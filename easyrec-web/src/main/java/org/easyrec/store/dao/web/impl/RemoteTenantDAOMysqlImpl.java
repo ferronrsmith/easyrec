@@ -19,7 +19,7 @@
 
 package org.easyrec.store.dao.web.impl;
 
-import org.easyrec.model.web.RemoteTenant;
+import org.easyrec.model.core.web.RemoteTenant;
 import org.easyrec.plugin.Plugin.LifecyclePhase;
 import org.easyrec.plugin.configuration.ConfigurationHelper;
 import org.easyrec.plugin.container.PluginRegistry;
@@ -28,8 +28,9 @@ import org.easyrec.plugin.generator.GeneratorConfiguration;
 import org.easyrec.plugin.model.PluginId;
 import org.easyrec.plugin.stats.GeneratorStatistics;
 import org.easyrec.service.core.TenantService;
+import org.easyrec.store.dao.impl.BasicDAOMysqlImpl;
 import org.easyrec.store.dao.web.RemoteTenantDAO;
-import org.easyrec.utils.Security;
+import org.easyrec.util.core.Security;
 import org.easyrec.utils.servlet.ServletUtils;
 import org.easyrec.utils.spring.cache.annotation.InvalidatesCache;
 import org.easyrec.utils.spring.store.dao.DaoUtils;
@@ -56,8 +57,8 @@ import java.util.Properties;
  * <p>
  * <b>Copyright:&nbsp;</b> (c) 2007
  * <p/>
- * <b>last modified:</b><br/> $Author: szavrel $<br/> $Date: 2008-07-17
- * 20:00:46 +0200 (Do, 17 Jul 2008) $<br/> $Revision: 18568 $
+ * <b>last modified:</b><br/> $Author: fsalcher $<br/> $Date: 2008-07-17
+ * 20:00:46 +0200 (Do, 17 Jul 2008) $<br/> $Revision: 18781 $
  * </p>
  *
  * @author <AUTHOR>

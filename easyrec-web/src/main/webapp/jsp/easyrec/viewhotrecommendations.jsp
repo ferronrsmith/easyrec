@@ -5,7 +5,7 @@
 <%@ taglib prefix="esapi" uri="/WEB-INF/esapi.tld" %>
 
 <%--@elvariable id="tenantId" type="java.lang.String"--%>
-<%--@elvariable id="items" type="java.util.List<org.easyrec.model.web.Item>"--%>
+<%--@elvariable id="items" type="java.util.List<org.easyrec.model.core.web.Item>"--%>
 
 <script src="${webappPath}/js/easyrec.js" type="text/javascript"></script>
 <script src="${webappPath}/js/item.js" type="text/javascript"></script>

@@ -20,10 +20,10 @@
 package org.easyrec.service.web;
 
 import com.google.common.base.Strings;
-import org.easyrec.model.web.Operator;
-import org.easyrec.model.web.RemoteTenant;
+import org.easyrec.model.core.web.Operator;
+import org.easyrec.model.core.web.RemoteTenant;
 import org.easyrec.store.dao.web.RemoteTenantDAO;
-import org.easyrec.utils.Security;
+import org.easyrec.util.core.Security;
 import org.easyrec.utils.servlet.ServletUtils;
 import org.springframework.web.servlet.ModelAndView;
 

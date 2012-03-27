@@ -33,9 +33,9 @@ import java.util.Set;
  * (c) 2007</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: sat-rsa $<br/>
- * $Date: 2012-02-23 16:01:50 +0100 (Do, 23 Feb 2012) $<br/>
- * $Revision: 140 $</p>
+ * $Author: fsalcher $<br/>
+ * $Date: 2012-03-23 15:35:07 +0100 (Fr, 23 Mär 2012) $<br/>
+ * $Revision: 18791 $</p>
  *
  * @author Stephan Zavrel
  */
@@ -43,49 +43,33 @@ public interface BaseProfileDAO<T, I, IT> extends TableCreatingDAO {
 
     ///////////////////////////////////////////////////////////////////////////
     // constants
-    public final static String DEFAULT_TABLE_NAME = "profile";
+    public final static String DEFAULT_TABLE_NAME = "item";
 
-    public final static String DEFAULT_PROFILE_ID_COLUMN_NAME = "profileId";
     public final static String DEFAULT_TENANT_ID_COLUMN_NAME = "tenantId";
-    public final static String DEFAULT_ITEM_ID_COLUMN_NAME = "itemId";
-    public final static String DEFAULT_ITEM_TYPE_ID_COLUMN_NAME = "itemTypeId";
+    public final static String DEFAULT_ITEM_ID_COLUMN_NAME = "itemid";
+    public final static String DEFAULT_ITEM_TYPE_ID_COLUMN_NAME = "itemtype";
     public final static String DEFAULT_PROFILE_DATA_COLUMN_NAME = "profileData";
     public final static String DEFAULT_ACTIVE_COLUMN_NAME = "active";
 
-    // abstract
-    //public List<String> getProfileQBE(String exampleProfileXML);
 
     // non abstract
     public int storeProfile(T tenant, I item, IT itemType, String profileXML);
 
     public String getProfile(T tenant, I item, IT itemType);
+
     public String getProfile(T tenantId, I itemId, IT itemTypeId, Boolean active);
-
-    public int updateProfileById(Integer profileId, String profileXML);
-
-    public String getProfileById(Integer profileId);
-
-    public void activateProfile(T tenant, I item, IT itemType);
-
-    public void activateProfile(Integer profileId);
-
-    public void deactivateProfile(T tenant, I item, IT itemType);
-
-    public void deactivateProfile(Integer profileId);
-
-    //    public int insertOrUpdateDimension(T tenant, I item, IT itemType, String dimensionXML);
-    //    public String getDimension(T tenant, I item, IT itemType, String dimensionXPath);
 
     public Set<String> getMultiDimensionValue(T tenantId, I itemId, IT itemTypeId, String dimensionXPath);
 
-    public Set<String> getMultiDimensionValue(Integer profileId, String dimensionXPath);
-
     public String getSimpleDimensionValue(T tenantId, I itemId, IT itemTypeId, String dimensionXPath);
 
-    public String getSimpleDimensionValue(Integer profileId, String dimensionXPath);
-
     public List<ItemVO<Integer, Integer>> getItemsByDimensionValue(T tenantId, IT itemType,
-                                                                            String dimensionXPath, String value);
+                                                                   String dimensionXPath, String value);
 
     public List<ItemVO<Integer, Integer>> getItemsByItemType(T Tenant, IT itemType, int count);
+
+    public void activateProfile(T tenant, I item, IT itemType);
+
+    public void deactivateProfile(T tenant, I item, IT itemType);
+
 }

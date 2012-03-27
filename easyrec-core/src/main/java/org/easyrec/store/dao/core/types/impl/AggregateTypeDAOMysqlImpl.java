@@ -44,9 +44,9 @@ import java.util.TreeSet;
  * (c) 2007</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: sat-rsa $<br/>
- * $Date: 2011-08-12 16:46:14 +0200 (Fr, 12 Aug 2011) $<br/>
- * $Revision: 113 $</p>
+ * $Author: pmarschik $<br/>
+ * $Date: 2011-02-11 10:43:43 +0100 (Fr, 11 Feb 2011) $<br/>
+ * $Revision: 17651 $</p>
  *
  * @author Roman Cerny
  */

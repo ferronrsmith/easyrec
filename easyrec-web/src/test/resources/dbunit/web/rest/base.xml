@@ -31,10 +31,10 @@
             creationdate="2011-06-22 12:00:01" tenantStatistic=""
             tenantConfig="backtracking=true&#10;AUTO_ARCHIVER.enabled=false&#10;AUTO_RULEMINER.enabled=false&#10;AUTO_ARCHIVER.timeRange=1825&#10;AUTO_RULEMINER.executionTime=02\:00"/>
 
-    <itemtype id="1" tenantId="1" name="ITEM" profileSchema="[null]" profileMatcher="[null]" visible="1"/>
-    <itemtype id="2" tenantId="1" name="CLUSTER" profileSchema="[null]" profileMatcher="[null]" visible="0"/>
-    <itemtype id="3" tenantId="1" name="OTHER_ITEM" profileSchema="[null]" profileMatcher="[null]" visible="1"/>
-    <itemtype id="4" tenantId="1" name="INVISIBLE_ITEM" profileSchema="[null]" profileMatcher="[null]" visible="0"/>
+    <itemtype id="1" tenantId="1" name="ITEM" visible="1"/>
+    <itemtype id="2" tenantId="1" name="CLUSTER" visible="0"/>
+    <itemtype id="3" tenantId="1" name="OTHER_ITEM" visible="1"/>
+    <itemtype id="4" tenantId="1" name="INVISIBLE_ITEM" visible="0"/>
 
     <actiontype id="1" tenantId="1" name="VIEW"/>
     <actiontype id="2" tenantId="1" name="RATE"/>
@@ -69,17 +69,17 @@
     +- CLUSTER_B (5)
     `- CLUSTER_C_INVISIBLE (6)
     -->
-    <profile profileId="1" tenantId="1" itemId="1" itemTypeId="2" changeDate="2011-01-01 00:00:01" active="1"
+    <item tenantId="1" itemid="CLUSTERS" itemtype="CLUSTER" changeDate="2011-01-01 00:00:01" active="1"
              profileData="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?>&lt;clusterVO>&lt;description>The root object of every cluster hierarchy. Cannot be removed!&lt;/description>&lt;name>CLUSTERS&lt;/name>&lt;/clusterVO>"/>
-    <profile profileId="2" tenantId="1" itemId="2" itemTypeId="2" changeDate="2011-01-01 00:00:01" active="1"
+    <item tenantId="1" itemid="CLUSTER_A" itemtype="CLUSTER" changeDate="2011-01-01 00:00:01" active="1"
              profileData="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?>&lt;clusterVO>&lt;description>&lt;/description>&lt;name>CLUSTER_A&lt;/name>&lt;/clusterVO>"/>
-    <profile profileId="3" tenantId="1" itemId="3" itemTypeId="2" changeDate="2011-01-01 00:00:01" active="1"
+    <item tenantId="1" itemid="CLUSTER_A_1" itemtype="CLUSTER" changeDate="2011-01-01 00:00:01" active="1"
              profileData="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?>&lt;clusterVO>&lt;description>&lt;/description>&lt;name>CLUSTER_A_1&lt;/name>&lt;/clusterVO>"/>
-    <profile profileId="4" tenantId="1" itemId="4" itemTypeId="2" changeDate="2011-01-01 00:00:01" active="1"
+    <item tenantId="1" itemid="CLUSTER_A_2" itemtype="CLUSTER" changeDate="2011-01-01 00:00:01" active="1"
              profileData="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?>&lt;clusterVO>&lt;description>&lt;/description>&lt;name>CLUSTER_A_2&lt;/name>&lt;/clusterVO>"/>
-    <profile profileId="5" tenantId="1" itemId="5" itemTypeId="2" changeDate="2011-01-01 00:00:01" active="1"
+    <item tenantId="1" itemid="CLUSTER_B" itemtype="CLUSTER" changeDate="2011-01-01 00:00:01" active="1"
              profileData="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?>&lt;clusterVO>&lt;description>&lt;/description>&lt;name>CLUSTER_B&lt;/name>&lt;/clusterVO>"/>
-    <profile profileId="6" tenantId="1" itemId="6" itemTypeId="2" changeDate="2011-01-01 00:00:01" active="0"
+    <item tenantId="1" itemid="CLUSTER_C_INVISIBLE" itemtype="CLUSTER" changeDate="2011-01-01 00:00:01" active="0"
              profileData="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?>&lt;clusterVO>&lt;description>&lt;/description>&lt;name>CLUSTER_C_INVISIBLE&lt;/name>&lt;/clusterVO>"/>
 
     <itemassoc tenantId="1" itemFromId="1" itemFromTypeId="2" assocTypeId="5" assocValue="1" itemToId="2"

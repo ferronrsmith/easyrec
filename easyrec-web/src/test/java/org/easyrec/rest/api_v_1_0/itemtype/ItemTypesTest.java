@@ -121,7 +121,7 @@ public abstract class ItemTypesTest extends AbstractApiTest {
 
         // itemtypes where visible=0 are not shown
         assertThat(itemTypes.size(), is(2));
-        assertThat(itemTypes.getString(0), is("ITEM"));
+        assertThat(itemTypes.getString(0), is("ITEM_TYPE"));
         assertThat(itemTypes.getString(1), is("OTHER_ITEM"));
     }
 }

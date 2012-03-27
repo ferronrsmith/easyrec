@@ -20,13 +20,13 @@ package org.easyrec.service.web.impl;
 
 
 import com.google.common.base.Strings;
+import org.easyrec.model.core.web.Item;
 import org.easyrec.model.core.ItemAssocVO;
 import org.easyrec.model.core.ItemVO;
-import org.easyrec.model.web.Item;
 import org.easyrec.service.core.ItemAssocService;
 import org.easyrec.service.domain.TypeMappingService;
 import org.easyrec.service.web.RemoteAssocService;
-import org.easyrec.utils.spring.store.dao.IDMappingDAO;
+import org.easyrec.store.dao.IDMappingDAO;
 
 /**
  * This Class is a Service for manipulating the item associations

@@ -22,6 +22,7 @@ import com.google.common.base.Strings;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.easyrec.model.core.ClusterVO;
+import org.easyrec.model.core.web.*;
 import org.easyrec.model.core.transfer.TimeConstraintVO;
 import org.easyrec.model.web.*;
 import org.easyrec.rest.*;
@@ -31,7 +32,7 @@ import org.easyrec.service.web.RemoteAssocService;
 import org.easyrec.service.web.nodomain.ShopRecommenderService;
 import org.easyrec.soap.nodomain.exception.EasyRecSoapException;
 import org.easyrec.soap.service.AuthenticationDispatcher;
-import org.easyrec.store.dao.web.ItemDAO;
+import org.easyrec.store.dao.core.ItemDAO;
 import org.easyrec.store.dao.web.OperatorDAO;
 import org.easyrec.store.dao.web.RemoteTenantDAO;
 import org.easyrec.utils.MyUtils;
@@ -65,9 +66,9 @@ import java.util.Set;
  * (c) 2007</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: szavrel $<br/>
- * $Date: 2012-02-02 18:49:38 +0100 (Do, 02 Feb 2012) $<br/>
- * $Revision: 18703 $</p>
+ * $Author: fsalcher $<br/>
+ * $Date: 2012-03-19 14:22:17 +0100 (Mo, 19 Mär 2012) $<br/>
+ * $Revision: 18781 $</p>
  *
  * @author Roman Cerny
  */

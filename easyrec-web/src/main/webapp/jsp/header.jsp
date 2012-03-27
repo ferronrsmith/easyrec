@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="${webappPath}/css/custom-theme/jquery-ui-1.8.6.custom.css" type="text/css"
           media="screen"/>
     <link rel="stylesheet" type="text/css" href="${webappPath}/css/footer.css"/>
-
+    <link rel="stylesheet" type="text/css" href="${webappPath}/js/prettify/prettify.css"/>
     <script type="text/javascript">
         webappPath = '${webappPath}/';
         extendedWebappPath = '${extendedWebAppPath}/';
@@ -36,6 +36,7 @@
     <script src="${webappPath}/js/jquery/jquery.jstree.js" type="text/javascript"></script>
     <script src="${webappPath}/js/jquery/jquery.hotkeys.js" type="text/javascript"></script>
     <script src="${webappPath}/js/jquery/jquery.cookie.js" type="text/javascript"></script>
+    <script src="${webappPath}/js/prettify/prettify.js" type="text/javascript"></script>
 
     <script src="${webappPath}/js/preload.js" type="text/javascript"></script>
     <script src="${webappPath}/js/paging.js" type="text/javascript"></script>

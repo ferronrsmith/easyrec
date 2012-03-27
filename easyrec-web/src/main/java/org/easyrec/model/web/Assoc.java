@@ -17,6 +17,8 @@
  */
 package org.easyrec.model.web;
 
+import org.easyrec.model.core.web.Item;
+
 public class Assoc {
     Item itemFrom;
     Item itemTo;

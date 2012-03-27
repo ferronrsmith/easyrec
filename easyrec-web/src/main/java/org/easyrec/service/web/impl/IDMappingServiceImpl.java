@@ -21,13 +21,16 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.easyrec.controller.BackTrackingController;
 import org.easyrec.model.core.*;
+import org.easyrec.model.core.web.Item;
+import org.easyrec.model.core.web.RemoteTenant;
+import org.easyrec.model.core.web.Session;
 import org.easyrec.model.web.*;
 import org.easyrec.service.core.TenantService;
 import org.easyrec.service.web.IDMappingService;
+import org.easyrec.store.dao.IDMappingDAO;
+import org.easyrec.store.dao.core.ItemDAO;
 import org.easyrec.store.dao.core.types.AssocTypeDAO;
 import org.easyrec.store.dao.core.types.ItemTypeDAO;
-import org.easyrec.store.dao.web.ItemDAO;
-import org.easyrec.utils.spring.store.dao.IDMappingDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +45,9 @@ import java.util.List;
  * (c) 2007</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: szavrel $<br/>
- * $Date: 2012-02-02 18:49:38 +0100 (Do, 02 Feb 2012) $<br/>
- * $Revision: 18703 $</p>
+ * $Author: fsalcher $<br/>
+ * $Date: 2012-03-23 15:35:07 +0100 (Fr, 23 Mär 2012) $<br/>
+ * $Revision: 18791 $</p>
  *
  * @author Stephan Zavrel
  */

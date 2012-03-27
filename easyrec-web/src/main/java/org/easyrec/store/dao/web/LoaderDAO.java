@@ -17,7 +17,7 @@
  */
 package org.easyrec.store.dao.web;
 
-import org.easyrec.model.web.Operator;
+import org.easyrec.model.core.web.Operator;
 
 /**
  * This class is used for checking the avaibility of the database server,

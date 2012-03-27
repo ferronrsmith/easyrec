@@ -18,10 +18,10 @@
 package org.easyrec.controller;
 
 import com.google.common.base.Strings;
-import org.easyrec.model.web.Operator;
-import org.easyrec.model.web.RemoteTenant;
+import org.easyrec.model.core.web.Operator;
+import org.easyrec.model.core.web.RemoteTenant;
 import org.easyrec.store.dao.web.RemoteTenantDAO;
-import org.easyrec.utils.Security;
+import org.easyrec.util.core.Security;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
@@ -40,9 +40,9 @@ import java.util.List;
  * (c) 2007</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: dmann $<br/>
- * $Date: 2011-05-20 11:34:51 +0200 (Fr, 20 Mai 2011) $<br/>
- * $Revision: 18345 $</p>
+ * $Author: fsalcher $<br/>
+ * $Date: 2012-03-19 14:22:17 +0100 (Mo, 19 Mär 2012) $<br/>
+ * $Revision: 18781 $</p>
  *
  * @author phlavac
  * @version 1.0

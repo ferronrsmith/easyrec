@@ -19,7 +19,8 @@
 package org.easyrec.store.dao.web.impl;
 
 import com.google.common.base.Strings;
-import org.easyrec.model.web.Operator;
+import org.easyrec.model.core.web.Operator;
+import org.easyrec.store.dao.impl.BasicDAOMysqlImpl;
 import org.easyrec.store.dao.web.OperatorDAO;
 import org.easyrec.utils.spring.store.dao.DaoUtils;
 import org.springframework.jdbc.core.RowMapper;
@@ -42,8 +43,8 @@ import java.util.List;
  * <p>
  * <b>Copyright:&nbsp;</b> (c) 2007
  * <p/>
- * <b>last modified:</b><br/> $Author: pmarschik $<br/> $Date: 2008-07-17
- * 20:00:46 +0200 (Do, 17 Jul 2008) $<br/> $Revision: 18099 $
+ * <b>last modified:</b><br/> $Author: fsalcher $<br/> $Date: 2008-07-17
+ * 20:00:46 +0200 (Do, 17 Jul 2008) $<br/> $Revision: 18781 $
  * </p>
  *
  * @author <AUTHOR>

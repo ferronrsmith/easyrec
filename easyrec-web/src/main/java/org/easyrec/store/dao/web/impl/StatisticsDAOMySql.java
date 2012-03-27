@@ -18,8 +18,8 @@
  */
 package org.easyrec.store.dao.web.impl;
 
-import org.easyrec.model.web.RemoteTenant;
-import org.easyrec.model.web.statistics.*;
+import org.easyrec.model.core.web.RemoteTenant;
+import org.easyrec.model.core.web.statistic.*;
 import org.easyrec.service.domain.TypeMappingService;
 import org.easyrec.store.dao.web.StatisticsDAO;
 import org.springframework.jdbc.core.RowMapper;

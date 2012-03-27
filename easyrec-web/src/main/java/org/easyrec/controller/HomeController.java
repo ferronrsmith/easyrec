@@ -19,7 +19,7 @@ package org.easyrec.controller;
 
 
 import org.easyrec.store.dao.web.OperatorDAO;
-import org.easyrec.utils.Security;
+import org.easyrec.util.core.Security;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
@@ -37,9 +37,9 @@ import javax.servlet.http.HttpServletResponse;
  * (c) 2009</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: dmann $<br/>
- * $Date: 2011-10-12 17:12:55 +0200 (Mi, 12 Okt 2011) $<br/>
- * $Revision: 18618 $</p>
+ * $Author: fsalcher $<br/>
+ * $Date: 2012-03-19 14:22:17 +0100 (Mo, 19 Mär 2012) $<br/>
+ * $Revision: 18781 $</p>
  *
  * @author dmann
  * @version 1.0

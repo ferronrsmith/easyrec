@@ -20,18 +20,18 @@ package org.easyrec.controller;
 
 import com.google.common.base.Strings;
 import org.easyrec.model.core.TenantVO;
-import org.easyrec.model.web.Message;
-import org.easyrec.model.web.Operator;
-import org.easyrec.model.web.RemoteTenant;
+import org.easyrec.model.core.web.Message;
+import org.easyrec.model.core.web.Operator;
+import org.easyrec.model.core.web.RemoteTenant;
 import org.easyrec.service.core.TenantService;
 import org.easyrec.service.web.NamedConfigurationService;
 import org.easyrec.service.web.PluginScheduler;
 import org.easyrec.service.web.RemoteTenantService;
 import org.easyrec.store.dao.web.OperatorDAO;
 import org.easyrec.store.dao.web.RemoteTenantDAO;
-import org.easyrec.utils.MessageBlock;
-import org.easyrec.utils.Security;
-import org.easyrec.utils.Web;
+import org.easyrec.util.core.MessageBlock;
+import org.easyrec.util.core.Security;
+import org.easyrec.util.core.Web;
 import org.easyrec.utils.io.Text;
 import org.easyrec.utils.servlet.ServletUtils;
 import org.easyrec.vocabulary.MSG;
@@ -53,9 +53,9 @@ import java.util.List;
  * (c) 2009</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: pmarschik $<br/>
- * $Date: 2011-04-01 19:23:19 +0200 (Fr, 01 Apr 2011) $<br/>
- * $Revision: 18099 $</p>
+ * $Author: fsalcher $<br/>
+ * $Date: 2012-03-19 14:22:17 +0100 (Mo, 19 Mär 2012) $<br/>
+ * $Revision: 18781 $</p>
  *
  * @author dmann
  * @version 1.0

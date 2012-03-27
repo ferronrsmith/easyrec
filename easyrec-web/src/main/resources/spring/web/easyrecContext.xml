@@ -262,6 +262,7 @@
     </bean>
 
     <bean name="itemController" class="org.easyrec.controller.ItemController">
+        <property name="profileService" ref="profileService"/>
         <property name="remoteTenantDAO" ref="remoteTenantDAO"/>
         <property name="itemDAO" ref="itemDAO"/>
         <property name="itemService" ref="itemService"/>

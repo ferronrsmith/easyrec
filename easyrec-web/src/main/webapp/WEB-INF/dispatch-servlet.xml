@@ -72,6 +72,7 @@
                 <value>easyrec_migrate_0.95</value>
                 <value>easyrec_migrate_0.96</value>
                 <value>easyrec_migrate_0.97</value>
+                <value>easyrec_migrate_0.98</value>
             </list>
         </property>
         <property name="properties" ref="dbProps"/>

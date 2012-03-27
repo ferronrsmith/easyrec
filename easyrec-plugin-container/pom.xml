@@ -15,12 +15,12 @@
     <dependencies>
         <dependency>
             <groupId>org.easyrec</groupId>
-            <artifactId>easyrec-plugin-api</artifactId>
+            <artifactId>easyrec-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.easyrec</groupId>
-            <artifactId>easyrec-domain</artifactId>
+            <artifactId>easyrec-plugin-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -34,6 +34,11 @@
             <artifactId>easyrec-testutils</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easyrec</groupId>
+            <artifactId>easyrec-utils</artifactId>
+            <version>${project.version}</version>
         </dependency>
 <!--        <dependency>
             <groupId>org.easyrec</groupId>

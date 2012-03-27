@@ -19,13 +19,13 @@
 
 package org.easyrec.controller;
 
-import org.easyrec.model.web.Operator;
-import org.easyrec.model.web.RemoteTenant;
+import org.easyrec.model.core.web.Operator;
+import org.easyrec.model.core.web.RemoteTenant;
 import org.easyrec.service.core.TenantService;
 import org.easyrec.service.web.ViewInitializationService;
 import org.easyrec.store.dao.core.types.ItemTypeDAO;
 import org.easyrec.store.dao.web.RemoteTenantDAO;
-import org.easyrec.utils.Security;
+import org.easyrec.util.core.Security;
 import org.easyrec.utils.servlet.ServletUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;

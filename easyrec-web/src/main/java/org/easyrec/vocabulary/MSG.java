@@ -1,9 +1,9 @@
 package org.easyrec.vocabulary;
 
-import org.easyrec.model.web.ErrorMessage;
-import org.easyrec.model.web.Message;
-import org.easyrec.model.web.Operator;
-import org.easyrec.model.web.SuccessMessage;
+import org.easyrec.model.core.web.ErrorMessage;
+import org.easyrec.model.core.web.Message;
+import org.easyrec.model.core.web.Operator;
+import org.easyrec.model.core.web.SuccessMessage;
 
 /**
  * Contains messages returned by various services.

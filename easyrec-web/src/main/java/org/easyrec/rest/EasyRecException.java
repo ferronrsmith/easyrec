@@ -18,7 +18,7 @@
 package org.easyrec.rest;
 
 import com.sun.jersey.api.json.JSONWithPadding;
-import org.easyrec.model.web.Message;
+import org.easyrec.model.core.web.Message;
 import org.easyrec.vocabulary.WS;
 
 import javax.ws.rs.WebApplicationException;

@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="esapi" uri="/WEB-INF/esapi.tld" %>
+<%@ taglib prefix="easyrec" uri="/WEB-INF/tagLib.tld" %>
 <%--
   ~ Copyright 2010 Research Studios Austria Forschungsgesellschaft mBH
   ~
@@ -26,8 +27,8 @@
 <%--@elvariable id="editEnabled" type="boolean"--%>
 <%--@elvariable id="operatorId" type="java.lang.String"--%>
 <%--@elvariable id="tenantId" type="java.lang.String"--%>
-<%--@elvariable id="tenant" type="org.easyrec.model.web.RemoteTenant"--%>
-<%--@elvariable id="item" type="org.easyrec.model.web.Item"--%>
+<%--@elvariable id="tenant" type="org.easyrec.model.core.web.RemoteTenant"--%>
+<%--@elvariable id="item" type="org.easyrec.model.core.web.Item"--%>
 <%--@elvariable id="clusters" type="java.util.List<org.easyrec.model.core.ClusterVO>"--%>
 
 <div id="itemTabs${detailBoxUniqueId}" class="itemDetailTabContainer">
@@ -134,6 +135,11 @@
                 </c:choose>
             </dd>
         </dl>
+
+        <c:if test="${profile != null}">
+            <h1>Profile</h1>
+            <easyrec:profileRenderer profile="${profile}"/>
+        </c:if>
 
     </div>
 

@@ -18,6 +18,7 @@
  */
 package org.easyrec.store.dao.web.impl;
 
+import org.easyrec.store.dao.impl.BasicDAOMysqlImpl;
 import org.easyrec.store.dao.web.AssocDAO;
 import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

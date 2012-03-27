@@ -28,33 +28,33 @@ function followingSteps(tenantId, reloadPage) {
     }
 
     $('#followingSteps').dialog(
-    {
-        modal:true,
-        title:"Integration Information",
-        width:600,
-        height:500,
-        resizable:false,
-        beforeClose:function(event, ui) {
-            if (reloadPage) {
-                location.href = webappPath + "easyrec/overview?tenantId=" + tenantId;
+        {
+            modal:true,
+            title:"Integration Information",
+            width:600,
+            height:500,
+            resizable:false,
+            beforeClose:function (event, ui) {
+                if (reloadPage) {
+                    location.href = webappPath + "easyrec/overview?tenantId=" + tenantId;
+                }
             }
-        }
-    });
+        });
 }
 
 
 function saveItem(operatorId, tenantId, itemId, tenantUrl, detailBoxUniqueId) {
     $.ajax({
-        url: webappPath + 'item/edit?operatorId=' + operatorId + '&tenantId=' + tenantId + '&itemId=' + itemId +
-                '&description=' + encodeURIComponent($('#editItemDescription' + itemId).val()) + '&url=' +
-                encodeURIComponent($('#editItemUrl' + itemId).val()) + '&imageUrl=' + encodeURIComponent($('#editItemImageUrl' + itemId).val()),
-        cache: false,
-        success: function() {
+        url:webappPath + 'item/edit?operatorId=' + operatorId + '&tenantId=' + tenantId + '&itemId=' + itemId +
+            '&description=' + encodeURIComponent($('#editItemDescription' + itemId).val()) + '&url=' +
+            encodeURIComponent($('#editItemUrl' + itemId).val()) + '&imageUrl=' + encodeURIComponent($('#editItemImageUrl' + itemId).val()),
+        cache:false,
+        success:function () {
             // set new item attributes
             $('#itemDescription' + itemId).html($('#editItemDescription' + itemId).val());
 
             if ($('#editItemImageUrl' + itemId).val().indexOf("http://") < 0 &&
-                    $('#editItemImageUrl' + itemId).val().indexOf("https://") < 0) {
+                $('#editItemImageUrl' + itemId).val().indexOf("https://") < 0) {
                 var imageTenantUrl = tenantUrl;
             }
 
@@ -62,7 +62,7 @@ function saveItem(operatorId, tenantId, itemId, tenantUrl, detailBoxUniqueId) {
             $('#image' + itemId).attr('src', imageTenantUrl + $('#editItemImageUrl' + itemId).val());
 
             if ($('#editItemUrl' + itemId).val().indexOf("http://") >= 0 ||
-                    $('#editItemUrl' + itemId).val().indexOf("https://") >= 0) {
+                $('#editItemUrl' + itemId).val().indexOf("https://") >= 0) {
                 tenantUrl = "";
             }
 
@@ -96,29 +96,29 @@ function loadItem(operatorId, tenantId, itemId, itemTitle, editEnabled, startTab
 
 
     $.ajax({
-        url: webappPath + 'item/viewitemdetails?operatorId=' + operatorId + '&tenantId=' + tenantId +
-                '&itemId=' + itemId + '&detailBoxUniqueId=' + detailBoxUniqueId + '&editEnabled=' + editEnabled,
-        cache: false,
-        dataType: 'html',
-        success: function(data) {
+        url:webappPath + 'item/viewitemdetails?operatorId=' + operatorId + '&tenantId=' + tenantId +
+            '&itemId=' + itemId + '&detailBoxUniqueId=' + detailBoxUniqueId + '&editEnabled=' + editEnabled,
+        cache:false,
+        dataType:'html',
+        success:function (data) {
             $('#itemDetailHelperDiv' + detailBoxUniqueId).html(data).dialog(
-            {
-                modal:false,
-                title:itemTitle,
-                width:700,
-                height:500,
-                resizable:false,
-                position:[detailXY,detailXY],
-                open:function() {
-                    $("#itemTabs" + detailBoxUniqueId).tabs({ selected: startTab });
-                },
-                beforeClose:function(event, ui) {
-                    $("#itemTabs" + detailBoxUniqueId).tabs("destroy");
-                    if (itemDetailsChanged == detailBoxUniqueId) {
-                        location.reload(true);
+                {
+                    modal:false,
+                    title:itemTitle,
+                    width:700,
+                    height:500,
+                    resizable:false,
+                    position:[detailXY, detailXY],
+                    open:function () {
+                        $("#itemTabs" + detailBoxUniqueId).tabs({ selected:startTab });
+                    },
+                    beforeClose:function (event, ui) {
+                        $("#itemTabs" + detailBoxUniqueId).tabs("destroy");
+                        if (itemDetailsChanged == detailBoxUniqueId) {
+                            location.reload(true);
+                        }
                     }
-                }
-            });
+                });
 
         }
     });
@@ -128,7 +128,7 @@ function loadItem(operatorId, tenantId, itemId, itemTitle, editEnabled, startTab
  * view tenants
  */
 function viewTenants(operatorId) {
-    $.get(webappPath + "tenant/view?operatorId=" + operatorId, function(data) {
+    $.get(webappPath + "tenant/view?operatorId=" + operatorId, function (data) {
         $('#myeasyrec').html(data);
     });
 }
@@ -145,13 +145,13 @@ function registerTenant(operatorId) {
     tenantId = tenantId.replace(/\?/g, "");
 
     url = webappPath + "tenant/register?operatorId=" + operatorId + "&tenantId=" + tenantId + "&url=" +
-            $('#url').val() + "&description=" + $('#easyrec_description').val();
+        $('#url').val() + "&description=" + $('#easyrec_description').val();
 
     $.ajax({
         url:url,
-        cache: false,
-        dataType: 'xml',
-        success: function(data) {
+        cache:false,
+        dataType:'xml',
+        success:function (data) {
             if ($(data).find('success').attr('code') == '200') { // Tenant Created
                 //successfully created a tenant
                 followingSteps(tenantId, true);
@@ -178,13 +178,13 @@ function registerTenant(operatorId) {
  */
 function updateTenant(operatorId, tenantId) {
     updateUrl = webappPath + "tenant/update?tenantId=" + tenantId + "&url=" + $('#url').val() + "&description=" +
-            $('#easyrec_description').val() + "&operatorId=" + operatorId;
+        $('#easyrec_description').val() + "&operatorId=" + operatorId;
 
     $.ajax({
         url:updateUrl,
-        cache: false,
+        cache:false,
         dataType:'xml',
-        success: function(data) {
+        success:function (data) {
 
             if ($(data).find('success').attr('code') == '208') { // tenant updated
                 //success
@@ -217,9 +217,9 @@ function refreshStatistics(tenantId, operatorId) {
 
     $.ajax({
         url:url,
-        cache: false,
-        dataType: 'xml',
-        success: function(data) {
+        cache:false,
+        dataType:'xml',
+        success:function (data) {
             if ($(data).find('success').attr('code') == '904') { // statistics successfully updated
                 window.location.reload();
             } else {
@@ -237,27 +237,27 @@ function updateTenantFlot(tenantId) {
     $('#updateflotwait').attr('src', webappPath + 'img/wait16.gif');
 
     flotUrl = webappPath + "statistics?flot=1&onlyData=1" + "&month=" + $('#month').val() + "&year=" +
-            $('#year').val() + "&actionType=" + $('#actionType').val() + "&tenant=" + tenantId + "&_=" + new Date().getTime();
+        $('#year').val() + "&actionType=" + $('#actionType').val() + "&tenant=" + tenantId + "&_=" + new Date().getTime();
 
     try {
-        $.getJSON(flotUrl, function(data) {
+        $.getJSON(flotUrl, function (data) {
             if (data.length != 0) {
                 $("#legend_days").show();
                 $("#legend_actions").show();
                 $(function () {
-                    $.plot($("#placeholder" + tenantId), eval(data), {grid: { hoverable: true, clickable: true },
-                        actualMonth:$('#month').val(), actualYear:$('#year').val(), legend: {container:"#legendContainer", noColumns: 3}});
+                    $.plot($("#placeholder" + tenantId), eval(data), {grid:{ hoverable:true, clickable:true },
+                        actualMonth:$('#month').val(), actualYear:$('#year').val(), legend:{container:"#legendContainer", noColumns:3}});
 
                     function showTooltip(x, y, contents) {
                         $('<div id="tooltip">' + contents + '</div>').css({
-                            position: 'absolute',
-                            display: 'none',
-                            top: y + 5,
-                            left: x + 5,
-                            border: '1px solid #fdd',
-                            padding: '2px',
-                            'background-color': '#fee',
-                            opacity: 0.80
+                            position:'absolute',
+                            display:'none',
+                            top:y + 5,
+                            left:x + 5,
+                            border:'1px solid #fdd',
+                            padding:'2px',
+                            'background-color':'#fee',
+                            opacity:0.80
                         }).appendTo("body").fadeIn(200);
                     }
 
@@ -271,13 +271,13 @@ function updateTenantFlot(tenantId) {
 
                                 $("#tooltip").remove();
                                 var x = item.datapoint[0].toFixed(2),
-                                        y = item.datapoint[1].toFixed(2);
+                                    y = item.datapoint[1].toFixed(2);
                                 var pre = "th";
                                 if (x == 1) pre = "st";
                                 if (x == 2) pre = "nd";
                                 showTooltip(item.pageX, item.pageY,
-                                        Math.round(x) + pre + " of " + $("#month :selected").text() + ": " +
-                                                Math.round(y) + " " + item.series.label);
+                                    Math.round(x) + pre + " of " + $("#month :selected").text() + ": " +
+                                        Math.round(y) + " " + item.series.label);
                             }
                         } else {
                             $("#tooltip").remove();
@@ -302,14 +302,18 @@ function updateTenantFlot(tenantId) {
 
 function showPluginDescription(operatorId, tenantId, pluginId, version, divName) {
     $.ajax({
-        url: webappPath + 'dev/viewplugindescription?operatorId=' + operatorId + '&tenantId=' + tenantId +
-                '&pluginId=' + encodeURIComponent(pluginId) + "&version=" + version,
-        cache: false,
+        url:webappPath + 'dev/viewplugindescription?operatorId=' + operatorId + '&tenantId=' + tenantId +
+            '&pluginId=' + encodeURIComponent(pluginId) + "&version=" + version,
+        cache:false,
         dataType:'xml',
-        success: function(data) {
+        success:function (data) {
             $('#' + divName).html($(data).find('token').text() + '<hr />');
         }
     });
 }
 
-
+function toggleProfileViewMode(profileId) {
+    $("#profileXML-" + profileId).toggle();
+    $("#profileHTML-" + profileId).toggle();
+    prettyPrint();
+}

@@ -20,6 +20,7 @@ package org.easyrec.plugin.arm.store.dao.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.easyrec.model.core.ItemAssocVO;
+import org.easyrec.plugin.arm.store.dao.RuleminingItemAssocDAO;
 import org.easyrec.store.dao.core.impl.ItemAssocDAOMysqlImpl;
 import org.easyrec.utils.spring.store.service.sqlscript.SqlScriptService;
 import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
@@ -27,7 +28,6 @@ import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import javax.sql.DataSource;
 import java.sql.Types;
 import java.util.Date;
-import org.easyrec.plugin.arm.store.dao.RuleminingItemAssocDAO;
 
 /**
  * @author Stephan Zavrel

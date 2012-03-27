@@ -30,9 +30,9 @@ import org.easyrec.store.dao.BaseRecommendedItemDAO;
  * (c) 2007</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: sat-rsa $<br/>
- * $Date: 2012-02-23 16:01:50 +0100 (Do, 23 Feb 2012) $<br/>
- * $Revision: 140 $</p>
+ * $Author: dmann $<br/>
+ * $Date: 2011-12-20 15:22:22 +0100 (Di, 20 Dez 2011) $<br/>
+ * $Revision: 18685 $</p>
  *
  * @author Roman Cerny
  */

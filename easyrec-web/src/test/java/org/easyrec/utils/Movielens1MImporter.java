@@ -5,11 +5,11 @@
 package org.easyrec.utils;
 
 import com.google.common.base.CharMatcher;
+import org.easyrec.model.core.web.Item;
 import org.easyrec.model.core.TenantVO;
-import org.easyrec.model.web.Item;
-import org.easyrec.model.web.Operator;
-import org.easyrec.model.web.RemoteTenant;
-import org.easyrec.model.web.Session;
+import org.easyrec.model.core.web.Operator;
+import org.easyrec.model.core.web.RemoteTenant;
+import org.easyrec.model.core.web.Session;
 import org.easyrec.service.core.TenantService;
 import org.easyrec.service.web.nodomain.ShopRecommenderService;
 import org.easyrec.store.dao.web.OperatorDAO;

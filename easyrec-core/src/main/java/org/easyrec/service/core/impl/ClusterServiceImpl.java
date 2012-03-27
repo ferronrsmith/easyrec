@@ -32,12 +32,12 @@ import org.easyrec.service.core.ClusterService;
 import org.easyrec.service.core.ClusterStrategy;
 import org.easyrec.service.core.ItemAssocService;
 import org.easyrec.service.core.TenantService;
+import org.easyrec.store.dao.IDMappingDAO;
 import org.easyrec.store.dao.core.ProfileDAO;
 import org.easyrec.store.dao.core.types.AssocTypeDAO;
 import org.easyrec.store.dao.core.types.ItemTypeDAO;
 import org.easyrec.store.dao.core.types.SourceTypeDAO;
 import org.easyrec.store.dao.core.types.ViewTypeDAO;
-import org.easyrec.utils.spring.store.dao.IDMappingDAO;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DuplicateKeyException;
 

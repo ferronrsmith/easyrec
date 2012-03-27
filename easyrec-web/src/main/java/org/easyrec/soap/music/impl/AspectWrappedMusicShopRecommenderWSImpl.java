@@ -29,10 +29,10 @@ import org.easyrec.service.domain.music.MusicRecommenderService;
 import org.easyrec.service.web.IDMappingService;
 import org.easyrec.soap.music.MusicShopRecommenderWS;
 import org.easyrec.soap.music.exception.MusicShopRecommenderException;
+import org.easyrec.store.dao.IDMappingDAO;
 import org.easyrec.utils.spring.exception.annotation.MapThrowableToException;
 import org.easyrec.utils.spring.log.annotation.IOLog;
 import org.easyrec.utils.spring.profile.annotation.Profiled;
-import org.easyrec.utils.spring.store.dao.IDMappingDAO;
 
 import java.util.List;
 
@@ -47,9 +47,9 @@ import java.util.List;
  * (c) 2007</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: dmann $<br/>
- * $Date: 2011-12-20 15:22:22 +0100 (Di, 20 Dez 2011) $<br/>
- * $Revision: 18685 $</p>
+ * $Author: fsalcher $<br/>
+ * $Date: 2012-03-23 15:35:07 +0100 (Fr, 23 Mär 2012) $<br/>
+ * $Revision: 18791 $</p>
  *
  * @author Roman Cerny
  */

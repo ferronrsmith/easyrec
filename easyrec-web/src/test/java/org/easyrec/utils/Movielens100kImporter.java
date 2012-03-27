@@ -5,21 +5,21 @@
 package org.easyrec.utils;
 
 import org.easyrec.exception.core.ClusterException;
+import org.easyrec.model.core.web.Item;
 import org.easyrec.model.core.TenantVO;
-import org.easyrec.model.web.Item;
-import org.easyrec.model.web.Operator;
-import org.easyrec.model.web.RemoteTenant;
-import org.easyrec.model.web.Session;
+import org.easyrec.model.core.web.Operator;
+import org.easyrec.model.core.web.RemoteTenant;
+import org.easyrec.model.core.web.Session;
 import org.easyrec.service.core.ClusterService;
 import org.easyrec.service.core.TenantService;
 import org.easyrec.service.domain.TypeMappingService;
 import org.easyrec.service.web.NamedConfigurationService;
 import org.easyrec.service.web.nodomain.ShopRecommenderService;
+import org.easyrec.store.dao.IDMappingDAO;
 import org.easyrec.store.dao.core.types.ItemTypeDAO;
 import org.easyrec.store.dao.web.OperatorDAO;
 import org.easyrec.store.dao.web.RemoteTenantDAO;
 import org.easyrec.utils.spring.cli.AbstractDependencyInjectionSpringCLI;
-import org.easyrec.utils.spring.store.dao.IDMappingDAO;
 
 import java.io.File;
 import java.io.FileInputStream;

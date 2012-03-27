@@ -1,7 +1,7 @@
 ###############################################################
-# $Author: sat-rsa $
-# $Revision: 113 $
-# $Date: 2011-08-12 16:46:14 +0200 (Fr, 12 Aug 2011) $
+# $Author: dmann $
+# $Revision: 17756 $
+# $Date: 2011-02-24 16:13:43 +0100 (Do, 24 Feb 2011) $
 ###############################################################
 
 # ATTENTION: do not add other sql statements than the CREATE TABLE statement

@@ -17,6 +17,8 @@
  */
 package org.easyrec.model.web;
 
+import org.easyrec.model.core.web.RemoteTenant;
+
 import java.util.ArrayList;
 import java.util.List;
 

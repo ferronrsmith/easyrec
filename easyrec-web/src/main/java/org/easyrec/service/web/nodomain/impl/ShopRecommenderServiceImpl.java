@@ -28,26 +28,28 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.easyrec.model.core.*;
 import org.easyrec.model.core.transfer.TimeConstraintVO;
+import org.easyrec.model.core.web.Item;
+import org.easyrec.model.core.web.RemoteTenant;
+import org.easyrec.model.core.web.Session;
 import org.easyrec.model.web.*;
 import org.easyrec.model.web.enums.TimeRange;
+import org.easyrec.service.core.ProfileService;
 import org.easyrec.service.core.ClusterService;
 import org.easyrec.service.core.TenantService;
 import org.easyrec.service.domain.DomainActionService;
 import org.easyrec.service.domain.DomainItemAssocService;
 import org.easyrec.service.domain.DomainRecommenderService;
 import org.easyrec.service.domain.TypeMappingService;
-import org.easyrec.service.domain.profile.ProfileMatcherService;
-import org.easyrec.service.domain.profile.ProfileService;
 import org.easyrec.service.web.IDMappingService;
 import org.easyrec.service.web.ItemService;
 import org.easyrec.service.web.nodomain.ShopRecommenderService;
 import org.easyrec.soap.nodomain.exception.EasyRecSoapException;
+import org.easyrec.store.dao.IDMappingDAO;
+import org.easyrec.store.dao.core.ItemDAO;
 import org.easyrec.store.dao.core.types.AssocTypeDAO;
-import org.easyrec.store.dao.web.ItemDAO;
 import org.easyrec.store.dao.web.RemoteTenantDAO;
 import org.easyrec.utils.spring.log.annotation.IOLog;
 import org.easyrec.utils.spring.profile.annotation.Profiled;
-import org.easyrec.utils.spring.store.dao.IDMappingDAO;
 import org.easyrec.vocabulary.MSG;
 import org.easyrec.vocabulary.WS;
 
@@ -63,9 +65,9 @@ import java.util.*;
  * (c) 2007</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: szavrel $<br/>
- * $Date: 2012-02-07 22:31:55 +0100 (Di, 07 Feb 2012) $<br/>
- * $Revision: 18713 $</p>
+ * $Author: fsalcher $<br/>
+ * $Date: 2012-03-23 15:35:07 +0100 (Fr, 23 Mär 2012) $<br/>
+ * $Revision: 18791 $</p>
  *
  * @author Stephan Zavrel
  */
@@ -84,7 +86,6 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
     private RemoteTenantDAO remoteTenantDAO;
     private Cache cache;
     private ProfileService profileService;
-    private ProfileMatcherService profileMatcherService;
     private ClusterService clusterService;
     private TenantService tenantService;
 
@@ -1287,16 +1288,6 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
     @SuppressWarnings({"UnusedDeclaration"})
     public void setProfileService(ProfileService profileService) {
         this.profileService = profileService;
-    }
-
-    @SuppressWarnings({"UnusedDeclaration"})
-    public ProfileMatcherService getProfileMatcherService() {
-        return profileMatcherService;
-    }
-
-    @SuppressWarnings({"UnusedDeclaration"})
-    public void setProfileMatcherService(ProfileMatcherService profileMatcherService) {
-        this.profileMatcherService = profileMatcherService;
     }
 
     public void setItemService(ItemService itemService) {

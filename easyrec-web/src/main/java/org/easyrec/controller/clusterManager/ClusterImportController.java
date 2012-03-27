@@ -20,16 +20,16 @@ package org.easyrec.controller.clusterManager;
 
 import org.easyrec.exception.core.ClusterException;
 import org.easyrec.model.core.ClusterVO;
+import org.easyrec.model.core.web.Item;
+import org.easyrec.model.core.web.RemoteTenant;
 import org.easyrec.model.web.FileUploadBean;
-import org.easyrec.model.web.Item;
-import org.easyrec.model.web.RemoteTenant;
 import org.easyrec.service.core.ClusterService;
 import org.easyrec.service.web.ViewInitializationService;
+import org.easyrec.store.dao.IDMappingDAO;
+import org.easyrec.store.dao.core.ItemDAO;
 import org.easyrec.store.dao.core.types.ItemTypeDAO;
-import org.easyrec.store.dao.web.ItemDAO;
 import org.easyrec.utils.io.tabular.input.InconsistentFieldCountException;
 import org.easyrec.utils.io.tabular.input.impl.CsvInput;
-import org.easyrec.utils.spring.store.dao.IDMappingDAO;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,9 +53,9 @@ import java.util.List;
  * (c) 2010</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: szavrel $<br/>
- * $Date: 2011-07-26 18:06:43 +0200 (Di, 26 Jul 2011) $<br/>
- * $Revision: 18543 $</p>
+ * $Author: fsalcher $<br/>
+ * $Date: 2012-03-23 15:35:07 +0100 (Fr, 23 Mär 2012) $<br/>
+ * $Revision: 18791 $</p>
  *
  * @author Stephan Zavrel
  */

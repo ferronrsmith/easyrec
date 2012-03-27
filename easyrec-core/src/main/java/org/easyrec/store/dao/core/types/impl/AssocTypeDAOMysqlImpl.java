@@ -49,9 +49,9 @@ import java.util.Set;
  * (c) 2007</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: sat-rsa $<br/>
- * $Date: 2012-02-23 16:01:50 +0100 (Do, 23 Feb 2012) $<br/>
- * $Revision: 140 $</p>
+ * $Author: dmann $<br/>
+ * $Date: 2011-10-24 18:06:52 +0200 (Mo, 24 Okt 2011) $<br/>
+ * $Revision: 18629 $</p>
  *
  * @author Roman Cerny
  */

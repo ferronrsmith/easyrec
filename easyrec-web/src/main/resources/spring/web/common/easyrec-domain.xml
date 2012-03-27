@@ -19,8 +19,4 @@
     <import resource="classpath:spring/domain/service/TypeMappingService.xml"/>
     <import resource="classpath:spring/domain/dao/TypedActionDAO.xml"/>
     <import resource="classpath:spring/domain/dao/TypedItemAssocDAO.xml"/>
-    <!--import resource="classpath:spring/domain/TypedProfileDAO.xml" />
-  <import resource="classpath:spring/domain/ProfileService.xml" />
-  <import resource="classpath:spring/domain/ProfileMatcherService.xml" /-->
-
 </beans>

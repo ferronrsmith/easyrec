@@ -18,9 +18,9 @@
   ~ along with easyrec.  If not, see <http://www.gnu.org/licenses />.
   -->
 
-<!-- $Author: szavrel $ -->
-<!-- $Revision: 18735 $ -->
-<!-- $Date: 2012-02-08 19:25:46 +0100 (Mi, 08 Feb 2012) $ -->
+<!-- $Author: fsalcher $ -->
+<!-- $Revision: 18785 $ -->
+<!-- $Date: 2012-03-20 14:03:52 +0100 (Di, 20 Mär 2012) $ -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>easyrec-plugins</artifactId>
@@ -44,12 +44,6 @@
         <dependency>
             <groupId>org.easyrec</groupId>
             <artifactId>easyrec-core</artifactId>
-            <version>${project.version}</version>
-            <!--<scope>provided</scope>-->
-        </dependency>
-        <dependency>
-            <groupId>org.easyrec</groupId>
-            <artifactId>easyrec-domain</artifactId>
             <version>${project.version}</version>
             <!--<scope>provided</scope>-->
         </dependency>

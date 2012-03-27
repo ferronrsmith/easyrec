@@ -60,9 +60,9 @@ import static com.google.common.base.Objects.firstNonNull;
  * (c) 2006</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: sat-rsa $<br/>
- * $Date: 2011-08-12 18:40:54 +0200 (Fr, 12 Aug 2011) $<br/>
- * $Revision: 119 $</p>
+ * $Author: pmarschik $<br/>
+ * $Date: 2011-02-21 17:44:25 +0100 (Mo, 21 Feb 2011) $<br/>
+ * $Revision: 17726 $</p>
  *
  * @author Florian Kleedorfer
  */

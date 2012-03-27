@@ -23,22 +23,12 @@ import java.util.List;
  * @author szavrel
  */
 public interface ProfiledItemTypeDAO extends ItemTypeDAO {
-    public final static String DEFAULT_PROFILE_SCHEMA_COLUMN_NAME = "profileSchema";
-    public final static String DEFAULT_PROFILE_MATCHER_COLUMN_NAME = "profileMatcher";
 
     public int insertOrUpdate(Integer tenantId, String itemType, Integer id, String profileSchema,
                               String profileMatcher);
 
     public int insertOrUpdate(Integer tenantId, String itemType, Integer id, String profileSchema,
                               String profileMatcher, Boolean visible);
-
-    public String getProfileSchema(Integer tenantId, String itemType);
-
-    public String getProfileMatcher(Integer tenantId, String itemType);
-
-    public String getProfileSchema(Integer tenantId, Integer id);
-
-    public String getProfileMatcher(Integer tenantId, Integer id);
 
     public List<Integer> getTenantIds();
 

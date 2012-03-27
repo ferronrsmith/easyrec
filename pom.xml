@@ -17,9 +17,9 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with easyrec.  If not, see <http://www.gnu.org/licenses />.
   --><!--
- $Author: sat-rsa $
- $Revision: 151 $
- $Date: 2012-02-23 18:18:28 +0100 (Do, 23 Feb 2012) $
+ $Author: fsalcher $
+ $Revision: 18783 $
+ $Date: 2012-03-19 15:12:54 +0100 (Mo, 19 Mär 2012) $
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
@@ -114,9 +114,9 @@
         <spring.dependency.version>3.0.5.RELEASE</spring.dependency.version>
 
         <!-- scm -->
- <!--       <scm.host>svn.researchstudio.at</scm.host>
+        <scm.host>svn.researchstudio.at</scm.host>
         <scm.url.https>scm:svn:https://${scm.host}/svn/sat</scm.url.https>
-        <scm.url.https.webview>https://${scm.host}/satsvn/wsvn/SAT</scm.url.https.webview>-->
+        <scm.url.https.webview>https://${scm.host}/satsvn/wsvn/SAT</scm.url.https.webview>
 
         <!-- reporting plugin versions (build plugin versions are set in build>pluginManagement -->
         <reporting.javadoc>2.7</reporting.javadoc>
@@ -132,7 +132,6 @@
         <reporting.changelog>2.2</reporting.changelog>
         <reporting.qalab>2.2</reporting.qalab>
         <reporting.pmd>2.5</reporting.pmd>
-
     </properties>
 
     <build>
@@ -361,21 +360,6 @@
                     <startTimeHoursOffset>1</startTimeHoursOffset>
                 </configuration>
             </plugin>
-            <!--
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-scm-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>site</phase>
-                        <goals>
-                            <goal>add</goal>
-                            <goal>checkin</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-eclipse-plugin</artifactId>
@@ -592,7 +576,7 @@ continous integration (in our case: continuum) needs an <distributionManagement>
 to be able to deploy and site-deploy during daily/nightly builds -->
 
       <distributionManagement>
-<!--      <repository>
+      <repository>
         <id>sat-maven-repository</id>
         <name>SAT Maven Repository</name>
         <url>${repository.url.private}</url>
@@ -602,10 +586,6 @@ to be able to deploy and site-deploy during daily/nightly builds -->
         <name>SAT Maven Repository</name>
         <url>${repository.url.private}</url>
       </snapshotRepository>
-      <site>
-        <id>sat-website</id>
-        <url>${website.url.scp}/easyrec/</url>
-      </site>-->
     </distributionManagement>
 
 
@@ -615,35 +595,16 @@ to be able to deploy and site-deploy during daily/nightly builds -->
         <!-- url>${issue.management.url.https}=ID</url-->
     </issueManagement>
 
-
-    <!--  <ciManagement>
-      <system>continuum</system>
-      <url>${continous.integration.url.http}</url>
-      <notifiers>
-        &lt;!&ndash; TODO: add project members that should be notified of nightly builds &ndash;&gt;
-
-        &lt;!&ndash; people who always want to be notified &ndash;&gt;
-        <notifier>
-          <type>mail</type>
-          <configuration>
-            <address>stephan.zavrel@researchstudio.at</address>
-          </configuration>
-          <sendOnSuccess>false</sendOnSuccess>
-        </notifier>
-      </notifiers>
-    </ciManagement>-->
-
-    <!--scm>
-        <connection>scm:svn:http://svn.researchstudio.at/svn/sat/easyrec/tags/easyrec-0.97</connection>
-        <developerConnection>scm:svn:http://svn.researchstudio.at/svn/sat/easyrec/tags/easyrec-0.97</developerConnection>
-        <url>http://svn.researchstudio.at/satsvn/wsvn/SAT/easyrec/tags/easyrec-0.97</url>
-    </scm-->
+    <scm>
+        <connection>scm:svn:http://svn.researchstudio.at/svn/sat/easyrec/trunk</connection>
+        <developerConnection>scm:svn:http://svn.researchstudio.at/svn/sat/easyrec/trunk</developerConnection>
+        <url>http://svn.researchstudio.at/satsvn/wsvn/SAT/easyrec/trunk</url>
+    </scm>
 
     <modules>
         <module>easyrec-testutils</module>
         <module>easyrec-utils</module>
         <module>easyrec-core</module>
-        <module>easyrec-domain</module>
         <module>easyrec-plugin-api</module>
         <module>easyrec-plugin-container</module>
         <module>easyrec-plugins</module>
@@ -715,10 +676,6 @@ to be able to deploy and site-deploy during daily/nightly builds -->
             <version>3.2</version>
             <scope>test</scope>
             <exclusions>
-                <!--<exclusion>
-                    <groupId>commons-dbcp</groupId>
-                    <artifactId>commons-dbcp</artifactId>
-                </exclusion>-->
                 <exclusion>
                     <groupId>org.springframework</groupId>
                     <artifactId>spring-jdbc</artifactId>
@@ -753,12 +710,6 @@ to be able to deploy and site-deploy during daily/nightly builds -->
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--dependency>
-            <groupId>org.easyrec</groupId>
-            <artifactId>easyrec-testutils</artifactId>
-            <version>0.96-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency-->
     </dependencies>
 
 </project>

@@ -9,11 +9,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.easyrec.model.web.Operator;
+import org.easyrec.model.core.web.Operator;
 import org.easyrec.store.dao.web.OperatorDAO;
-import org.easyrec.utils.MessageBlock;
+import org.easyrec.util.core.MessageBlock;
+import org.easyrec.util.core.Security;
 import org.easyrec.utils.PageStringGenerator;
-import org.easyrec.utils.Security;
 import org.easyrec.utils.servlet.ServletUtils;
 import org.easyrec.vocabulary.MSG;
 import org.springframework.web.servlet.ModelAndView;

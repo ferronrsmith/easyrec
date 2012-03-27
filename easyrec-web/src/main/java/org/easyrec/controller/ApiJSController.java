@@ -17,9 +17,9 @@
  */
 package org.easyrec.controller;
 
-import org.easyrec.model.web.Operator;
-import org.easyrec.model.web.RemoteTenant;
-import org.easyrec.utils.Security;
+import org.easyrec.model.core.web.Operator;
+import org.easyrec.model.core.web.RemoteTenant;
+import org.easyrec.util.core.Security;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
@@ -38,9 +38,9 @@ import javax.servlet.http.HttpServletResponse;
  * (c) 2007</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: pmarschik $<br/>
- * $Date: 2011-07-19 16:10:01 +0200 (Di, 19 Jul 2011) $<br/>
- * $Revision: 18517 $</p>
+ * $Author: fsalcher $<br/>
+ * $Date: 2012-03-19 14:22:17 +0100 (Mo, 19 Mär 2012) $<br/>
+ * $Revision: 18781 $</p>
  *
  * @author dmann
  * @version 1.0

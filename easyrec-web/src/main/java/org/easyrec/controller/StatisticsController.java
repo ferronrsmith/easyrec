@@ -22,7 +22,7 @@ import org.easyrec.model.web.flot.FlotDataSet;
 import org.easyrec.model.web.flot.FlotSeries;
 import org.easyrec.service.domain.TypeMappingService;
 import org.easyrec.store.dao.web.StatisticsDAO;
-import org.easyrec.utils.Security;
+import org.easyrec.util.core.Security;
 import org.easyrec.utils.servlet.ServletUtils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;

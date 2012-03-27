@@ -17,7 +17,7 @@
  */
 package org.easyrec.service.web;
 
-import org.easyrec.model.web.statistics.*;
+import org.easyrec.model.core.web.statistic.*;
 
 import java.util.HashMap;
 
@@ -42,7 +42,6 @@ public interface RemoteTenantService {
     /**
      * Updates the TenantStatistics for a given tenant.
      *
-     * @param operatorId
      * @param tenantId
      */
     public void updateTenantStatistics(Integer tenantId);
@@ -93,7 +92,7 @@ public interface RemoteTenantService {
     /**
      * Clears the statistic properties of the given tenant
      *
-     * @param id
+     * @param tenantId
      */
     public void resetTenant(Integer tenantId);
 

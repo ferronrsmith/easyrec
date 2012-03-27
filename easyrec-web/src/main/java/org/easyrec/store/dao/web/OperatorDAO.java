@@ -17,7 +17,8 @@
  */
 package org.easyrec.store.dao.web;
 
-import org.easyrec.model.web.Operator;
+import org.easyrec.model.core.web.Operator;
+import org.easyrec.store.dao.BasicDAO;
 
 import java.util.List;
 
@@ -32,9 +33,9 @@ import java.util.List;
  * (c) 2007</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: pmarschik $<br/>
- * $Date: 2011-02-11 11:04:49 +0100 (Fr, 11 Feb 2011) $<br/>
- * $Revision: 17656 $</p>
+ * $Author: fsalcher $<br/>
+ * $Date: 2012-03-19 14:22:17 +0100 (Mo, 19 Mär 2012) $<br/>
+ * $Revision: 18781 $</p>
  *
  * @author <AUTHOR>
  */

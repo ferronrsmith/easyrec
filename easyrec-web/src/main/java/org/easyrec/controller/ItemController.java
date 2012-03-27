@@ -19,17 +19,18 @@ package org.easyrec.controller;
 
 
 import org.easyrec.model.core.ClusterVO;
+import org.easyrec.model.core.web.Item;
 import org.easyrec.model.core.ItemVO;
-import org.easyrec.model.web.Item;
-import org.easyrec.model.web.RemoteTenant;
+import org.easyrec.model.core.web.RemoteTenant;
 import org.easyrec.service.core.ClusterService;
+import org.easyrec.service.core.ProfileService;
 import org.easyrec.service.web.IDMappingService;
 import org.easyrec.service.web.ItemService;
-import org.easyrec.store.dao.web.ItemDAO;
+import org.easyrec.store.dao.core.ItemDAO;
 import org.easyrec.store.dao.web.RemoteTenantDAO;
-import org.easyrec.utils.MessageBlock;
-import org.easyrec.utils.Security;
-import org.easyrec.utils.Web;
+import org.easyrec.util.core.MessageBlock;
+import org.easyrec.util.core.Security;
+import org.easyrec.util.core.Web;
 import org.easyrec.utils.servlet.ServletUtils;
 import org.easyrec.vocabulary.MSG;
 import org.springframework.web.servlet.ModelAndView;
@@ -50,9 +51,9 @@ import java.util.List;
  * (c) 2007</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: dmann $<br/>
- * $Date: 2011-12-20 15:22:22 +0100 (Di, 20 Dez 2011) $<br/>
- * $Revision: 18685 $</p>
+ * $Author: fsalcher $<br/>
+ * $Date: 2012-03-23 15:35:07 +0100 (Fr, 23 Mär 2012) $<br/>
+ * $Revision: 18791 $</p>
  *
  * @author phlavac
  * @version <CURRENT PROJECT VERSION>
@@ -65,6 +66,12 @@ public class ItemController extends MultiActionController {
     private ItemService itemService;
     private ClusterService clusterService;
     private IDMappingService idMappingService;
+    private ProfileService profileService;
+
+
+    public void setProfileService(ProfileService profileService) {
+        this.profileService = profileService;
+    }
 
     public void setRemoteTenantDAO(RemoteTenantDAO remoteTenantDAO) {
         this.remoteTenantDAO = remoteTenantDAO;
@@ -205,6 +212,9 @@ public class ItemController extends MultiActionController {
                 boolean editEnabled =
                         ServletUtils.getSafeParameter(request, "editEnabled", "false").equalsIgnoreCase("true");
 
+                String profileXML = profileService.getProfile(item);
+
+                mav.addObject("profile", profileXML);
                 mav.addObject("detailBoxUniqueId", detailBoxUniqueId);
                 mav.addObject("editEnabled", editEnabled);
                 mav.addObject("item", itemDetailed);

@@ -19,9 +19,9 @@
   -->
 
 <!--
- $Author: szavrel $
- $Revision: 18735 $
- $Date: 2012-02-08 19:25:46 +0100 (Mi, 08 Feb 2012) $
+ $Author: fsalcher $
+ $Revision: 18785 $
+ $Date: 2012-03-20 14:03:52 +0100 (Di, 20 Mär 2012) $
  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
@@ -219,11 +219,6 @@
         </dependency>
         <!-- COMPILE SCOPE -->
         <!-- easyrec dependencies -->
-        <dependency>
-            <groupId>org.easyrec</groupId>
-            <artifactId>easyrec-domain</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <!--    <dependency>
           <groupId>org.easyrec</groupId>
           <artifactId>easyrec-plugin-api</artifactId>

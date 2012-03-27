@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- $Author: szavrel $ -->
-<!-- $Revision: 18406 $ -->
-<!-- $Date: 2011-05-31 16:33:07 +0200 (Di, 31 Mai 2011) $ -->
+<!-- $Author: fsalcher $ -->
+<!-- $Revision: 18753 $ -->
+<!-- $Date: 2012-03-12 17:25:40 +0100 (Mo, 12 Mär 2012) $ -->
 
 <dataset>
     <action id="1" tenantId="1" userId="1" sessionId="session1" ip="127.0.0.1" itemId="1" itemTypeId="1"
@@ -60,8 +60,8 @@
     <tenant id="1" stringId="FOOD SHOP INC" description="SELLING FOOD SINCE 1987" ratingRangeMin="1" ratingRangeMax="10"
             ratingRangeNeutral="5.5" active="1"/>
 
-    <itemtype tenantId="1" name="ITEM" id="1" profileSchema="[null]" profileMatcher="[null]"/>
-    <itemtype tenantId="1" name="FOOD" id="2" profileSchema="[null]" profileMatcher="[null]"/>
+    <itemtype tenantId="1" name="ITEM" id="1"/>
+    <itemtype tenantId="1" name="FOOD" id="2"/>
     <actiontype tenantId="1" name="VIEW" id="1"/>
     <actiontype tenantId="1" name="RATE" id="2"/>
     <actiontype tenantId="1" name="BUY" id="3"/>

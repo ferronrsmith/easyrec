@@ -24,7 +24,7 @@ import org.easyrec.model.plugin.PluginVO;
 import org.easyrec.model.web.FileUploadBean;
 import org.easyrec.plugin.container.PluginRegistry;
 import org.easyrec.store.dao.plugin.PluginDAO;
-import org.easyrec.utils.Security;
+import org.easyrec.util.core.Security;
 import org.easyrec.utils.servlet.ServletUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

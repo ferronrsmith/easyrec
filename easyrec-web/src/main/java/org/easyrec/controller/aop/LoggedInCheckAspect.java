@@ -27,8 +27,8 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.easyrec.model.web.EasyRecSettings;
+import org.easyrec.util.core.Security;
 import org.easyrec.utils.MyUtils;
-import org.easyrec.utils.Security;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Nullable;
@@ -44,9 +44,9 @@ import java.util.Set;
  * (c) 2007</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: pmarschik $<br/>
- * $Date: 2011-06-14 15:02:22 +0200 (Di, 14 Jun 2011) $<br/>
- * $Revision: 18435 $</p>
+ * $Author: fsalcher $<br/>
+ * $Date: 2012-03-19 14:22:17 +0100 (Mo, 19 Mär 2012) $<br/>
+ * $Revision: 18781 $</p>
  *
  * @author David Mann
  */

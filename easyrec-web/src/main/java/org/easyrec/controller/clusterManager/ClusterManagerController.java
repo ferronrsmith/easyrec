@@ -29,15 +29,15 @@ import org.easyrec.exception.core.ClusterException;
 import org.easyrec.model.core.ClusterVO;
 import org.easyrec.model.core.ItemAssocVO;
 import org.easyrec.model.core.ItemVO;
-import org.easyrec.model.web.RemoteTenant;
+import org.easyrec.model.core.web.RemoteTenant;
 import org.easyrec.service.core.ClusterService;
 import org.easyrec.service.web.IDMappingService;
 import org.easyrec.service.web.ViewInitializationService;
+import org.easyrec.store.dao.IDMappingDAO;
+import org.easyrec.store.dao.core.ItemDAO;
 import org.easyrec.store.dao.core.types.ItemTypeDAO;
-import org.easyrec.store.dao.web.ItemDAO;
 import org.easyrec.store.dao.web.RemoteTenantDAO;
 import org.easyrec.utils.servlet.ServletUtils;
-import org.easyrec.utils.spring.store.dao.IDMappingDAO;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 

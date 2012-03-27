@@ -18,8 +18,8 @@
 package org.easyrec.store.dao.web;
 
 
-import org.easyrec.model.web.RemoteTenant;
-import org.easyrec.model.web.statistics.*;
+import org.easyrec.model.core.web.RemoteTenant;
+import org.easyrec.model.core.web.statistic.*;
 
 import java.util.HashMap;
 
@@ -35,7 +35,7 @@ public interface StatisticsDAO {
     /**
      * Return information about a tenant.
      *
-     * @param RemoteTenant
+     * @param remoteTenant
      * @return
      */
     public TenantStatistic getTenantStatistics(RemoteTenant remoteTenant);

@@ -10,7 +10,7 @@
 	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <bean id="idMappingDAO"
-          class="org.easyrec.utils.spring.store.dao.impl.IDMappingDAOMysqlImpl">
+          class="org.easyrec.store.dao.impl.IDMappingDAOMysqlImpl">
         <constructor-arg ref="easyrecDataSource"/>
         <constructor-arg ref="easyrecSqlScriptService"/>
     </bean>

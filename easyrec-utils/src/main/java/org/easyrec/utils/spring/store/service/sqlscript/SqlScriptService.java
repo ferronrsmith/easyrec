@@ -32,9 +32,9 @@ import java.util.List;
  * (c) 2006</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: sat-rsa $<br/>
- * $Date: 2011-08-12 18:40:54 +0200 (Fr, 12 Aug 2011) $<br/>
- * $Revision: 119 $</p>
+ * $Author: pmarschik $<br/>
+ * $Date: 2011-02-11 11:04:49 +0100 (Fr, 11 Feb 2011) $<br/>
+ * $Revision: 17656 $</p>
  *
  * @author Florian Kleedorfer
  */

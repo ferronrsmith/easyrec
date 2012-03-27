@@ -18,10 +18,10 @@
 package org.easyrec.service.web.impl;
 
 
-import org.easyrec.model.web.Item;
-import org.easyrec.model.web.RemoteTenant;
+import org.easyrec.model.core.web.Item;
+import org.easyrec.model.core.web.RemoteTenant;
 import org.easyrec.service.web.ItemService;
-import org.easyrec.store.dao.web.ItemDAO;
+import org.easyrec.store.dao.core.ItemDAO;
 import org.easyrec.store.dao.web.RemoteTenantDAO;
 
 import javax.servlet.http.HttpServletRequest;

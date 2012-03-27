@@ -38,9 +38,9 @@ import java.util.List;
  * (c) 2007</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: sat-rsa $<br/>
- * $Date: 2011-08-12 16:46:14 +0200 (Fr, 12 Aug 2011) $<br/>
- * $Revision: 113 $</p>
+ * $Author: fsalcher $<br/>
+ * $Date: 2012-03-19 14:26:28 +0100 (Mo, 19 Mär 2012) $<br/>
+ * $Revision: 18782 $</p>
  *
  * @author szavrel
  */
@@ -60,99 +60,6 @@ public class ProfiledItemTypeDAOMysqlImpl extends ItemTypeDAOMysqlImpl implement
                 logger.error(e);
             }
         }
-    }
-
-    public String getProfileMatcher(Integer tenantId, String itemType) {
-        Preconditions.checkNotNull(tenantId, "missing constraints: missing 'tenantId'");
-        Preconditions.checkNotNull(itemType, "missing constraints: missing 'itemType'");
-
-        StringBuilder sqlString = new StringBuilder("SELECT ");
-        sqlString.append(DEFAULT_PROFILE_MATCHER_COLUMN_NAME);
-        sqlString.append(" FROM ");
-        sqlString.append(DEFAULT_TABLE_NAME);
-        sqlString.append(" WHERE ");
-        sqlString.append(DEFAULT_TENANT_COLUMN_NAME);
-        sqlString.append("=? AND ");
-        sqlString.append(DEFAULT_NAME_COLUMN_NAME);
-        sqlString.append("=?");
-
-        Object[] args;
-        int[] argTypes;
-
-        args = new Object[]{tenantId, itemType};
-        argTypes = new int[]{Types.INTEGER, Types.VARCHAR};
-
-        return getJdbcTemplate().queryForObject(sqlString.toString(), args, argTypes, String.class);
-    }
-
-    public String getProfileMatcher(Integer tenantId, Integer id) {
-        Preconditions.checkNotNull(tenantId, "missing constraints: missing 'tenantId'");
-        Preconditions.checkNotNull(id, "missing constraints: missing 'id'");
-
-        StringBuilder sqlString = new StringBuilder("SELECT ");
-        sqlString.append(DEFAULT_PROFILE_MATCHER_COLUMN_NAME);
-        sqlString.append(" FROM ");
-        sqlString.append(DEFAULT_TABLE_NAME);
-        sqlString.append(" WHERE ");
-        sqlString.append(DEFAULT_TENANT_COLUMN_NAME);
-        sqlString.append("=? AND ");
-        sqlString.append(DEFAULT_ID_COLUMN_NAME);
-        sqlString.append("=?");
-
-        Object[] args;
-        int[] argTypes;
-
-        args = new Object[]{tenantId, id};
-        argTypes = new int[]{Types.INTEGER, Types.INTEGER};
-
-        return getJdbcTemplate().queryForObject(sqlString.toString(), args, argTypes, String.class);
-    }
-
-    public String getProfileSchema(Integer tenantId, String itemType) {
-        Preconditions.checkNotNull(tenantId, "missing constraints: missing 'tenantId'");
-        Preconditions.checkNotNull(itemType, "missing constraints: missing 'itemType'");
-
-        StringBuilder sqlString = new StringBuilder("SELECT ");
-        sqlString.append(DEFAULT_PROFILE_SCHEMA_COLUMN_NAME);
-        sqlString.append(" FROM ");
-        sqlString.append(DEFAULT_TABLE_NAME);
-        sqlString.append(" WHERE ");
-        sqlString.append(DEFAULT_TENANT_COLUMN_NAME);
-        sqlString.append("=? AND ");
-        sqlString.append(DEFAULT_NAME_COLUMN_NAME);
-        sqlString.append("=?");
-
-        Object[] args;
-        int[] argTypes;
-
-        args = new Object[]{tenantId, itemType};
-        argTypes = new int[]{Types.INTEGER, Types.VARCHAR};
-
-        return getJdbcTemplate().queryForObject(sqlString.toString(), args, argTypes, String.class);
-
-    }
-
-    public String getProfileSchema(Integer tenantId, Integer id) {
-        Preconditions.checkNotNull(tenantId, "missing constraints: missing 'tenantId'");
-        Preconditions.checkNotNull(id, "missing constraints: missing 'id'");
-
-        StringBuilder sqlString = new StringBuilder("SELECT ");
-        sqlString.append(DEFAULT_PROFILE_SCHEMA_COLUMN_NAME);
-        sqlString.append(" FROM ");
-        sqlString.append(DEFAULT_TABLE_NAME);
-        sqlString.append(" WHERE ");
-        sqlString.append(DEFAULT_TENANT_COLUMN_NAME);
-        sqlString.append("=? AND ");
-        sqlString.append(DEFAULT_ID_COLUMN_NAME);
-        sqlString.append("=?");
-
-        Object[] args;
-        int[] argTypes;
-
-        args = new Object[]{tenantId, id};
-        argTypes = new int[]{Types.INTEGER, Types.INTEGER};
-
-        return getJdbcTemplate().queryForObject(sqlString.toString(), args, argTypes, String.class);
     }
 
     public int insertOrUpdate(Integer tenantId, String itemType, Integer id, String profileSchema,
@@ -187,10 +94,6 @@ public class ProfiledItemTypeDAOMysqlImpl extends ItemTypeDAOMysqlImpl implement
             query.append("=?, ");
             query.append(DEFAULT_ID_COLUMN_NAME);
             query.append("=?, ");
-            query.append(DEFAULT_PROFILE_SCHEMA_COLUMN_NAME);
-            query.append("=?, ");
-            query.append(DEFAULT_PROFILE_MATCHER_COLUMN_NAME);
-            query.append("=?,");
             query.append(DEFAULT_VISIBLE_COLUMN_NAME);
             query.append("=?");
         } else {
@@ -206,10 +109,6 @@ public class ProfiledItemTypeDAOMysqlImpl extends ItemTypeDAOMysqlImpl implement
             query.append(DEFAULT_NAME_COLUMN_NAME);
             query.append("=?, ");
             query.append(DEFAULT_ID_COLUMN_NAME);
-            query.append("=?, ");
-            query.append(DEFAULT_PROFILE_SCHEMA_COLUMN_NAME);
-            query.append("=?, ");
-            query.append(DEFAULT_PROFILE_MATCHER_COLUMN_NAME);
             query.append("=?");
 
             if (visible != null) {

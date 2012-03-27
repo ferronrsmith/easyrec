@@ -50,9 +50,9 @@ import java.util.TreeSet;
  * (c) 2007</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: sat-rsa $<br/>
- * $Date: 2012-02-23 16:01:50 +0100 (Do, 23 Feb 2012) $<br/>
- * $Revision: 140 $</p>
+ * $Author: dmann $<br/>
+ * $Date: 2011-10-07 17:52:32 +0200 (Fr, 07 Okt 2011) $<br/>
+ * $Revision: 18617 $</p>
  *
  * @author Roman Cerny
  */

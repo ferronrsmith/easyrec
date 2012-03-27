@@ -17,7 +17,8 @@
  */
 package org.easyrec.store.dao.web;
 
-import org.easyrec.model.web.RemoteTenant;
+import org.easyrec.model.core.web.RemoteTenant;
+import org.easyrec.store.dao.BasicDAO;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -33,9 +34,9 @@ import java.util.List;
  * (c) 2007</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: dmann $<br/>
- * $Date: 2011-03-22 18:43:47 +0100 (Di, 22 Mär 2011) $<br/>
- * $Revision: 18003 $</p>
+ * $Author: fsalcher $<br/>
+ * $Date: 2012-03-19 14:22:17 +0100 (Mo, 19 Mär 2012) $<br/>
+ * $Revision: 18781 $</p>
  *
  * @author <AUTHOR>
  */

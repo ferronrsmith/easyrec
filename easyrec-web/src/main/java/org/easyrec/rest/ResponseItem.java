@@ -17,7 +17,7 @@
  */
 package org.easyrec.rest;
 
-import org.easyrec.model.web.Item;
+import org.easyrec.model.core.web.Item;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

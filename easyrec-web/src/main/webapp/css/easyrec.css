@@ -1361,6 +1361,23 @@ dd {
     width: 455px;
 }
 
+dt.profileView {
+    float: none;
+    clear: none;
+}
+
+dd.profileView {
+    float: none;
+    margin-left: 40px;
+}
+
+
+pre.prettyprint {
+    overflow-x: auto;
+    border: 1px dotted #CCCCCC;
+
+}
+
 .itemDetailTabContainer {
     height: 440px;
 }

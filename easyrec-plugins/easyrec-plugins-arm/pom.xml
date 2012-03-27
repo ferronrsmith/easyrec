@@ -27,15 +27,10 @@
             <groupId>org.easyrec</groupId>
             <artifactId>easyrec-utils</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>org.easyrec</groupId>
             <artifactId>easyrec-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>-->
-        <dependency>
-            <groupId>org.easyrec</groupId>
-            <artifactId>easyrec-domain</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- TEST SCOPE -->

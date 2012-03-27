@@ -20,13 +20,13 @@ package org.easyrec.service.web.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.easyrec.model.web.RemoteTenant;
-import org.easyrec.model.web.statistics.*;
+import org.easyrec.model.core.web.RemoteTenant;
+import org.easyrec.model.core.web.statistic.*;
 import org.easyrec.service.core.TenantService;
 import org.easyrec.service.domain.TypeMappingService;
 import org.easyrec.service.web.RemoteTenantService;
+import org.easyrec.store.dao.core.ItemDAO;
 import org.easyrec.store.dao.plugin.LogEntryDAO;
-import org.easyrec.store.dao.web.ItemDAO;
 import org.easyrec.store.dao.web.RemoteTenantDAO;
 import org.easyrec.store.dao.web.StatisticsDAO;
 
@@ -91,7 +91,6 @@ public class RemoteTenantServiceImpl implements RemoteTenantService {
      * Updates the TenantStatistics for a given tenant.
      * This method is called after ruleminer finished execution.
      *
-     * @param operatorId
      * @param tenantId
      */
     public void updateTenantStatistics(Integer tenantId) {

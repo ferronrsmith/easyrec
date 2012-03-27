@@ -18,8 +18,11 @@
 package org.easyrec.service.web.nodomain;
 
 import org.easyrec.model.core.ClusterVO;
+import org.easyrec.model.core.web.Item;
 import org.easyrec.model.core.ItemAssocVO;
 import org.easyrec.model.core.transfer.TimeConstraintVO;
+import org.easyrec.model.core.web.RemoteTenant;
+import org.easyrec.model.core.web.Session;
 import org.easyrec.model.web.*;
 import org.easyrec.soap.nodomain.exception.EasyRecSoapException;
 
@@ -38,9 +41,9 @@ import java.util.Set;
  * (c) 2007</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: szavrel $<br/>
- * $Date: 2012-02-02 18:49:38 +0100 (Do, 02 Feb 2012) $<br/>
- * $Revision: 18703 $</p>
+ * $Author: fsalcher $<br/>
+ * $Date: 2012-03-19 14:22:17 +0100 (Mo, 19 Mär 2012) $<br/>
+ * $Revision: 18781 $</p>
  *
  * @author Stephan Zavrel
  */

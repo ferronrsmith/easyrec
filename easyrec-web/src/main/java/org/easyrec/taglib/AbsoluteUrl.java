@@ -18,7 +18,7 @@
  */
 package org.easyrec.taglib;
 
-import org.easyrec.model.web.RemoteTenant;
+import org.easyrec.model.core.web.RemoteTenant;
 import org.easyrec.store.dao.web.RemoteTenantDAO;
 import org.easyrec.utils.io.Text;
 import org.springframework.context.ApplicationContext;

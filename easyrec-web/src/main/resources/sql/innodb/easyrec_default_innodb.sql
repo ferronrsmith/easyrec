@@ -123,13 +123,15 @@ CREATE TABLE item (
   itemid varchar(250) NOT NULL DEFAULT '',
   itemtype varchar(20) NOT NULL DEFAULT '',
   description varchar(500) CHARACTER SET utf8 DEFAULT NULL,
+  profileData text,
   url varchar(500) CHARACTER SET utf8 DEFAULT NULL,
   imageurl varchar(500) CHARACTER SET utf8 DEFAULT NULL,
   active tinyint(1) DEFAULT '1',
-  creationdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  creationdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  changedate TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (id),
   UNIQUE KEY itemTripple (tenantId,itemid,itemtype)
-) ENGINE=InnoDb DEFAULT CHARSET=latin1 COMMENT='Table containing items';
+) ENGINE=InnoDb DEFAULT CHARSET=latin1 COMMENT='Table containing items with profiles';
 
 --
 -- Table structure for table easyrec.itemassoc
@@ -164,8 +166,6 @@ CREATE TABLE itemtype (
   tenantId INT(11) unsigned NOT NULL,
   name VARCHAR(50) NOT NULL,
   id INT(11) NOT NULL,
-  profileSchema MEDIUMBLOB,
-  profileMatcher MEDIUMBLOB,
   visible BIT(1) NOT NULL DEFAULT b'1',
   UNIQUE KEY (tenantId, name),
   UNIQUE KEY (tenantId, id)
@@ -195,23 +195,6 @@ CREATE TABLE operator (
   token varchar(32) DEFAULT NULL,
   PRIMARY KEY (operatorid)
 ) ENGINE=InnoDb DEFAULT CHARSET=latin1;
-
---
--- Table structure for table easyrec.profile
---
-
-DROP TABLE IF EXISTS profile;
-CREATE TABLE profile (
-  profileId int(11) unsigned NOT NULL auto_increment,
-  tenantId int(11) NOT NULL,
-  itemId int(11) NOT NULL,
-  itemTypeId int(11) NOT NULL,
-  profileData text,
-  changeDate timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
-  active TINYINT(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY  (profileId),
-  UNIQUE KEY tenantId (tenantId,itemId,itemTypeId)
-) ENGINE=InnoDb DEFAULT CHARSET=latin1 COMMENT='Table containing item profiles';
 
 --
 -- Table structure for table easyrec.recommendation
@@ -328,7 +311,7 @@ CREATE TABLE easyrec (
   version float(9,3) DEFAULT NULL
 ) ENGINE=InnoDb DEFAULT CHARSET=latin1;
 
-INSERT INTO easyrec (version) VALUES (0.97);
+INSERT INTO easyrec (version) VALUES (0.98);
 
 DROP TABLE IF EXISTS plugin_log;
 CREATE TABLE plugin_log (

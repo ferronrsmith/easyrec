@@ -19,8 +19,8 @@ package org.easyrec.service.web;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.easyrec.model.core.web.RemoteTenant;
 import org.easyrec.model.web.Queue;
-import org.easyrec.model.web.RemoteTenant;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -41,9 +41,9 @@ import java.util.TimerTask;
  * (c) 2007</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: pmarschik $<br/>
- * $Date: 2011-04-04 13:26:26 +0200 (Mo, 04 Apr 2011) $<br/>
- * $Revision: 18100 $</p>
+ * $Author: fsalcher $<br/>
+ * $Date: 2012-03-19 14:22:17 +0100 (Mo, 19 Mär 2012) $<br/>
+ * $Revision: 18781 $</p>
  *
  * @author phlavac
  * @version <CURRENT PROJECT VERSION>

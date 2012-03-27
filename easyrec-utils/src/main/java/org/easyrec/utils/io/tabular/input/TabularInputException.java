@@ -27,9 +27,9 @@ package org.easyrec.utils.io.tabular.input;
  * (c) 2007</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: sat-rsa $<br/>
- * $Date: 2011-08-12 18:40:54 +0200 (Fr, 12 Aug 2011) $<br/>
- * $Revision: 119 $</p>
+ * $Author: szavrel $<br/>
+ * $Date: 2011-03-22 15:26:04 +0100 (Di, 22 Mär 2011) $<br/>
+ * $Revision: 17973 $</p>
  *
  * @author Florian Kleedorfer
  */

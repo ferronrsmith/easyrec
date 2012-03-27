@@ -18,13 +18,13 @@
 package org.easyrec.controller;
 
 import com.google.common.base.Strings;
+import org.easyrec.model.core.web.Message;
+import org.easyrec.model.core.web.Operator;
 import org.easyrec.model.web.EasyRecSettings;
-import org.easyrec.model.web.Message;
-import org.easyrec.model.web.Operator;
 import org.easyrec.store.dao.web.LoaderDAO;
-import org.easyrec.utils.MessageBlock;
+import org.easyrec.util.core.MessageBlock;
+import org.easyrec.util.core.Security;
 import org.easyrec.utils.MyUtils;
-import org.easyrec.utils.Security;
 import org.easyrec.utils.io.Text;
 import org.easyrec.utils.servlet.ServletUtils;
 import org.easyrec.vocabulary.MSG;
@@ -122,7 +122,7 @@ public class LoaderController extends AbstractController {
 
             if (db_username != null) {
                 try {
-                    loaderDAO.testConnection("jdbc:mysql://" + db_host + "/" + db_name + "?useUnicode=true&characterEncoding=UTF-8", db_username, db_password);
+                    loaderDAO.testConnection("jdbc:mysql://" + db_host + "/" + db_name + "?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull", db_username, db_password);
 
                     // check easyrec version
                     // if a previous version is installed offer user
@@ -165,7 +165,7 @@ public class LoaderController extends AbstractController {
 
                     //store settings to Prop-file
                     mav.addObject("db_name", db_name);
-                    props.setProperty("db.easyrec.url", "jdbc:mysql://" + db_host + "/" + db_name + "?useUnicode=true&characterEncoding=UTF-8");
+                    props.setProperty("db.easyrec.url", "jdbc:mysql://" + db_host + "/" + db_name + "?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull");
                     props.setProperty("db.easyrec.username", db_username);
                     props.setProperty("db.easyrec.password", db_password);
 

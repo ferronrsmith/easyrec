@@ -52,18 +52,11 @@ public abstract class AbstractBaseProfileDAOMysqlImpl<T, I, IT> extends Abstract
 
     public abstract String getProfile(T tenantId, I itemId, IT itemTypeId);
 
-    public abstract String getProfileById(Integer profileId);
-
     public abstract int storeProfile(T tenantId, I itemId, IT itemTypeId, String profileXML);
-
-    public abstract int updateProfileById(Integer profileId, String profileXML);
 
     public abstract Set<String> getMultiDimensionValue(T tenantId, I itemId, IT itemTypeId, String dimensionXPath);
 
-    public abstract Set<String> getMultiDimensionValue(Integer profileId, String dimensionXPath);
-
     public abstract String getSimpleDimensionValue(T tenantId, I itemId, IT itemTypeId, String dimensionXPath);
 
-    public abstract String getSimpleDimensionValue(Integer profileId, String dimensionXPath);
 
 }

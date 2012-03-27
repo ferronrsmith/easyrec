@@ -18,8 +18,8 @@
 package org.easyrec.controller;
 
 
-import org.easyrec.model.web.Operator;
-import org.easyrec.utils.Security;
+import org.easyrec.model.core.web.Operator;
+import org.easyrec.util.core.Security;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 

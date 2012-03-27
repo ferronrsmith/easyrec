@@ -32,9 +32,9 @@ import java.util.Set;
  * (c) 2007</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: sat-rsa $<br/>
- * $Date: 2012-02-23 16:01:50 +0100 (Do, 23 Feb 2012) $<br/>
- * $Revision: 140 $</p>
+ * $Author: szavrel $<br/>
+ * $Date: 2011-11-04 16:32:45 +0100 (Fr, 04 Nov 2011) $<br/>
+ * $Revision: 18633 $</p>
  *
  * @author Roman Cerny
  */

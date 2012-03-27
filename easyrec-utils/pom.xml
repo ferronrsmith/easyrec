@@ -19,9 +19,9 @@
   -->
 
 <!--
- $Author: sat-rsa $
- $Revision: 151 $
- $Date: 2012-02-23 18:18:28 +0100 (Do, 23 Feb 2012) $
+ $Author: szavrel $
+ $Revision: 18735 $
+ $Date: 2012-02-08 19:25:46 +0100 (Mi, 08 Feb 2012) $
  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>

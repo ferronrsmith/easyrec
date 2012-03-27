@@ -20,13 +20,13 @@ package org.easyrec.service.web;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.easyrec.model.core.web.Operator;
+import org.easyrec.model.core.web.RemoteTenant;
 import org.easyrec.model.plugin.NamedConfiguration;
 import org.easyrec.model.plugin.archive.ArchivePseudoConfiguration;
 import org.easyrec.model.plugin.archive.ArchivePseudoGenerator;
 import org.easyrec.model.web.EasyRecSettings;
-import org.easyrec.model.web.Operator;
 import org.easyrec.model.web.Queue;
-import org.easyrec.model.web.RemoteTenant;
 import org.easyrec.plugin.configuration.GeneratorContainer;
 import org.easyrec.service.core.TenantService;
 import org.easyrec.store.dao.plugin.LogEntryDAO;

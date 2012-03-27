@@ -23,7 +23,7 @@ import com.google.common.collect.Maps;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.easyrec.model.web.Operator;
+import org.easyrec.model.core.web.Operator;
 import org.easyrec.store.dao.web.LoaderDAO;
 import org.easyrec.store.dao.web.OperatorDAO;
 import org.easyrec.utils.spring.store.service.sqlscript.SqlScriptService;
@@ -38,6 +38,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.jdbc.support.DatabaseMetaDataCallback;
 import org.springframework.jdbc.support.JdbcUtils;
@@ -47,11 +48,9 @@ import org.springframework.web.context.ConfigurableWebApplicationContext;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 /**
  * @author szavrel
@@ -155,127 +154,259 @@ public class LoaderDAOMysqlImpl extends JdbcDaoSupport
         }
 
         if (installedVersion < 0.96f) {
-            // easyrec pre 0.96 stored settings for plugins in the tenantConfig column of the tenantsTable from 0.96
-            // onwards they are stored as XML serialized GeneratorConfigurations in the plugin_configuration  table
-            // this snippet converts the existing ARM configurations (and only ARM configurations) to the new XML
-            // version.
-
-             final String RENAME_SOURCETYPE_QUERY =
-                            "UPDATE sourcetype SET name=? WHERE name=?";
-            getJdbcTemplate().update(RENAME_SOURCETYPE_QUERY, "http://www.easyrec.org/plugins/ARM/0.96", "ARM");
-            getJdbcTemplate().update(RENAME_SOURCETYPE_QUERY, "http://www.easyrec.org/plugins/slopeone/0.96", "http://www.easyrec.org/plugins/slopeone/0.95");
-
-            ResultSetExtractor<Map<Integer, String>> rse = new ResultSetExtractor<Map<Integer, String>>() {
-                public Map<Integer, String> extractData(ResultSet rs) throws SQLException, DataAccessException {
-                    Map<Integer, String> result = Maps.newHashMap();
-
-                    while (rs.next()) {
-                        int id = rs.getInt("id");
-                        String config = rs.getString("tenantConfig");
-                        result.put(id, config);
-                    }
-
-                    return result;
-                }
-            };
-
-            Map<Integer, String> tenantConfigs = getJdbcTemplate().query("SELECT id, tenantConfig FROM tenant", rse);
-
-            for (Map.Entry<Integer, String> tenantConfig : tenantConfigs.entrySet()) {
-                String tenantConfigString = tenantConfig.getValue();
-
-                if (tenantConfigString == null)
-                    tenantConfigString = "";
-
-                int tenantId = tenantConfig.getKey();
-                StringReader reader = new StringReader(tenantConfigString);
-
-                Properties propertiesConfig = new Properties();
-                propertiesConfig.load(reader);
-
-                String configViewedTogether =
-                        generateXmlConfigurationFromProperties(propertiesConfig, "VIEWED_TOGETHER", "VIEW");
-                String configGoodRatedTogether =
-                        generateXmlConfigurationFromProperties(propertiesConfig, "GOOD_RATED_TOGETHER", "RATE");
-                String configBoughtTogether =
-                        generateXmlConfigurationFromProperties(propertiesConfig, "BOUGHT_TOGETHER", "BUY");
-
-                // write back config with arm settings removed
-//                getJdbcTemplate().update("UPDATE tenant SET tenantConfig = ? WHERE id = ?",
-//                        propertiesConfig.toString(), tenantConfig.getKey());
-
-                final String CONFIG_QUERY =
-                        "INSERT INTO plugin_configuration(tenantId, assocTypeId, pluginId, pluginVersion, name, configuration, active) VALUES " +
-                                "(?, ?, 'http://www.easyrec.org/plugins/ARM', ?, 'Default Configuration', ?, b'1')";
-
-                // generate configuration entries
-                getJdbcTemplate().update(CONFIG_QUERY, tenantId, 1, currentVersion, configViewedTogether);
-                getJdbcTemplate().update(CONFIG_QUERY, tenantId, 2, currentVersion, configGoodRatedTogether);
-                getJdbcTemplate().update(CONFIG_QUERY, tenantId, 3, currentVersion, configBoughtTogether);
-
-                final String slopeOneXmlConfig =
-                        "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
-                                "<slopeOneConfiguration>" +
-                                "<configurationName>Default Configuration</configurationName>" +
-                                "<associationType>IS_RELATED</associationType>" +
-                                "<maxRecsPerItem>10</maxRecsPerItem>" +
-                                "<minRatedCount xsi:nil=\"true\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"/>" +
-                                "<nonPersonalizedSourceInfo>slopeone-nonpersonalized</nonPersonalizedSourceInfo>" +
-                                "<actionType>RATE</actionType><itemTypes/>" +
-                                "<viewType>COMMUNITY</viewType>" +
-                                "</slopeOneConfiguration>";
-
-                final String GET_ISRELATED_ASSOCTYPE_QUERY =
-                        "SELECT id FROM assoctype WHERE name = 'IS_RELATED' AND tenantId = ?";
-                int isRelatedAssocType = 0;
-                // for tenants without a type 'IS_RELATED' this throws an exception - so catch!!
-                try {
-                    isRelatedAssocType = getJdbcTemplate().queryForInt(GET_ISRELATED_ASSOCTYPE_QUERY, tenantId);
-                } catch (EmptyResultDataAccessException erdar) {
-                    isRelatedAssocType = 0;
-                }
-
-                if (isRelatedAssocType == 0) {
-                    final String GET_MAX_ASSOCTYPE_QUERY =
-                            "SELECT MAX(id) FROM assoctype WHERE tenantId = ?";
-                    isRelatedAssocType = getJdbcTemplate().queryForInt(GET_MAX_ASSOCTYPE_QUERY, tenantId) + 1;
-
-                    final String INSERT_ASSOCTYPE_QUERY =
-                            "INSERT INTO assoctype(tenantId, name, id, visible) VALUES (?, 'IS_RELATED', ?, b'1')";
-                    getJdbcTemplate().update(INSERT_ASSOCTYPE_QUERY, tenantId, isRelatedAssocType);
-                }
-                // add sourcetype for slopeone where missing
-                final String GET_SLOPEONE_SOURCETYPE_QUERY =
-                        "SELECT id FROM sourcetype WHERE name = 'http://www.easyrec.org/plugins/slopeone/0.96' AND tenantId = ?";
-                int slopeOneSourceType = 0;
-                // for tenants without a type 'http://www.easyrec.org/plugins/slopeone/0.96' this throws an exception - so catch!!
-                try {
-                    slopeOneSourceType = getJdbcTemplate().queryForInt(GET_SLOPEONE_SOURCETYPE_QUERY, tenantId);
-                } catch (EmptyResultDataAccessException erdar) {
-                    slopeOneSourceType = 0;
-                }
-
-                if (slopeOneSourceType == 0) { // this means sourcetype not found, so update
-                    final String GET_MAX_SOURCETYPE_QUERY =
-                            "SELECT MAX(id) FROM sourcetype WHERE tenantId = ?";
-                    slopeOneSourceType = getJdbcTemplate().queryForInt(GET_MAX_SOURCETYPE_QUERY, tenantId) + 1;
-
-                    final String INSERT_SOURCETYPE_QUERY =
-                            "INSERT INTO sourcetype(tenantId, name, id) VALUES (?, 'http://www.easyrec.org/plugins/slopeone/0.96', ?)";
-                    getJdbcTemplate().update(INSERT_SOURCETYPE_QUERY, tenantId, slopeOneSourceType);
-                }
-
-                final String SLOPEONE_CONFIG_QUERY =
-                        "INSERT INTO plugin_configuration(tenantId, assocTypeId, pluginId, pluginVersion, name, configuration, active) VALUES " +
-                                "(?, ?, 'http://www.easyrec.org/plugins/slopeone', ?, 'Default Configuration', ?, b'1')";
-                getJdbcTemplate().update(SLOPEONE_CONFIG_QUERY, tenantId, isRelatedAssocType, currentVersion,
-                        slopeOneXmlConfig);
-            }
-
+            update_0_96f();
             // logs are not converted from ruleminerlog -> plugin_log
         }
 
+        if (installedVersion < 0.98) {
+            update_0_98();
+        }
+
         //updateVersion(); // done in migrate script!
+    }
+
+    /*
+     * Items now have a profile field so the profile table moved to the item table
+     * this function will move the items from the profile table to the items table and
+     * remove the profile table from the database.
+     */
+    private void update_0_98() {
+
+        final String profileTableName = "profile";
+        final String itemTableName = "item";
+        final String itemTypeTableName = "itemtype";
+
+        final String itemColumnTenantID = "tenantId";
+        final String itemColumnItemID = "itemid";
+        final String itemColumnItemType = "itemtype";
+        final String itemColumnProfileData = "profileData";
+        final String itemColumnChangeDate = "changedate";
+        final String itemColumnActive = "active";
+
+        final String profileColumnTenantID = "tenantId";
+        final String profileColumnItemID = "itemId";
+        final String profileColumnItemTypeID = "itemTypeId";
+        final String profileColumnProfileData = "profileData";
+        final String profileColumnChangeData = "changeDate";
+        final String profileColumnActive = "active";
+
+        final String itemTypeColumnTenantID = "tenantId";
+        final String itemTypeColumnName = "name";
+        final String itemTypeColumnID = "id";
+
+        /* Create a hashmap with the itemTypeNames as values and the
+         * tenantId and itemTypeId as key.
+         */
+        final HashMap<String, String> itemTypeList = new HashMap<String, String>();
+        getJdbcTemplate().query("SELECT * FROM " + itemTypeTableName, new RowCallbackHandler() {
+            public void processRow(ResultSet resultSet) throws SQLException {
+                while (resultSet.next()) {
+                    int tenantId = resultSet.getInt(itemTypeColumnTenantID);
+                    int itemTypeId = resultSet.getInt(itemTypeColumnID);
+                    String itemTypeName = resultSet.getString(itemTypeColumnName);
+                    itemTypeList.put(String.valueOf(tenantId) + "," + String.valueOf(itemTypeId), itemTypeName);
+                }
+            }
+        });
+
+        /*
+         * For each entry in the profile table look for an entry with the same key in the
+         * item table. If the item table has no entry, create it else update the entry with
+         * the values from the profile table.
+         */
+        getJdbcTemplate().query("SELECT * FROM " + profileTableName, new RowCallbackHandler() {
+            public void processRow(ResultSet resultSet) throws SQLException {
+
+                final int tenantId = resultSet.getInt(profileColumnTenantID);
+                final int itemId = resultSet.getInt(profileColumnItemID);
+                int itemTypeId = resultSet.getInt(profileColumnItemTypeID);
+                String tempProfileData = resultSet.getString(profileColumnProfileData);
+                if (tempProfileData == null) {
+                    tempProfileData = "null";
+                } else {
+                    tempProfileData = "'" + tempProfileData + "'";
+                }
+                final String profileData = tempProfileData;
+                final String itemTypeName = "'" + itemTypeList.get(
+                        String.valueOf(tenantId) + "," + String.valueOf(itemTypeId)) + "'";
+
+                /*
+                 * A "0000-00-00 00:00:00" value in the table is returned as null and
+                 * must therefore a null value must be changed back to "0000-00-00 00:00:00"
+                 * before updating the table.
+                 */
+
+                String tempChangeDate = resultSet.getString(profileColumnChangeData);
+                if (tempChangeDate == null) {
+                    tempChangeDate = "0000-00-00 00:00:00";
+                }
+                final String changeDate = "'" + tempChangeDate + "'";
+                final boolean active = resultSet.getBoolean(profileColumnActive);
+
+                final String sqlItemUpdate = " WHERE " +
+                        itemColumnItemID + " = " + itemId + " AND " +
+                        itemColumnTenantID + " = " + tenantId + " AND " +
+                        itemColumnItemType + " like " + itemTypeName;
+
+                final String sqlItemToUpdate = "FROM " + itemTableName + sqlItemUpdate;
+                getJdbcTemplate().query("SELECT COUNT(*) " + sqlItemToUpdate, new RowCallbackHandler() {
+                    public void processRow(ResultSet resultSet) throws SQLException {
+                        if (resultSet.getInt(1) == 0) { // The profile is not in the item table -> create one.
+                            String sqlInsertStatement = "INSERT INTO " + itemTableName + " SET " +
+                                    itemColumnItemID + " = " + String.valueOf(itemId) + ", " +
+                                    itemColumnTenantID + " = " + String.valueOf(tenantId) + ", " +
+                                    itemColumnItemType + " = " + itemTypeName + ", " +
+                                    itemColumnProfileData + " = " + profileData + ", " +
+                                    itemColumnChangeDate + " = " + changeDate + ", " +
+                                    itemColumnActive + " = " + String.valueOf(active);
+                            logger.info("executing: " + sqlInsertStatement);
+                            getJdbcTemplate().execute(sqlInsertStatement);
+                        } else { // The profile has already an entry in the item table -> just updating.
+                            getJdbcTemplate().query("SELECT * " + sqlItemToUpdate, new RowCallbackHandler() {
+                                public void processRow(ResultSet resultSet) throws SQLException {
+
+                                    logger.info("updating item: " + resultSet.getString(itemColumnItemID));
+                                    getJdbcTemplate().execute("UPDATE " + itemTableName + " SET " +
+                                            itemColumnProfileData + " = " + profileData + ", " +
+                                            itemColumnChangeDate + " = " + changeDate + " " +
+                                            sqlItemUpdate);
+                                }
+                            }
+                            );
+                        }
+                    }
+                }
+                );
+            }
+        });
+
+        getJdbcTemplate().execute("DROP TABLE " + profileTableName);
+    }
+
+
+    /**
+     * easyrec pre 0.96 stored settings for plugins in the tenantConfig column of the tenantsTable from 0.96
+     * onwards they are stored as XML serialized GeneratorConfigurations in the plugin_configuration  table
+     * this snippet converts the existing ARM configurations (and only ARM configurations) to the new XML
+     * version.
+     *
+     * @throws IOException
+     */
+    private void update_0_96f() throws IOException {
+        //
+
+        final String RENAME_SOURCETYPE_QUERY =
+                "UPDATE sourcetype SET name=? WHERE name=?";
+        getJdbcTemplate().update(RENAME_SOURCETYPE_QUERY, "http://www.easyrec.org/plugins/ARM/0.96", "ARM");
+        getJdbcTemplate().update(RENAME_SOURCETYPE_QUERY, "http://www.easyrec.org/plugins/slopeone/0.96", "http://www.easyrec.org/plugins/slopeone/0.95");
+
+        ResultSetExtractor<Map<Integer, String>> rse = new ResultSetExtractor<Map<Integer, String>>() {
+            public Map<Integer, String> extractData(ResultSet rs) throws SQLException, DataAccessException {
+                Map<Integer, String> result = Maps.newHashMap();
+
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String config = rs.getString("tenantConfig");
+                    result.put(id, config);
+                }
+
+                return result;
+            }
+        };
+
+        Map<Integer, String> tenantConfigs = getJdbcTemplate().query("SELECT id, tenantConfig FROM tenant", rse);
+
+        for (Map.Entry<Integer, String> tenantConfig : tenantConfigs.entrySet()) {
+            String tenantConfigString = tenantConfig.getValue();
+
+            if (tenantConfigString == null)
+                tenantConfigString = "";
+
+            int tenantId = tenantConfig.getKey();
+            StringReader reader = new StringReader(tenantConfigString);
+
+            Properties propertiesConfig = new Properties();
+            propertiesConfig.load(reader);
+
+            String configViewedTogether =
+                    generateXmlConfigurationFromProperties(propertiesConfig, "VIEWED_TOGETHER", "VIEW");
+            String configGoodRatedTogether =
+                    generateXmlConfigurationFromProperties(propertiesConfig, "GOOD_RATED_TOGETHER", "RATE");
+            String configBoughtTogether =
+                    generateXmlConfigurationFromProperties(propertiesConfig, "BOUGHT_TOGETHER", "BUY");
+
+            // write back config with arm settings removed
+//                getJdbcTemplate().update("UPDATE tenant SET tenantConfig = ? WHERE id = ?",
+//                        propertiesConfig.toString(), tenantConfig.getKey());
+
+            final String CONFIG_QUERY =
+                    "INSERT INTO plugin_configuration(tenantId, assocTypeId, pluginId, pluginVersion, name, configuration, active) VALUES " +
+                            "(?, ?, 'http://www.easyrec.org/plugins/ARM', ?, 'Default Configuration', ?, b'1')";
+
+            // generate configuration entries
+            getJdbcTemplate().update(CONFIG_QUERY, tenantId, 1, currentVersion, configViewedTogether);
+            getJdbcTemplate().update(CONFIG_QUERY, tenantId, 2, currentVersion, configGoodRatedTogether);
+            getJdbcTemplate().update(CONFIG_QUERY, tenantId, 3, currentVersion, configBoughtTogether);
+
+            final String slopeOneXmlConfig =
+                    "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
+                            "<slopeOneConfiguration>" +
+                            "<configurationName>Default Configuration</configurationName>" +
+                            "<associationType>IS_RELATED</associationType>" +
+                            "<maxRecsPerItem>10</maxRecsPerItem>" +
+                            "<minRatedCount xsi:nil=\"true\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"/>" +
+                            "<nonPersonalizedSourceInfo>slopeone-nonpersonalized</nonPersonalizedSourceInfo>" +
+                            "<actionType>RATE</actionType><itemTypes/>" +
+                            "<viewType>COMMUNITY</viewType>" +
+                            "</slopeOneConfiguration>";
+
+            final String GET_ISRELATED_ASSOCTYPE_QUERY =
+                    "SELECT id FROM assoctype WHERE name = 'IS_RELATED' AND tenantId = ?";
+            int isRelatedAssocType = 0;
+            // for tenants without a type 'IS_RELATED' this throws an exception - so catch!!
+            try {
+                isRelatedAssocType = getJdbcTemplate().queryForInt(GET_ISRELATED_ASSOCTYPE_QUERY, tenantId);
+            } catch (EmptyResultDataAccessException erdar) {
+                isRelatedAssocType = 0;
+            }
+
+            if (isRelatedAssocType == 0) {
+                final String GET_MAX_ASSOCTYPE_QUERY =
+                        "SELECT MAX(id) FROM assoctype WHERE tenantId = ?";
+                isRelatedAssocType = getJdbcTemplate().queryForInt(GET_MAX_ASSOCTYPE_QUERY, tenantId) + 1;
+
+                final String INSERT_ASSOCTYPE_QUERY =
+                        "INSERT INTO assoctype(tenantId, name, id, visible) VALUES (?, 'IS_RELATED', ?, b'1')";
+                getJdbcTemplate().update(INSERT_ASSOCTYPE_QUERY, tenantId, isRelatedAssocType);
+            }
+            // add sourcetype for slopeone where missing
+            final String GET_SLOPEONE_SOURCETYPE_QUERY =
+                    "SELECT id FROM sourcetype WHERE name = 'http://www.easyrec.org/plugins/slopeone/0.96' AND tenantId = ?";
+            int slopeOneSourceType = 0;
+            // for tenants without a type 'http://www.easyrec.org/plugins/slopeone/0.96' this throws an exception - so catch!!
+            try {
+                slopeOneSourceType = getJdbcTemplate().queryForInt(GET_SLOPEONE_SOURCETYPE_QUERY, tenantId);
+            } catch (EmptyResultDataAccessException erdar) {
+                slopeOneSourceType = 0;
+            }
+
+            if (slopeOneSourceType == 0) { // this means sourcetype not found, so update
+                final String GET_MAX_SOURCETYPE_QUERY =
+                        "SELECT MAX(id) FROM sourcetype WHERE tenantId = ?";
+                slopeOneSourceType = getJdbcTemplate().queryForInt(GET_MAX_SOURCETYPE_QUERY, tenantId) + 1;
+
+                final String INSERT_SOURCETYPE_QUERY =
+                        "INSERT INTO sourcetype(tenantId, name, id) VALUES (?, 'http://www.easyrec.org/plugins/slopeone/0.96', ?)";
+                getJdbcTemplate().update(INSERT_SOURCETYPE_QUERY, tenantId, slopeOneSourceType);
+            }
+
+            final String SLOPEONE_CONFIG_QUERY =
+                    "INSERT INTO plugin_configuration(tenantId, assocTypeId, pluginId, pluginVersion, name, configuration, active) VALUES " +
+                            "(?, ?, 'http://www.easyrec.org/plugins/slopeone', ?, 'Default Configuration', ?, b'1')";
+            getJdbcTemplate().update(SLOPEONE_CONFIG_QUERY, tenantId, isRelatedAssocType, currentVersion,
+                    slopeOneXmlConfig);
+
+        }
     }
 
     private String generateXmlConfigurationFromProperties(final Properties propertiesConfig, final String assocType,

@@ -20,6 +20,7 @@ package org.easyrec.controller;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import org.easyrec.model.core.web.*;
 import org.easyrec.model.core.ItemAssocVO;
 import org.easyrec.model.core.TenantVO;
 import org.easyrec.model.plugin.LogEntry;
@@ -35,17 +36,17 @@ import org.easyrec.service.web.NamedConfigurationService;
 import org.easyrec.service.web.PluginScheduler;
 import org.easyrec.service.web.RemoteTenantService;
 import org.easyrec.service.web.nodomain.ShopRecommenderService;
+import org.easyrec.store.dao.IDMappingDAO;
+import org.easyrec.store.dao.core.ItemDAO;
 import org.easyrec.store.dao.core.types.AssocTypeDAO;
 import org.easyrec.store.dao.plugin.LogEntryDAO;
 import org.easyrec.store.dao.web.BackTrackingDAO;
-import org.easyrec.store.dao.web.ItemDAO;
 import org.easyrec.store.dao.web.OperatorDAO;
 import org.easyrec.store.dao.web.RemoteTenantDAO;
-import org.easyrec.utils.MessageBlock;
-import org.easyrec.utils.Security;
-import org.easyrec.utils.Web;
+import org.easyrec.util.core.MessageBlock;
+import org.easyrec.util.core.Security;
+import org.easyrec.util.core.Web;
 import org.easyrec.utils.servlet.ServletUtils;
-import org.easyrec.utils.spring.store.dao.IDMappingDAO;
 import org.easyrec.vocabulary.MSG;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
@@ -67,9 +68,9 @@ import java.util.logging.Logger;
  * (c) 2009</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: dmann $<br/>
- * $Date: 2011-12-20 15:22:22 +0100 (Di, 20 Dez 2011) $<br/>
- * $Revision: 18685 $</p>
+ * $Author: fsalcher $<br/>
+ * $Date: 2012-03-23 15:35:07 +0100 (Fr, 23 Mär 2012) $<br/>
+ * $Revision: 18791 $</p>
  *
  * @author dmann
  * @version 1.0
@@ -567,7 +568,7 @@ public class RemoteTenantController extends MultiActionController {
             mav.addObject("ruleMinerStatistics", remoteTenantService.getRuleMinerStatistics(remoteTenant.getId()));
             if (remoteTenant.getPluginsEnabled() && (remoteTenant.getGeneratorConfig() != null)) {
                 int assocType = assocTypeDAO.getIdOfType(remoteTenant.getId(),
-                        remoteTenant.getGeneratorConfig().getAssociationType());
+                        ((GeneratorConfiguration)remoteTenant.getGeneratorConfig()).getAssociationType());
 
                 List<LogEntry> logEntries = logEntryDAO.getLogEntriesForTenant(remoteTenant.getId(), assocType, 0, 1);
                 LogEntry entry = logEntries.size() > 0 ? logEntries.get(0) : null;

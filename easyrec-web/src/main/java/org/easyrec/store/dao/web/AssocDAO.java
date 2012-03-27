@@ -18,6 +18,8 @@
 package org.easyrec.store.dao.web;
 
 
+import org.easyrec.store.dao.BasicDAO;
+
 /**
  * This manages importing rules or setting the active or inactive.
  * <p/>

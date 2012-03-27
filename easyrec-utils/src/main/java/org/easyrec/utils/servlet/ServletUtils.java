@@ -37,8 +37,8 @@ import java.util.Vector;
  * </p>
  * <p/>
  * <p>
- * <b>last modified:</b><br/> $Author: sat-rsa $<br/> $Date: 2008-06-27
- * 14:40:01 +0200 (Fr, 27 Jun 2008) $<br/> $Revision: 119 $
+ * <b>last modified:</b><br/> $Author: pmarschik $<br/> $Date: 2008-06-27
+ * 14:40:01 +0200 (Fr, 27 Jun 2008) $<br/> $Revision: 18299 $
  * </p>
  *
  * @author Florian Kleedorfer

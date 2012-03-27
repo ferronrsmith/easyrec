@@ -18,7 +18,7 @@
 package org.easyrec.controller;
 
 import org.easyrec.store.dao.web.RemoteTenantDAO;
-import org.easyrec.utils.Security;
+import org.easyrec.util.core.Security;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
@@ -35,9 +35,9 @@ import javax.servlet.http.HttpServletResponse;
  * (c) 2007</p>
  * <p/>
  * <p><b>last modified:</b><br/>
- * $Author: pmarschik $<br/>
- * $Date: 2011-02-11 11:04:49 +0100 (Fr, 11 Feb 2011) $<br/>
- * $Revision: 17656 $</p>
+ * $Author: fsalcher $<br/>
+ * $Date: 2012-03-19 14:22:17 +0100 (Mo, 19 Mär 2012) $<br/>
+ * $Revision: 18781 $</p>
  *
  * @author phlavac
  * @version 1.0

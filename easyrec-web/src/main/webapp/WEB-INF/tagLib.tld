@@ -47,6 +47,18 @@
     </tag>
 
     <tag>
+        <name>profileRenderer</name>
+        <tagclass>org.easyrec.taglib.ProfileRenderer</tagclass>
+        <bodycontent>empty</bodycontent>
+        <info>Creates a HTML view of the given XML profile.</info>
+        <attribute>
+            <name>profile</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
         <name>generatorStats</name>
         <tagclass>org.easyrec.taglib.GeneratorStatisticsTag</tagclass>
         <bodycontent>empty</bodycontent>

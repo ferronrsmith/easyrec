@@ -46,12 +46,6 @@
             <version>${project.version}</version>
             <!--<scope>provided</scope>-->
         </dependency>
-        <dependency>
-            <groupId>org.easyrec</groupId>
-            <artifactId>easyrec-domain</artifactId>
-            <version>${project.version}</version>
-            <!--<scope>provided</scope>-->
-        </dependency>
     </dependencies>
 
 </project>

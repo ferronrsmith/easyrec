@@ -17,7 +17,7 @@
  */
 package org.easyrec.service.web;
 
-import org.easyrec.model.web.Item;
+import org.easyrec.model.core.web.Item;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
