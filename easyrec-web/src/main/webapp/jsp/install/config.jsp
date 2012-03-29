@@ -38,16 +38,6 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>SOAP API:</td>
-                        <td><input name="soap" type="checkbox"/></td>
-                        <td>
-                            Enable this API if you want to integrate easyrec as a SOAP
-                            service in your webapplication.
-                            <br/>
-
-                        </td>
-                    </tr>
-                    <tr>
                         <td>DEV mode:</td>
                         <td><input name="dev" type="checkbox"/></td>
                         <td>

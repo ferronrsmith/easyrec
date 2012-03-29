@@ -32,7 +32,7 @@ import org.easyrec.service.core.TenantService;
 import org.easyrec.service.domain.TypeMappingService;
 import org.easyrec.service.web.RemoteAssocService;
 import org.easyrec.service.web.nodomain.ShopRecommenderService;
-import org.easyrec.soap.nodomain.exception.EasyRecSoapException;
+import org.easyrec.rest.nodomain.exception.EasyRecRestException;
 import org.easyrec.store.dao.core.ItemDAO;
 import org.easyrec.store.dao.core.types.AssocTypeDAO;
 import org.easyrec.store.dao.web.OperatorDAO;
@@ -409,7 +409,7 @@ public class EasyRec {
 
             rec = shopRecommenderService.alsoViewedItems(coreTenantId, userId, itemId, itemType, requestedItemType,
                     session, numberOfResults);
-        } catch (EasyRecSoapException sre) {
+        } catch (EasyRecRestException sre) {
             exceptionResponse(WS.ACTION_OTHER_USERS_ALSO_VIEWED, sre.getMessageObject(), type,
                     callback);
         }
@@ -466,7 +466,7 @@ public class EasyRec {
             try {
                 rec = shopRecommenderService.itemsBasedOnActionHistory(coreTenantId, userId, session, actiontype, null, WS.ACTION_HISTORY_DEPTH, null,
                         requestedItemType, numberOfResults);
-            } catch (EasyRecSoapException sre) {
+            } catch (EasyRecRestException sre) {
                 exceptionResponse(WS.ACTION_RECOMMENDATIONS_FOR_USER, sre.getMessageObject(), type, callback);
             }
         }
@@ -523,7 +523,7 @@ public class EasyRec {
             try {
                 rec = shopRecommenderService.actionHistory(coreTenantId, userId, session, actiontype, requestedItemType, numberOfResults + 5, numberOfResults); // +5 to compensate for inactive items 
 
-            } catch (EasyRecSoapException sre) {
+            } catch (EasyRecRestException sre) {
                 exceptionResponse(WS.ACTION_HISTORY, sre.getMessageObject(), type, callback);
             }
         }
@@ -571,7 +571,7 @@ public class EasyRec {
 
             rec = shopRecommenderService.alsoBoughtItems(coreTenantId, userId, itemId, itemType, requestedItemType,
                     session, numberOfResults);
-        } catch (EasyRecSoapException sre) {
+        } catch (EasyRecRestException sre) {
             exceptionResponse(WS.ACTION_OTHER_USERS_ALSO_BOUGHT, sre.getMessageObject(), type, callback);
         }
 
@@ -621,7 +621,7 @@ public class EasyRec {
 
             rec = shopRecommenderService.alsoGoodRatedItems(coreTenantId, userId, itemId, itemType, requestedItemType,
                     session, numberOfResults);
-        } catch (EasyRecSoapException sre) {
+        } catch (EasyRecRestException sre) {
             exceptionResponse(WS.ACTION_ITEMS_RATED_GOOD_BY_OTHER_USERS, sre.getMessageObject(),
                     type, callback);
         }
@@ -820,7 +820,7 @@ public class EasyRec {
                         coreItemType, new Session(null, request));
 
                 recommendation = new Recommendation(tenantId, WS.ACTION_ITEMS_OF_CLUSTER, null, null, null, items);
-            } catch (EasyRecSoapException sre) {
+            } catch (EasyRecRestException sre) {
                 exceptionResponse(WS.ACTION_ITEMS_OF_CLUSTER, sre.getMessageObject(), type,
                         callback);
             }
@@ -979,7 +979,7 @@ public class EasyRec {
 
             rec = shopRecommenderService.relatedItems(coreTenantId, assocType, userId, itemId, itemType, requestedItemType, session,
                     numberOfResults);
-        } catch (EasyRecSoapException e) {
+        } catch (EasyRecRestException e) {
             exceptionResponse(WS.ACTION_RELATED_ITEMS, e.getMessageObject(), type,
                     callback);
         }
@@ -1058,7 +1058,7 @@ public class EasyRec {
         try {
             Set<String> itemTypes = shopRecommenderService.getItemTypes(coreTenantId);
             responseItemTypes = new ResponseItemTypes(tenantId, itemTypes);
-        } catch (EasyRecSoapException e) {
+        } catch (EasyRecRestException e) {
             exceptionResponse(WS.ACTION_ITEMTYPES, e.getMessageObject().append("Failed to retrieve item types"), type,
                     callback);
         }
@@ -1094,7 +1094,7 @@ public class EasyRec {
         try {
             List<ClusterVO> clusters = shopRecommenderService.getClusters(coreTenantId);
             responseClusters = new ResponseClusters(tenantId, clusters);
-        } catch (EasyRecSoapException e) {
+        } catch (EasyRecRestException e) {
             exceptionResponse(WS.ACTION_CLUSTERS, e.getMessageObject().append("Failed to retrieve clusters"), type,
                     callback);
         }

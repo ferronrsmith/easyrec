@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with easyrec.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.easyrec.soap.nodomain.exception;
+package org.easyrec.rest.nodomain.exception;
 
 import org.easyrec.model.core.web.Message;
 
@@ -37,7 +37,7 @@ import java.util.List;
  *
  * @author Stephan Zavrel
  */
-public class EasyRecSoapException extends Exception {
+public class EasyRecRestException extends Exception {
 
     private static final long serialVersionUID = 8167767882920920061L;
 
@@ -50,16 +50,16 @@ public class EasyRecSoapException extends Exception {
 
     private Message messageObject;
 
-    public EasyRecSoapException(Message messageObject) {
+    public EasyRecRestException(Message messageObject) {
         super(messageObject.getDescription());
         this.messageObject = messageObject;
     }
 
-    public EasyRecSoapException(String message) {
+    public EasyRecRestException(String message) {
         super(message);
     }
 
-    public EasyRecSoapException(List<Message> messages, String action) {
+    public EasyRecRestException(List<Message> messages, String action) {
 
         super(toXMLString(messages, action));
     }

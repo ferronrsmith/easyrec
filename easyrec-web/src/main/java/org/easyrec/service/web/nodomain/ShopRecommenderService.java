@@ -24,7 +24,7 @@ import org.easyrec.model.core.transfer.TimeConstraintVO;
 import org.easyrec.model.core.web.RemoteTenant;
 import org.easyrec.model.core.web.Session;
 import org.easyrec.model.web.*;
-import org.easyrec.soap.nodomain.exception.EasyRecSoapException;
+import org.easyrec.rest.nodomain.exception.EasyRecRestException;
 
 import javax.annotation.Nullable;
 import java.util.Date;
@@ -201,12 +201,12 @@ public interface ShopRecommenderService {
      * @param itemType        TODO
      * @param session         TODO
      * @return an array of {@link Item}s, sorted by {@code strategy}
-     * @throws org.easyrec.soap.nodomain.exception.EasyRecSoapException
+     * @throws org.easyrec.rest.nodomain.exception.EasyRecRestException
      *
      */
     public List<Item> itemsOfCluster(Integer tenant, String clusterName, Integer numberOfResults, String strategy,
                                      Boolean useFallback, Integer itemType, Session session)
-            throws EasyRecSoapException;
+            throws EasyRecRestException;
 
     /**
      * returns 'bad rated items' (of a given item type for a given tenant) ranked by the frequency of 'rate' actions
@@ -320,13 +320,13 @@ public interface ShopRecommenderService {
      * @param numberOfLastActionsConsidered optional, if set only the given number of considered items are used
      * @param assocType                     optional, if set, only associations of the given type are used to compute related items
      * @param requestedItemType             optional, if set, only items of the requested type are used in the result
-     * @throws EasyRecSoapException
+     * @throws org.easyrec.rest.nodomain.exception.EasyRecRestException
      * @returns an array of {@link RecommendedItem}s, based on the 'purchase' history of items with the given 'consideredItemType',
      */
     public RecommendedItem[] itemsBasedOnPurchaseHistory(Integer tenant, String userId, String sessionId,
                                                          String consideredItemType,
                                                          Integer numberOfLastActionsConsidered, String assocType,
-                                                         String requestedItemType) throws EasyRecSoapException;
+                                                         String requestedItemType) throws EasyRecRestException;
 
     /**
      * returns {@link RecommendedItem}s, based on the 'viewing' history of items with the given 'consideredItemType',
@@ -340,13 +340,13 @@ public interface ShopRecommenderService {
      * @param numberOfLastActionsConsidered optional, if set only the given number of considered items are used
      * @param assocType                     optional, if set, only associations of the given type are used to compute related items
      * @param requestedItemType             optional, if set, only items of the requested type are used in the result
-     * @throws EasyRecSoapException
+     * @throws org.easyrec.rest.nodomain.exception.EasyRecRestException
      * @returns an array of {@link RecommendedItem}s, based on the 'viewing' history of items with the given 'consideredItemType',
      */
     public Recommendation itemsBasedOnViewingHistory(Integer tenant, String userId, Session session,
                                                      String consideredItemType, Integer numberOfLastActionsConsidered,
                                                      String assocType, String requestedItemType,
-                                                     Integer numberOfRecommendations) throws EasyRecSoapException;
+                                                     Integer numberOfRecommendations) throws EasyRecRestException;
 
     /**
      * returns {@link RecommendedItem}s, based on the 'searching' history of items with the given 'consideredItemType',
@@ -360,13 +360,13 @@ public interface ShopRecommenderService {
      * @param numberOfLastActionsConsidered optional, if set only the given number of considered items are used
      * @param assocType                     optional, if set, only associations of the given type are used to compute related items
      * @param requestedItemType             optional, if set, only items of the requested type are used in the result
-     * @throws EasyRecSoapException
+     * @throws org.easyrec.rest.nodomain.exception.EasyRecRestException
      * @returns an array of {@link RecommendedItem}s, based on the 'searching' history of items with the given 'consideredItemType',
      */
     public RecommendedItem[] itemsBasedOnSearchingHistory(Integer tenant, String userId, String sessionId,
                                                           String consideredItemType,
                                                           Integer numberOfLastActionsConsidered, String assocType,
-                                                          String requestedItemType) throws EasyRecSoapException;
+                                                          String requestedItemType) throws EasyRecRestException;
     // HINT: use tenant specific threshold 'ratingRangeNeutral' to decide between good and bad ratings (Mantis Issue: #666)
     //public RecommendedItem[] itemsBasedOnRatingHistory(Integer tenant, String userId, String sessionId, String consideredItemType, Integer numberOfLastActionsConsidered, String assocType, String requestedItemType) throws ShopRecommenderException;
     //public RecommendedItem[] itemsBasedOnGoodRatingHistory(Integer tenant, String userId, String sessionId, String consideredItemType, Integer numberOfLastActionsConsidered, String assocType, String requestedItemType) throws ShopRecommenderException;
@@ -383,13 +383,13 @@ public interface ShopRecommenderService {
      * @param requestedItemType
      * @param numberOfRecommendations
      * @return
-     * @throws EasyRecSoapException
+     * @throws org.easyrec.rest.nodomain.exception.EasyRecRestException
      */
     public Recommendation itemsBasedOnActionHistory(Integer tenantId, String userId, Session session,
                                                     String consideredActionType, String consideredItemType,
                                                     Integer numberOfLastActionsConsidered,
                                                     String assocType, String requestedItemType,
-                                                    Integer numberOfRecommendations) throws EasyRecSoapException;
+                                                    Integer numberOfRecommendations) throws EasyRecRestException;
 
 
     /**
@@ -402,12 +402,12 @@ public interface ShopRecommenderService {
      * @param numberOfLastActionsConsidered
      * @param numberOfRecommendations
      * @return
-     * @throws EasyRecSoapException 
+     * @throws org.easyrec.rest.nodomain.exception.EasyRecRestException
      */
     public Recommendation actionHistory(Integer tenantId, String userId, Session session,
                                                     String consideredActionType, String consideredItemType, 
                                                     Integer numberOfLastActionsConsidered,
-                                                    Integer numberOfRecommendations) throws EasyRecSoapException;
+                                                    Integer numberOfRecommendations) throws EasyRecRestException;
     
     /**
      * @param tenantId
@@ -420,13 +420,13 @@ public interface ShopRecommenderService {
      * @param requestedItemType
      * @param numberOfRecommendations
      * @return
-     * @throws EasyRecSoapException
+     * @throws org.easyrec.rest.nodomain.exception.EasyRecRestException
      */
     public Recommendation itemsForUser(Integer tenantId, String userId, Session session,
                                                     String consideredActionType, String consideredItemType,
                                                     Integer numberOfLastActionsConsidered,
                                                     String assocType, String requestedItemType,
-                                                    Integer numberOfRecommendations) throws EasyRecSoapException;
+                                                    Integer numberOfRecommendations) throws EasyRecRestException;
 
     /**
      * returns {@link RecommendedItem}s, based on business rules that identify items as 'bought together'
@@ -438,11 +438,11 @@ public interface ShopRecommenderService {
      * @param itemType          the type of the item that was already bought (searching for rules containing this item)
      * @param requestedItemType optional, if set, only items of the requested type are used in the result
      * @return an array of {@link RecommendedItem}s, based on business rules that identify items as 'bought together'
-     * @throws EasyRecSoapException
+     * @throws org.easyrec.rest.nodomain.exception.EasyRecRestException
      */
     public Recommendation alsoBoughtItems(Integer tenant, String userId, String itemId, String itemType,
                                           String requestedItemType, Session session, Integer numberOfResults)
-            throws EasyRecSoapException;
+            throws EasyRecRestException;
 
     /**
      * returns {@link RecommendedItem}s, based on business rules that identify items as 'viewed together'
@@ -454,11 +454,11 @@ public interface ShopRecommenderService {
      * @param itemType          the type of the item that was already viewed (searching for rules containing this item)
      * @param requestedItemType optional, if set, only items of the requested type are used in the result
      * @return an array of {@link RecommendedItem}s, based on business rules that identify items as 'viewed together'
-     * @throws EasyRecSoapException
+     * @throws org.easyrec.rest.nodomain.exception.EasyRecRestException
      */
     public Recommendation alsoViewedItems(Integer tenant, String userId, String itemId, String itemType,
                                           String requestedItemType, Session session, Integer numberOfResults)
-            throws EasyRecSoapException;
+            throws EasyRecRestException;
 
     // HINT: use tenant specific threshold 'ratingRangeNeutral' to decide between good and bad ratings (Mantis Issue: #666)
     //public RecommendedItem[] alsoRatedItems(Integer tenant, String userId, String sessionId, String itemId, String itemType, String requestedItemType) throws ShopRecommenderException;
@@ -474,11 +474,11 @@ public interface ShopRecommenderService {
      * @param itemType          the type of the item that was already searched (searching for rules containing this item)
      * @param requestedItemType optional, if set, only items of the requested type are used in the result
      * @return an array of {@link RecommendedItem}s, based on business rules that identify items as 'searched together'
-     * @throws EasyRecSoapException
+     * @throws org.easyrec.rest.nodomain.exception.EasyRecRestException
      */
     public Recommendation alsoGoodRatedItems(Integer tenant, String userId, String itemId, String itemType,
                                              String requestedItemType, Session session, Integer numberOfResults)
-            throws EasyRecSoapException;
+            throws EasyRecRestException;
        
     /**
      * @param tenantId
@@ -489,11 +489,11 @@ public interface ShopRecommenderService {
      * @param requestedItemType
      * @param session
      * @return
-     * @throws EasyRecSoapException
+     * @throws org.easyrec.rest.nodomain.exception.EasyRecRestException
      */
     public Recommendation relatedItems(Integer tenantId, String assocType, String userId, String itemId, String itemType,
                                        String requestedItemType, Session session, Integer numberOfResults)
-            throws EasyRecSoapException;
+            throws EasyRecRestException;
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // Utility methods
@@ -505,9 +505,9 @@ public interface ShopRecommenderService {
      * @param tenantId tenant identifier
      * @return an array of {@link String}s representing possible item types of a given tenant
      */
-    public Set<String> getItemTypes(Integer tenantId) throws EasyRecSoapException;
+    public Set<String> getItemTypes(Integer tenantId) throws EasyRecRestException;
 
-    public List<ClusterVO> getClusters(Integer tenantId) throws EasyRecSoapException;
+    public List<ClusterVO> getClusters(Integer tenantId) throws EasyRecRestException;
 
     /**
      * returns the possible association types of the given tenant
@@ -515,7 +515,7 @@ public interface ShopRecommenderService {
      * @param tenantId tenant identifier
      * @return an array of {@link String}s representing possible association types of a given tenant
      */
-    public String[] getAssocTypes(Integer tenantId) throws EasyRecSoapException;
+    public String[] getAssocTypes(Integer tenantId) throws EasyRecRestException;
 
     public List<ItemAssocVO<String, String>> getRules(Integer tenantId);
 

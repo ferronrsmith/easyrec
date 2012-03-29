@@ -73,33 +73,6 @@
                 <artifactId>jaxws-maven-plugin</artifactId>
                 <version>1.12</version>
                 <executions>
-                    <execution>
-                        <id>EasyRecSoap</id>
-                        <goals>
-                            <goal>wsgen</goal>
-                        </goals>
-                        <configuration>
-                            <sei>org.easyrec.soap.nodomain.impl.EasyRecSoap</sei>
-                            <genWsdl>true</genWsdl>
-                            <sourceDestDir>target/jaxws/wsgen/java</sourceDestDir>
-                            <keep>true</keep>
-                            <verbose>true</verbose>
-                            <!--<target>${java.target.version}</target>-->
-                        </configuration>
-                    </execution>
-                    <!--execution>
-                      <id>MusicShopRecommenderWS</id>
-                      <goals>
-                        <goal>wsgen</goal>
-                      </goals>
-                      <configuration>
-                        <sei>org.easyrec.soap.music.impl.MusicShopRecommenderWSImpl</sei>
-                        <genWsdl>true</genWsdl>
-                          <sourceDestDir>target/jaxws/wsgen/java</sourceDestDir>
-                        <keep>true</keep>
-                        <verbose>true</verbose>
-                      </configuration>
-                    </execution-->
                 </executions>
             </plugin>
             <plugin>
@@ -285,10 +258,6 @@
                 <exclusion>
                     <groupId>com.sun.xml.bind</groupId>
                     <artifactId>jaxb-impl</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.xml.soap</groupId>
-                    <artifactId>saaj-api</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>com.sun.xml.messaging.saaj</groupId>

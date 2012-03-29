@@ -346,11 +346,9 @@ public class LoaderController extends AbstractController {
     private void saveConfig(HttpServletRequest request) throws IOException {
 
         String rest = ServletUtils.getSafeParameterDecoded(request, "rest", "");
-        String soap = ServletUtils.getSafeParameterDecoded(request, "soap", "");
         String dev = ServletUtils.getSafeParameterDecoded(request, "dev", "");
 
         props.setProperty("easyrec.rest", rest);
-        props.setProperty("easyrec.soap", soap);
         props.setProperty("easyrec.dev", dev);
         props.setProperty("easyrec.firstrun", "true");
 
