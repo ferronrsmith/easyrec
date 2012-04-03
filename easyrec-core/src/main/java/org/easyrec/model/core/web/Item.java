@@ -142,6 +142,8 @@ public class Item implements Serializable {
     @XmlElement(nillable = true)
     public String getDescription() {
         try {
+            if (description == null)
+                return "n/a";
             return URLDecoder.decode(description.trim(), "UTF-8");
         } catch (Exception e) {
             return description.trim();
