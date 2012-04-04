@@ -42,15 +42,6 @@
     </filter-mapping>
 
     <!-- web services -->
-    <!-- SOAP -->
-    <servlet>
-        <description>Spring SOAP Webservice Servlet</description>
-        <display-name>Spring SOAP Webservice Servlet</display-name>
-        <servlet-name>jaxws-servlet</servlet-name>
-        <servlet-class>
-            com.sun.xml.ws.transport.http.servlet.WSSpringServlet
-        </servlet-class>
-    </servlet>
     <!-- REST -->
     <servlet>
         <description>Jersey Spring Web Application</description>
@@ -148,11 +139,6 @@
     <servlet-mapping>
         <servlet-name>jaxrs-servlet</servlet-name>
         <url-pattern>/api/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>jaxws-servlet</servlet-name>
-        <url-pattern>/easyrecsoap</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

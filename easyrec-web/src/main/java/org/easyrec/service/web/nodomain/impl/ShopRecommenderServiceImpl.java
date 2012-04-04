@@ -43,7 +43,7 @@ import org.easyrec.service.domain.TypeMappingService;
 import org.easyrec.service.web.IDMappingService;
 import org.easyrec.service.web.ItemService;
 import org.easyrec.service.web.nodomain.ShopRecommenderService;
-import org.easyrec.soap.nodomain.exception.EasyRecSoapException;
+import org.easyrec.rest.nodomain.exception.EasyRecRestException;
 import org.easyrec.store.dao.IDMappingDAO;
 import org.easyrec.store.dao.core.ItemDAO;
 import org.easyrec.store.dao.core.types.AssocTypeDAO;
@@ -425,7 +425,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
     @Override
     public Recommendation alsoBoughtItems(Integer tenantId, String userId, String itemId, String itemType,
                                           String requestedItemType, Session session, Integer numberOfResults)
-            throws EasyRecSoapException {
+            throws EasyRecRestException {
 
         Recommendation rec;
         RemoteTenant remoteTenant = remoteTenantDAO.get(tenantId);
@@ -459,10 +459,10 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
                 rec = new Recommendation(remoteTenant.getStringId(), WS.ACTION_OTHER_USERS_ALSO_BOUGHT, userId,
                         session.getSessionId(), i, items);
             } else {
-                throw new EasyRecSoapException(MSG.ITEM_NOT_ACTIVE);
+                throw new EasyRecRestException(MSG.ITEM_NOT_ACTIVE);
             }
         } else {
-            throw new EasyRecSoapException(MSG.ITEM_NOT_EXISTS);
+            throw new EasyRecRestException(MSG.ITEM_NOT_EXISTS);
         }
 
         return rec;
@@ -473,7 +473,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
     @Override
     public Recommendation alsoViewedItems(Integer tenantId, String userId, String itemId, String itemType,
                                           String requestedItemType, Session session, Integer numberOfResults)
-            throws EasyRecSoapException {
+            throws EasyRecRestException {
 
         Recommendation rec;
         RemoteTenant remoteTenant = remoteTenantDAO.get(tenantId);
@@ -508,10 +508,10 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
                         session.getSessionId(), i, items);
 
             } else {
-                throw new EasyRecSoapException(MSG.ITEM_NOT_ACTIVE);
+                throw new EasyRecRestException(MSG.ITEM_NOT_ACTIVE);
             }
         } else {
-            throw new EasyRecSoapException(MSG.ITEM_NOT_EXISTS);
+            throw new EasyRecRestException(MSG.ITEM_NOT_EXISTS);
         }
 
         return rec;
@@ -522,7 +522,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
     @Override
     public Recommendation alsoGoodRatedItems(Integer tenantId, String userId, String itemId, String itemType,
                                              String requestedItemType, Session session, Integer numberOfResults)
-            throws EasyRecSoapException {
+            throws EasyRecRestException {
         Recommendation rec;
         RemoteTenant remoteTenant = remoteTenantDAO.get(tenantId);
 
@@ -557,10 +557,10 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
                         session.getSessionId(), i, items);
 
             } else {
-                throw new EasyRecSoapException(MSG.ITEM_NOT_ACTIVE);
+                throw new EasyRecRestException(MSG.ITEM_NOT_ACTIVE);
             }
         } else {
-            throw new EasyRecSoapException(MSG.ITEM_NOT_EXISTS);
+            throw new EasyRecRestException(MSG.ITEM_NOT_EXISTS);
         }
 
         return rec;
@@ -734,7 +734,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
     @Override
     public List<Item> itemsOfCluster(Integer tenant, String clusterName, Integer numberOfResults, String strategy,
                                      Boolean useFallback, Integer itemType, Session session)
-            throws EasyRecSoapException {
+            throws EasyRecRestException {
         List<Item> items;
         RemoteTenant remoteTenant = remoteTenantDAO.get(tenant);
 
@@ -755,7 +755,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
 
             return items.subList(0, Math.min(items.size(), numberOfResults));
         } else {
-            throw new EasyRecSoapException(MSG.CLUSTER_NOT_EXISTS);
+            throw new EasyRecRestException(MSG.CLUSTER_NOT_EXISTS);
         }
     }
 
@@ -885,7 +885,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
     public RecommendedItem[] itemsBasedOnPurchaseHistory(Integer tenantId, String userId, String sessionId,
                                                          String consideredItemType,
                                                          Integer numberOfLastActionsConsidered, String assocType,
-                                                         String requestedItemType) throws EasyRecSoapException {
+                                                         String requestedItemType) throws EasyRecRestException {
         RecommendationVO<Integer, String> recommendation = domainRecommenderService
                 .itemsBasedOnPurchaseHistory(tenantId, idMappingDAO.lookup(userId), sessionId, consideredItemType,
                         numberOfLastActionsConsidered, assocType, requestedItemType);
@@ -904,7 +904,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
     public Recommendation itemsBasedOnViewingHistory(Integer tenantId, String userId, Session session,
                                                      String consideredItemType, Integer numberOfLastActionsConsidered,
                                                      String assocType, String requestedItemType,
-                                                     Integer numberOfRecommendations) throws EasyRecSoapException {
+                                                     Integer numberOfRecommendations) throws EasyRecRestException {
         Recommendation rec;
         RemoteTenant remoteTenant = remoteTenantDAO.get(tenantId);
 
@@ -933,7 +933,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
     public Recommendation actionHistory(Integer tenantId, String userId, Session session,
                                                     String consideredActionType, String consideredItemType, 
                                                     Integer numberOfLastActionsConsidered,
-                                                    Integer numberOfRecommendations) throws EasyRecSoapException {
+                                                    Integer numberOfRecommendations) throws EasyRecRestException {
         Recommendation rec;
         RemoteTenant remoteTenant = remoteTenantDAO.get(tenantId);
 
@@ -968,7 +968,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
                                                     String consideredActionType, String consideredItemType, 
                                                     Integer numberOfLastActionsConsidered,
                                                     String assocType, String requestedItemType,
-                                                    Integer numberOfRecommendations) throws EasyRecSoapException {
+                                                    Integer numberOfRecommendations) throws EasyRecRestException {
         Recommendation rec;
         RemoteTenant remoteTenant = remoteTenantDAO.get(tenantId);
 
@@ -1001,7 +1001,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
     public Recommendation itemsForUser(Integer tenantId, String userId, Session session,
                                        String consideredActionType, String consideredItemType, Integer numberOfLastActionsConsidered,
                                        String assocType, String requestedItemType,
-                                       Integer numberOfRecommendations) throws EasyRecSoapException {
+                                       Integer numberOfRecommendations) throws EasyRecRestException {
 
         Recommendation rec = null;
         RemoteTenant remoteTenant = remoteTenantDAO.get(tenantId);
@@ -1034,7 +1034,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
     public RecommendedItem[] itemsBasedOnSearchingHistory(Integer tenantId, String userId, String sessionId,
                                                           String consideredItemType,
                                                           Integer numberOfLastActionsConsidered, String assocType,
-                                                          String requestedItemType) throws EasyRecSoapException {
+                                                          String requestedItemType) throws EasyRecRestException {
         RecommendationVO<Integer, String> recommendation = domainRecommenderService
                 .itemsBasedOnSearchingHistory(tenantId, idMappingDAO.lookup(userId), sessionId, consideredItemType,
                         numberOfLastActionsConsidered, assocType, requestedItemType);
@@ -1054,7 +1054,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
     @Override
     public Recommendation relatedItems(Integer tenantId, String assocType, String userId, String itemId, String itemType,
                                        String requestedItemType, Session session, Integer numberOfResults)
-            throws EasyRecSoapException {
+            throws EasyRecRestException {
 
         Recommendation rec = null;
         RemoteTenant remoteTenant = remoteTenantDAO.get(tenantId);
@@ -1064,10 +1064,10 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
             i = itemDAO.get(remoteTenant, itemId, itemType);
 
             if (i == null)
-                throw new EasyRecSoapException(MSG.ITEM_NOT_EXISTS);
+                throw new EasyRecRestException(MSG.ITEM_NOT_EXISTS);
 
             if (!i.isActive())
-                throw new EasyRecSoapException(MSG.ITEM_NOT_ACTIVE);
+                throw new EasyRecRestException(MSG.ITEM_NOT_ACTIVE);
         } else {
             //create dummy item for User
             i = new Item(null,tenantId,itemId,itemType,"user id " + itemId, null, null, null, true,null);
@@ -1103,7 +1103,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
     @IOLog
     @Profiled
     @Override
-    public String[] getAssocTypes(Integer tenantId) throws EasyRecSoapException {
+    public String[] getAssocTypes(Integer tenantId) throws EasyRecRestException {
         return typeMappingService.getAssocTypes(tenantId)
                 .toArray(new String[typeMappingService.getAssocTypes(tenantId).size()]);
     }
@@ -1111,14 +1111,14 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
     @IOLog
     @Profiled
     @Override
-    public Set<String> getItemTypes(Integer tenantId) throws EasyRecSoapException {
+    public Set<String> getItemTypes(Integer tenantId) throws EasyRecRestException {
         return typeMappingService.getItemTypes(tenantId, true);
     }
 
     @IOLog
     @Profiled
     @Override
-    public List<ClusterVO> getClusters(Integer tenantId) throws EasyRecSoapException {
+    public List<ClusterVO> getClusters(Integer tenantId) throws EasyRecRestException {
         return Lists.newArrayList(clusterService.getClustersForTenant(tenantId).getVertices());
     }
 

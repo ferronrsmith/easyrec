@@ -546,10 +546,6 @@ public class LoaderDAOMysqlImpl extends JdbcDaoSupport
             configLocs.add(configLocations.get("easyrec.rest"));
         }
 
-        if ("on".equals(properties.getProperty("easyrec.soap"))) {
-            configLocs.add(configLocations.get("easyrec.soap"));
-        }
-
         // if no config found use default
         if (configLocs.size() == 1) {
             configLocs.add(configLocations.get("easyrec.rest"));
