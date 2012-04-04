@@ -44,6 +44,11 @@ public class WS implements InitializingBean {
     public final static String RESPONSE_TYPE_JSON = "application/json";
     public final static String RESPONSE_TYPE_JSCRIPT = "application/javascript";
 
+    // vocabulary for the webservice 2.0
+    public final static String RESPONSE_TYPE_PATH_JSON = "json";
+    public final static String RESPONSE_TYPE_PATH_XML = "";
+
+
     public WS(Integer DEFAULT_NUMBER_OF_RESULTS, Integer MAX_NUMBER_OF_RANKING_RESULTS, Integer ACTION_HISTORY_DEPTH) {
         setDEFAULT_NUMBER_OF_RESULTS(DEFAULT_NUMBER_OF_RESULTS);
         setMAX_NUMBER_OF_RANKING_RESULTS(MAX_NUMBER_OF_RANKING_RESULTS);
