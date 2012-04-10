@@ -9,6 +9,7 @@ import org.easyrec.model.core.web.SuccessMessage;
  * Contains messages returned by various services.
  *
  * @author pmarschik
+ * @author fsalcher
  */
 public class MSG {
 
@@ -127,6 +128,26 @@ public class MSG {
             308, "Missing parameter: active (true|false)");
     public static final Message ITEM_INVALID_ACTION_VALUE = new ErrorMessage(
             305, "Action Value must be a valid Integer!");
+
+    // profile messages
+    public static final Message PROFILE_SAVED = new SuccessMessage(
+            310, "Profile successfully saved!");
+    public static final Message PROFILE_NOT_SAVED = new ErrorMessage(
+            311, "An error occurred while saving the profile!");
+    public static final Message PROFILE_DELETED = new SuccessMessage(
+            312, "Profile successfully deleted!");
+    public static final Message PROFILE_NOT_DELETED = new ErrorMessage(
+            313, "An error occurred while deleting the profile!");
+    public static final Message PROFILE_NOT_LOADED = new ErrorMessage(
+            314, "An error occurred while loading the profile!");
+    public static final Message PROFILE_FIELD_SAVED = new SuccessMessage(
+            315, "Profile field successfully saved!");
+    public static final Message PROFILE_FIELD_NOT_LOADED = new ErrorMessage(
+            316, "An error occurred while loading the profile field!");
+    public static final Message PROFILE_FIELD_DELETED = new SuccessMessage(
+            317, "Profile field successfully deleted!");
+    public static final Message PROFILE_FIELD_NOT_DELETED = new ErrorMessage(
+            318, "An error occurred while deleting the profile field!");
 
     // user/login messages
     public static final Message USER_NO_SESSION_ID = new ErrorMessage(

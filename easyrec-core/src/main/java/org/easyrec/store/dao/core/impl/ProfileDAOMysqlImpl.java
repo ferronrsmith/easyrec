@@ -46,6 +46,7 @@ import java.util.StringTokenizer;
 
 /**
  * @author szavrel
+ * @author Fabian Salcher
  */
 @DAO
 public class ProfileDAOMysqlImpl extends AbstractBaseProfileDAOMysqlImpl<Integer, Integer, Integer>
@@ -79,7 +80,7 @@ public class ProfileDAOMysqlImpl extends AbstractBaseProfileDAOMysqlImpl<Integer
             .append(DEFAULT_TENANT_ID_COLUMN_NAME).append("=? AND ").append(DEFAULT_ITEM_ID_COLUMN_NAME)
             .append("=? AND ").append(DEFAULT_ITEM_TYPE_ID_COLUMN_NAME).append("=?").toString();
 
-    private final int[] ARGTYPES_PROFILE_KEY = new int[]{Types.INTEGER, Types.INTEGER, Types.INTEGER};
+    private final int[] ARGTYPES_PROFILE_KEY = new int[]{Types.INTEGER, Types.VARCHAR, Types.VARCHAR};
     private final int[] ARGTYPES_PROFILE_ID = new int[]{Types.INTEGER};
 
     // logging
@@ -95,8 +96,9 @@ public class ProfileDAOMysqlImpl extends AbstractBaseProfileDAOMysqlImpl<Integer
         super(sqlScriptService);
         setDataSource(dataSource);
 
+        // ToDo: They shouldn't be here such mapping stuff should be done in the ProfileService
         itemTypeDAO = new ItemTypeDAOMysqlImpl(dataSource, sqlScriptService);
-        idMappingDAO = new IDMappingDAOMysqlImpl(dataSource,sqlScriptService);
+        idMappingDAO = new IDMappingDAOMysqlImpl(dataSource, sqlScriptService);
 
         // output connection information
         if (logger.isInfoEnabled()) {
@@ -132,23 +134,25 @@ public class ProfileDAOMysqlImpl extends AbstractBaseProfileDAOMysqlImpl<Integer
 
         String itemType = itemTypeDAO.getTypeById(tenantId, itemTypeId);
         String mappedItemId = idMappingDAO.lookup(itemId);
+        if (mappedItemId == null)
+            throw new IllegalArgumentException("itemId has no string equivalent");
 
         Object[] args;
         int[] argTypes;
 
         if (active == null) {
             args = new Object[]{tenantId, mappedItemId, itemType};
-            argTypes = new int[]{Types.INTEGER, Types.INTEGER, Types.VARCHAR};
+            argTypes = new int[]{Types.INTEGER, Types.VARCHAR, Types.VARCHAR};
 
             return getJdbcTemplate().queryForObject(GET_PROFILE_QUERY, args, argTypes, String.class);
         } else {
             args = new Object[]{tenantId, mappedItemId, itemType, active};
-            argTypes = new int[]{Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.BOOLEAN};
+            argTypes = new int[]{Types.INTEGER, Types.VARCHAR, Types.VARCHAR, Types.BOOLEAN};
 
             return getJdbcTemplate().queryForObject(GET_ACTIVE_PROFILE_QUERY, args, argTypes, String.class);
         }
     }
-    
+
     public String getProfile(Integer tenantId, Integer itemId, Integer itemTypeId) {
 
         return getProfile(tenantId, itemId, itemTypeId, null);
@@ -169,9 +173,13 @@ public class ProfileDAOMysqlImpl extends AbstractBaseProfileDAOMysqlImpl<Integer
 
         String itemType = itemTypeDAO.getTypeById(tenantId, itemTypeId);
 
-        Object[] args = {tenantId, itemId, itemType, profileXML, profileXML};
+        String mappedItemId = idMappingDAO.lookup(itemId);
+        if (mappedItemId == null)
+            throw new IllegalArgumentException("itemId has no string equivalent");
 
-        int[] argTypes = {Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.BLOB, Types.BLOB};
+        Object[] args = {tenantId, mappedItemId, itemType, profileXML, profileXML};
+
+        int[] argTypes = {Types.INTEGER, Types.VARCHAR, Types.VARCHAR, Types.BLOB, Types.BLOB};
 
         PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(STORE_PROFILE_QUERY, argTypes);
 
@@ -181,7 +189,10 @@ public class ProfileDAOMysqlImpl extends AbstractBaseProfileDAOMysqlImpl<Integer
 
     public void activateProfile(Integer tenant, Integer item, Integer itemType) {
 
-        Object[] args = {tenant, item, itemTypeDAO.getTypeById(tenant, itemType)};
+        String mappedItemId = idMappingDAO.lookup(item);
+        if (mappedItemId == null)
+            throw new IllegalArgumentException("itemId has no string equivalent");
+        Object[] args = {tenant, mappedItemId, itemTypeDAO.getTypeById(tenant, itemType)};
 
         try {
             getJdbcTemplate().update(SQL_ACTIVATE_PROFILE, args, ARGTYPES_PROFILE_KEY);
@@ -193,7 +204,11 @@ public class ProfileDAOMysqlImpl extends AbstractBaseProfileDAOMysqlImpl<Integer
 
     public void deactivateProfile(Integer tenant, Integer item, Integer itemType) {
 
-        Object[] args = {tenant, item, itemTypeDAO.getTypeById(tenant, itemType)};
+        String mappedItemId = idMappingDAO.lookup(item);
+        if (mappedItemId == null)
+            throw new IllegalArgumentException("itemId has no string equivalent");
+
+        Object[] args = {tenant, mappedItemId, itemTypeDAO.getTypeById(tenant, itemType)};
 
         try {
             getJdbcTemplate().update(SQL_DEACTIVATE_PROFILE, args, ARGTYPES_PROFILE_KEY);
@@ -218,24 +233,12 @@ public class ProfileDAOMysqlImpl extends AbstractBaseProfileDAOMysqlImpl<Integer
             throw new IllegalArgumentException("itemTypeId must not be 'null'");
         }
 
-        //        StringBuilder sqlString = new StringBuilder("SELECT  ExtractValue(");
-        //        sqlString.append(DEFAULT_PROFILE_DATA_COLUMN_NAME);
-        //        sqlString.append(",?) FROM ");
-        //        sqlString.append(DEFAULT_TABLE_NAME);
-        //        sqlString.append(" WHERE ");
-        //        sqlString.append(DEFAULT_TENANT_ID_COLUMN_NAME);
-        //        sqlString.append("=? AND ");
-        //        sqlString.append(DEFAULT_ITEM_ID_COLUMN_NAME);
-        //        sqlString.append("=? AND ");
-        //        sqlString.append(DEFAULT_ITEM_TYPE_ID_COLUMN_NAME);
-        //        sqlString.append("=?");
-
         Object[] args;
         int[] argTypes;
 
-        args = new Object[]{dimensionXPath, tenantId, itemId,
+        args = new Object[]{dimensionXPath, tenantId, idMappingDAO.lookup(itemId),
                 itemTypeDAO.getTypeById(tenantId, itemTypeId)};
-        argTypes = new int[]{Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.VARCHAR};
+        argTypes = new int[]{Types.VARCHAR, Types.INTEGER, Types.VARCHAR, Types.VARCHAR};
 
         String result = getJdbcTemplate().queryForObject(GET_DIM_VALUE_QUERY, args, argTypes, String.class);
         StringTokenizer st = new StringTokenizer(result, " ");
@@ -246,38 +249,6 @@ public class ProfileDAOMysqlImpl extends AbstractBaseProfileDAOMysqlImpl<Integer
 
         return ret;
     }
-
-//    @Override
-//    public Set<String> getMultiDimensionValue(Integer profileId, String dimensionXPath) {
-//        Set<String> ret = new HashSet<String>();
-//
-//        if (profileId == null) {
-//            throw new IllegalArgumentException("profileId must not be 'null'!");
-//        }
-//
-//        //        StringBuilder sqlString = new StringBuilder("SELECT  ExtractValue(");
-//        //        sqlString.append(DEFAULT_PROFILE_DATA_COLUMN_NAME);
-//        //        sqlString.append(",?) FROM ");
-//        //        sqlString.append(DEFAULT_TABLE_NAME);
-//        //        sqlString.append(" WHERE ");
-//        //        sqlString.append(DEFAULT_PROFILE_ID_COLUMN_NAME);
-//        //        sqlString.append("=?");
-//
-//        Object[] args;
-//        int[] argTypes;
-//
-//        args = new Object[]{dimensionXPath, profileId};
-//        argTypes = new int[]{Types.VARCHAR, Types.INTEGER};
-//
-//        String result = getJdbcTemplate().queryForObject(GET_DIM_VALUE_BY_ID_QUERY, args, argTypes, String.class);
-//        StringTokenizer st = new StringTokenizer(result, " ");
-//
-//        while (st.hasMoreTokens()) {
-//            ret.add(st.nextToken());
-//        }
-//
-//        return ret;
-//    }
 
 
     public String getSimpleDimensionValue(Integer tenantId, Integer itemId, Integer itemTypeId, String dimensionXPath) {
@@ -292,46 +263,81 @@ public class ProfileDAOMysqlImpl extends AbstractBaseProfileDAOMysqlImpl<Integer
             throw new IllegalArgumentException("itemTypeId must not be 'null'");
         }
 
-        //        StringBuilder sqlString = new StringBuilder("SELECT  ExtractValue(");
-        //        sqlString.append(DEFAULT_PROFILE_DATA_COLUMN_NAME);
-        //        sqlString.append(",?) FROM ");
-        //        sqlString.append(DEFAULT_TABLE_NAME);
-        //        sqlString.append(" WHERE ");
-        //        sqlString.append(DEFAULT_TENANT_ID_COLUMN_NAME);
-        //        sqlString.append("=? AND ");
-        //        sqlString.append(DEFAULT_ITEM_ID_COLUMN_NAME);
-        //        sqlString.append("=? AND ");
-        //        sqlString.append(DEFAULT_ITEM_TYPE_ID_COLUMN_NAME);
-        //        sqlString.append("=?");
-
         Object[] args;
         int[] argTypes;
 
-        args = new Object[]{dimensionXPath, tenantId, itemId,
+        args = new Object[]{dimensionXPath, tenantId, idMappingDAO.lookup(itemId),
                 itemTypeDAO.getTypeById(tenantId, itemTypeId)};
-        argTypes = new int[]{Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.VARCHAR};
+        argTypes = new int[]{Types.VARCHAR, Types.INTEGER, Types.VARCHAR, Types.VARCHAR};
 
         return getJdbcTemplate().queryForObject(GET_DIM_VALUE_QUERY, args, argTypes, String.class);
     }
 
-//    @Override
-//    public String getSimpleDimensionValue(Integer profileId, String dimensionXPath) {
-//
-//        if (profileId == null) {
-//            throw new IllegalArgumentException("profileId must not be 'null'");
-//        }
-//
-//        Object[] args;
-//        int[] argTypes;
-//
-//        args = new Object[]{dimensionXPath, profileId};
-//        argTypes = new int[]{Types.VARCHAR, Types.INTEGER};
-//
-//        return getJdbcTemplate().queryForObject(GET_DIM_VALUE_BY_ID_QUERY, args, argTypes, String.class);
-//    }
+    public boolean updateXML(Integer tenantId, Integer itemId, Integer itemTypeId,
+                             String updateXPath, String newXML) {
+
+        String query = new StringBuilder
+                ("SELECT  UpdateXML(")
+                .append(DEFAULT_PROFILE_DATA_COLUMN_NAME)
+                .append(", ?, ?) FROM ")
+                .append(DEFAULT_TABLE_NAME)
+                .append(" WHERE ")
+                .append(DEFAULT_TENANT_ID_COLUMN_NAME)
+                .append("=? AND ")
+                .append(DEFAULT_ITEM_ID_COLUMN_NAME)
+                .append("=? AND ")
+                .append(DEFAULT_ITEM_TYPE_ID_COLUMN_NAME)
+                .append("=?")
+                .toString();
+
+        Object[] args;
+        int[] argTypes;
+
+        args = new Object[]{updateXPath, newXML,
+                tenantId,
+                idMappingDAO.lookup(itemId),
+                itemTypeDAO.getTypeById(tenantId, itemTypeId)};
+        argTypes = new int[]{Types.VARCHAR, Types.VARCHAR, Types.INTEGER, Types.VARCHAR, Types.VARCHAR};
+        String modifiedProfile = getJdbcTemplate().queryForObject(query, args, argTypes, String.class);
+
+        int result = 0;
+        if (modifiedProfile != null)
+            result = storeProfile(tenantId, itemId, itemTypeId, modifiedProfile);
+
+        return (result != 0);
+    }
+
+    public boolean deleteProfile(Integer tenantId, Integer itemId, Integer itemTypeId) {
+
+        if (tenantId == null) {
+            throw new IllegalArgumentException("tenantId must not be 'null'!");
+        }
+        if (itemId == null) {
+            throw new IllegalArgumentException("itemId must not be 'null'!");
+        }
+        if (itemTypeId == null) {
+            throw new IllegalArgumentException("itemTypeId must not be 'null'");
+        }
+
+        String itemType = itemTypeDAO.getTypeById(tenantId, itemTypeId);
+
+        String mappedItemId = idMappingDAO.lookup(itemId);
+        if (mappedItemId == null)
+            throw new IllegalArgumentException("itemId has no string equivalent");
+
+        Object[] args = {tenantId, mappedItemId, itemType, null, null};
+
+        int[] argTypes = {Types.INTEGER, Types.VARCHAR, Types.VARCHAR, Types.BLOB, Types.BLOB};
+
+        PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(STORE_PROFILE_QUERY, argTypes);
+
+        int rowsAffected = getJdbcTemplate().update(factory.newPreparedStatementCreator(args));
+        return (rowsAffected > 0);
+    }
+
 
     public List<ItemVO<Integer, Integer>> getItemsByDimensionValue(Integer tenantId, Integer itemType,
-                                                                            String dimensionXPath, String value) {
+                                                                   String dimensionXPath, String value) {
         List<Object> args = Lists.newArrayList();
         List<Integer> argt = Lists.newArrayList();
 
@@ -372,7 +378,7 @@ public class ProfileDAOMysqlImpl extends AbstractBaseProfileDAOMysqlImpl<Integer
             throw new IllegalArgumentException("itemType must not be 'null'");
         }
 
-        List<Object> args = Lists.newArrayList((Object)itemTypeDAO.getTypeById(tenantId, itemType));
+        List<Object> args = Lists.newArrayList((Object) itemTypeDAO.getTypeById(tenantId, itemType));
         List<Integer> argt = Lists.newArrayList(Types.VARCHAR);
 
         StringBuilder sqlString = new StringBuilder("SELECT ");
@@ -410,13 +416,4 @@ public class ProfileDAOMysqlImpl extends AbstractBaseProfileDAOMysqlImpl<Integer
             return item;
         }
     }
-
-
-    //   select
-    //  IF(ExtractValue(profileData,'count(/movie/burli)')=0,
-    //  null,
-    //  ExtractValue(profileData,'/movie/burli')) as val
-    //    from profile where itemId=3 and itemTypeId=2;
-
-
 }

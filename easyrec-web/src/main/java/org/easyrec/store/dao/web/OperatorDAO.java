@@ -65,7 +65,7 @@ public interface OperatorDAO extends BasicDAO {
      * This function checks if the operator id, submitted by the client,
      * is allowed to communicate with the recommender.
      *
-     * @param operatorid
+     * @param operatorId
      * @return
      */
     public boolean exists(String operatorId);
@@ -94,7 +94,6 @@ public interface OperatorDAO extends BasicDAO {
      * and return true if operation was successfull.
      *
      * @param operatorId
-     * @param password
      * @param firstName
      * @param lastName
      * @param email
@@ -109,20 +108,21 @@ public interface OperatorDAO extends BasicDAO {
                           String company, String address, String apiKey, String ip);
 
     /**
-     * This function returns an operator for a given operator id
+     * This function returns an <code>Operator</code> object for a given operator id.
      *
-     * @param operatorid
-     * @return
+     * @param operatorId the operator id of the wanted <code>Operator</code> object
+     * @return the <code>Operator</code> object with the given operator id
      */
     public Operator get(String operatorId);
 
     /**
-     * This function returns the CoreTenantId, if the
-     * apiKey/TenantId combination exists in DB.
+     * This function checks if the apiKey/TenantId combination is valid and
+     * returns in case of success the core <code>TenantId</code> and <code>null</code> otherwise.
      *
      * @param apiKey   the operators apiKey.
-     * @param tenantId the tenantid which is assigned to the operator.
-     * @return
+     * @param tenantId the tenantId which is assigned to the operator.
+     * @return the <code>coreTenantID</code> if the apiKey/tenantId combination exists
+     *         and <code>null</code> otherwise
      */
     public Integer getTenantId(String apiKey, String tenantId);
 
@@ -149,7 +149,6 @@ public interface OperatorDAO extends BasicDAO {
      * Removes the security token from the given operator.
      * This method may be called, when a session invalidates.
      *
-     * @param token
      * @param operatorId
      */
     public void removeTokenFromOperator(String operatorId);
@@ -159,7 +158,7 @@ public interface OperatorDAO extends BasicDAO {
      * This function removes an operator with a given operator id
      * from the database.
      *
-     * @param operatorid
+     * @param operatorId
      * @return
      */
     public void remove(String operatorId);
@@ -168,7 +167,7 @@ public interface OperatorDAO extends BasicDAO {
      * This function return true if the given operator has associated
      * tenants.
      *
-     * @param operatorid
+     * @param operatorId
      * @return
      */
     public boolean hasTenants(String operatorId);
@@ -182,15 +181,15 @@ public interface OperatorDAO extends BasicDAO {
      * activated and the method return true.
      * False in any other case.
      *
-     * @param operatorid
-     * @param apikey
+     * @param operatorId
+     * @param apiKey
      */
     public boolean activate(String operatorId, String apiKey);
 
     /**
      * This function deactivates an Operator.
      *
-     * @param operatorid
+     * @param operatorId
      */
     public boolean deactivate(String operatorId);
 
@@ -199,7 +198,7 @@ public interface OperatorDAO extends BasicDAO {
      * set the current date to the last login date
      * if the right operator/password combination is passed.
      *
-     * @param operatorid
+     * @param operatorId
      * @param password
      */
     public Operator signIn(String operatorId, String password);

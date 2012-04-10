@@ -20,18 +20,24 @@ package org.easyrec.rest;
 
 import com.sun.jersey.api.json.JSONWithPadding;
 import com.sun.jersey.spi.resource.Singleton;
+import org.easyrec.model.core.web.Message;
 import org.easyrec.service.core.ProfileService;
+import org.easyrec.store.dao.web.OperatorDAO;
+import org.easyrec.vocabulary.MSG;
 import org.easyrec.vocabulary.WS;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * This class is a REST webservice facade for the ProfileService
  *
- * @author fsalcher
+ * @author Fabian Salcher
  */
 
 /*
@@ -39,7 +45,7 @@ import javax.ws.rs.core.Response;
 * Followed by an optional "json" part. If this part is missing the result
 * will be returned as XML.
 */
-@Path("1.0/{responseType: (/json)?}/profile/}")
+@Path("1.0{responseType: (/json)?}/profile")
 @Produces({"application/xml", "application/json"})
 @Singleton
 
@@ -49,9 +55,11 @@ public class ProfileWebservice {
     public HttpServletRequest request;
 
     private ProfileService profileService;
+    private OperatorDAO operatorDAO;
 
-    public ProfileWebservice(ProfileService profileService) {
+    public ProfileWebservice(ProfileService profileService, OperatorDAO operatorDAO) {
         this.profileService = profileService;
+        this.operatorDAO = operatorDAO;
     }
 
 
@@ -72,14 +80,27 @@ public class ProfileWebservice {
     @GET
     @Path("/store")
     public Response storeProfile(@PathParam("responseType") String responseType,
-                                 @QueryParam("apiKey") String apiKey,
-                                 @QueryParam("tenantID") String tenantID,
-                                 @QueryParam("itemID") String itemID,
-                                 @QueryParam("itemType") String itemType,
+                                 @QueryParam("apikey") String apiKey,
+                                 @QueryParam("tenantid") String tenantID,
+                                 @QueryParam("itemid") String itemID,
+                                 @QueryParam("itemtype") String itemType,
                                  @QueryParam("profile") String profile,
                                  @QueryParam("callback") String callback) {
 
-        return formatResponse("", responseType, callback);
+        List<Message> errorMessages = new ArrayList<Message>();
+        Object response = null;
+
+        Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
+        if (coreTenantID == null)
+            errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
+        else {
+            if (profileService.storeProfile(coreTenantID, itemID, itemType, profile))
+                response = MSG.PROFILE_SAVED;
+            else
+                errorMessages.add(MSG.PROFILE_NOT_SAVED);
+        }
+
+        return formatResponse(response, errorMessages, WS.PROFILE_STORE, responseType, callback);
     }
 
     /**
@@ -98,13 +119,26 @@ public class ProfileWebservice {
     @GET
     @Path("/delete")
     public Response deleteProfile(@PathParam("responseType") String responseType,
-                                  @QueryParam("apiKey") String apiKey,
-                                  @QueryParam("tenantID") String tenantID,
-                                  @QueryParam("itemID") String itemID,
-                                  @QueryParam("itemType") String itemType,
+                                  @QueryParam("apikey") String apiKey,
+                                  @QueryParam("tenantid") String tenantID,
+                                  @QueryParam("itemid") String itemID,
+                                  @QueryParam("itemtype") String itemType,
                                   @QueryParam("callback") String callback) {
 
-        return formatResponse("", responseType, callback);
+        List<Message> errorMessages = new ArrayList<Message>();
+        Object response = null;
+
+        Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
+        if (coreTenantID == null)
+            errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
+        else {
+            if (profileService.deleteProfile(coreTenantID, itemID, itemType))
+                response = MSG.PROFILE_DELETED;
+            else
+                errorMessages.add(MSG.PROFILE_NOT_DELETED);
+        }
+
+        return formatResponse(response, errorMessages, WS.PROFILE_DELETE, responseType, callback);
     }
 
     /**
@@ -123,13 +157,27 @@ public class ProfileWebservice {
     @GET
     @Path("/load")
     public Response loadProfile(@PathParam("responseType") String responseType,
-                                @QueryParam("apiKey") String apiKey,
-                                @QueryParam("tenantID") String tenantID,
-                                @QueryParam("itemID") String itemID,
-                                @QueryParam("itemType") String itemType,
+                                @QueryParam("apikey") String apiKey,
+                                @QueryParam("tenantid") String tenantID,
+                                @QueryParam("itemid") String itemID,
+                                @QueryParam("itemtype") String itemType,
                                 @QueryParam("callback") String callback) {
 
-        return formatResponse("", responseType, callback);
+        List<Message> errorMessages = new ArrayList<Message>();
+        Object response = null;
+
+        Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
+        if (coreTenantID == null)
+            errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
+        else {
+            String profile = profileService.getProfile(coreTenantID, itemID, itemType);
+            if (profile != null)
+                response = new ResponseProfile("/profile/load", tenantID, itemID, itemType, profile);
+            else
+                errorMessages.add(MSG.PROFILE_NOT_LOADED);
+        }
+
+        return formatResponse(response, errorMessages, WS.PROFILE_LOAD, responseType, callback);
     }
 
     /**
@@ -152,15 +200,28 @@ public class ProfileWebservice {
     @GET
     @Path("/field/store")
     public Response storeField(@PathParam("responseType") String responseType,
-                               @QueryParam("apiKey") String apiKey,
-                               @QueryParam("tenantID") String tenantID,
-                               @QueryParam("itemID") String itemID,
-                               @QueryParam("itemType") String itemType,
+                               @QueryParam("apikey") String apiKey,
+                               @QueryParam("tenantid") String tenantID,
+                               @QueryParam("itemid") String itemID,
+                               @QueryParam("itemtype") String itemType,
                                @QueryParam("field") String field,
                                @QueryParam("value") String value,
                                @QueryParam("callback") String callback) {
 
-        return formatResponse("", responseType, callback);
+        List<Message> errorMessages = new ArrayList<Message>();
+        Object response = null;
+
+        Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
+        if (coreTenantID == null)
+            errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
+        else {
+            profileService.insertSimpleDimension(
+                    coreTenantID, itemID, itemType,
+                    field, value);
+            response = MSG.PROFILE_FIELD_SAVED;
+        }
+
+        return formatResponse(response, errorMessages, WS.PROFILE_FIELD_STORE, responseType, callback);
     }
 
     /**
@@ -182,61 +243,107 @@ public class ProfileWebservice {
     @GET
     @Path("/field/delete")
     public Response deleteField(@PathParam("responseType") String responseType,
-                                @QueryParam("apiKey") String apiKey,
-                                @QueryParam("tenantID") String tenantID,
-                                @QueryParam("itemID") String itemID,
-                                @QueryParam("itemType") String itemType,
+                                @QueryParam("apikey") String apiKey,
+                                @QueryParam("tenantid") String tenantID,
+                                @QueryParam("itemid") String itemID,
+                                @QueryParam("itemtype") String itemType,
                                 @QueryParam("field") String field,
                                 @QueryParam("callback") String callback) {
 
-        return formatResponse("", responseType, callback);
+        List<Message> errorMessages = new ArrayList<Message>();
+        Object response = null;
+
+        Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
+        if (coreTenantID == null)
+            errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
+        else {
+            if (profileService.deleteValue(coreTenantID, itemID, itemType, field))
+                response = MSG.PROFILE_FIELD_DELETED;
+            else
+                errorMessages.add(MSG.PROFILE_FIELD_NOT_DELETED);
+        }
+
+        return formatResponse(response, errorMessages, WS.PROFILE_FIELD_DELETE, responseType, callback);
     }
 
     /**
-     * This method loads a value from a specific field of the profile which belongs to the item
+     * This method loads the values from a specific field of the profile which belongs to the item
      * defined by the tenantID, itemID and the itemTypeID. The field can be addressed
      * by a XPath expression
+     *
+     * @see ResponseProfileField
      *
      * @param responseType defines the media type of the result
      * @param apiKey       the apiKey which admits access to the API
      * @param tenantID     the tenantID of the addressed item
      * @param itemID       the itemID if the addressed item
      * @param itemType     the itemType of the addressed item
-     * @param field        an XPath expression pointing to the filed
+     * @param field        an XPath expression pointing to the field(s)
      *                     whose value will be returned
      * @param callback     if set and responseType is jason the result will be returned
      *                     via this javascript callback function (optional)
-     * @return a response object containing the value of the field
+     * @return a response object containing the values of the field.
      */
     @GET
     @Path("/field/load")
     public Response loadField(@PathParam("responseType") String responseType,
-                              @QueryParam("apiKey") String apiKey,
-                              @QueryParam("tenantID") String tenantID,
-                              @QueryParam("itemID") String itemID,
-                              @QueryParam("itemType") String itemType,
+                              @QueryParam("apikey") String apiKey,
+                              @QueryParam("tenantid") String tenantID,
+                              @QueryParam("itemid") String itemID,
+                              @QueryParam("itemtype") String itemType,
                               @QueryParam("field") String field,
                               @QueryParam("callback") String callback) {
 
-        return formatResponse("", responseType, callback);
+        List<Message> errorMessages = new ArrayList<Message>();
+        Object response = null;
+
+        Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
+        if (coreTenantID == null)
+            errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
+        else {
+            Set<String> values = profileService.getMultiDimensionValue(coreTenantID, itemID, itemType, field);
+            if (values != null)
+                response = new ResponseProfileField("/profile/field/load", tenantID, itemID, itemType, values);
+            else
+                errorMessages.add(MSG.PROFILE_FIELD_NOT_LOADED);
+        }
+        return formatResponse(response, errorMessages, WS.PROFILE_FIELD_LOAD, responseType, callback);
     }
 
 
     /**
      * This method takes an object and creates a <code>Response</code> object
-     * out of it which will be returned. The format of the <code>Response</code>
+     * out of it which will be returned. If <code>errorMessages</code> contains error
+     * messages they will be send back instead.
+     * The format of the <code>Response</code>
      * depends on the <code>responseType</code>.
      * Supported types are <code>application/xml</code> and <code>application/json</code>
      *
-     * @param respondData  an object which will be returned as a
-     *                     <code>Response</code> object
-     * @param responseType defines the format of the <code>Response</code> object
-     * @param callback     if set and responseType is jason the result will be returned
-     *                     via this javascript callback function (optional)
+     * @param respondData   an object which will be returned as a
+     *                      <code>Response</code> object
+     * @param errorMessages a list of <code>Message</code> objects which contain
+     *                      error messages of the API request
+     * @param responseType  defines the format of the <code>Response</code> object
+     * @param callback      if set and responseType is jason the result will be returned
+     *                      via this javascript callback function (optional)
      * @return a <code>Response</code> object containing the <code>responseData</code>
      *         in the format defined with <code>responseType</code>
      */
-    private Response formatResponse(Object respondData, String responseType, String callback) {
+    private Response formatResponse(Object respondData,
+                                    List<Message> errorMessages,
+                                    String serviceName,
+                                    String responseType,
+                                    String callback) {
+
+        //handle error messages if existing
+        if (errorMessages.size() > 0) {
+            if ((WS.RESPONSE_TYPE_PATH_JSON.equals(responseType)))
+                throw new EasyRecException(errorMessages, serviceName, WS.RESPONSE_TYPE_JSON, callback);
+            else
+                throw new EasyRecException(errorMessages, serviceName);
+        }
+
+        //convert respondData to Respond object
         if (WS.RESPONSE_TYPE_PATH_JSON.equals(responseType)) {
             if (callback != null) {
                 return Response.ok(new JSONWithPadding(respondData, callback),
