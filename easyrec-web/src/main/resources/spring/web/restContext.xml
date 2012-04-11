@@ -13,5 +13,6 @@
     <!-- This file contains all spring bean definitions necessary for easyrec REST interfaces -->
 
     <import resource="classpath:spring/web/rest/easyrecREST.xml"/>
+    <import resource="classpath:spring/web/rest/profileWebservice.xml"/>
 
 </beans>

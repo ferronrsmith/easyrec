@@ -28,6 +28,7 @@ import org.easyrec.store.dao.core.ProfileDAO;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import javax.xml.XMLConstants;
@@ -103,6 +104,16 @@ public class ProfileServiceImpl implements ProfileService {
                 typeMappingService.getIdOfItemType(tenantId, itemTypeId), profileXML) != 0;
     }
 
+    public boolean storeProfile(Integer tenantId, String itemId, String itemType, String profileXML) {
+        return profileDAO.storeProfile(tenantId, idMappingDAO.lookup(itemId),
+                typeMappingService.getIdOfItemType(tenantId, itemType), profileXML) != 0;
+    }
+
+    public boolean deleteProfile(Integer tenantId, String itemId, String itemType) {
+        return profileDAO.deleteProfile(tenantId, idMappingDAO.lookup(itemId),
+                typeMappingService.getIdOfItemType(tenantId, itemType));
+    }
+
     public String getProfile(Integer tenantId, String itemId, Integer itemTypeId) {
         Integer mappedItemId = idMappingDAO.lookup(itemId);
         return profileDAO.getProfile(tenantId, mappedItemId, itemTypeId);
@@ -129,10 +140,16 @@ public class ProfileServiceImpl implements ProfileService {
         return getProfile(tenantId, mappedItemId, itemTypeId);
     }
 
-    public Set<String> getMultiDimensionValue(Integer tenantId, Integer itemId, String itemTypeId,
+    public Set<String> getMultiDimensionValue(Integer tenantId, Integer itemId, String itemType,
                                               String dimensionXPath) {
         return profileDAO.getMultiDimensionValue(tenantId, itemId,
-                typeMappingService.getIdOfItemType(tenantId, itemTypeId), dimensionXPath);
+                typeMappingService.getIdOfItemType(tenantId, itemType), dimensionXPath);
+    }
+
+    public Set<String> getMultiDimensionValue(Integer tenantId, String itemId, String itemType,
+                                              String dimensionXPath) {
+        return profileDAO.getMultiDimensionValue(tenantId, idMappingDAO.lookup(itemId),
+                typeMappingService.getIdOfItemType(tenantId, itemType), dimensionXPath);
     }
 
     public String getSimpleDimensionValue(Integer tenantId, Integer itemId, String itemTypeId, String dimensionXPath) {
@@ -141,7 +158,15 @@ public class ProfileServiceImpl implements ProfileService {
                         dimensionXPath);
     }
 
-    public void insertOrUpdateMultiDimension(Integer tenantId, Integer itemId, String itemTypeId, String dimensionXPath,
+    public String getSimpleDimensionValue(Integer tenantId, String itemId, String itemTypeId, String dimensionXPath) {
+        return profileDAO.getSimpleDimensionValue(
+                tenantId,
+                idMappingDAO.lookup(itemId),
+                typeMappingService.getIdOfItemType(tenantId, itemTypeId),
+                dimensionXPath);
+    }
+
+    public void insertOrUpdateMultiDimension(Integer tenantId, Integer itemId, String itemType, String dimensionXPath,
                                              List<String> values) {
 
         XPathFactory xpf = XPathFactory.newInstance();
@@ -149,7 +174,7 @@ public class ProfileServiceImpl implements ProfileService {
         try {
             // load and parse the profile
             DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(new InputSource(new StringReader(getProfile(tenantId, itemId, itemTypeId))));
+            Document doc = db.parse(new InputSource(new StringReader(getProfile(tenantId, itemId, itemType))));
             // check if the element exists
             Node node = null;
             Node parent = null;
@@ -190,13 +215,20 @@ public class ProfileServiceImpl implements ProfileService {
             writer.close();
             String xml = writer.toString();
             logger.debug(xml);
-            storeProfile(tenantId, itemId, itemTypeId, xml);
+            storeProfile(tenantId, itemId, itemType, xml);
 
         } catch (Exception e) {
             logger.error("Error inserting Multi Dimension: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
+    public void insertOrUpdateMultiDimension(Integer tenantId, String itemId,
+                                             String itemType, String dimensionXPath,
+                                             List<String> values) {
+        insertOrUpdateMultiDimension(tenantId, idMappingDAO.lookup(itemId), itemType, dimensionXPath, values);
+    }
+
 
     public void insertOrUpdateSimpleDimension(Integer tenantId, Integer itemId, String itemTypeId,
                                               String dimensionXPath, String value) {
@@ -241,6 +273,88 @@ public class ProfileServiceImpl implements ProfileService {
 
     }
 
+    public void insertOrUpdateSimpleDimension(Integer tenantId, String itemId, String itemTypeId,
+                                              String dimensionXPath, String value) {
+        insertOrUpdateSimpleDimension(tenantId, idMappingDAO.lookup(itemId), itemTypeId,
+                dimensionXPath, value);
+    }
+
+    public void insertSimpleDimension(Integer tenantId, Integer itemId, String itemTypeId,
+                                      String dimensionXPath, String value) {
+
+        XPathFactory xpf = XPathFactory.newInstance();
+        try {
+            // load and parse the profile
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document doc = db.parse(new InputSource(new StringReader(getProfile(tenantId, itemId, itemTypeId))));
+
+            // follow the XPath from bottom to top until you find the first existing path element
+            XPath xp = xpf.newXPath();
+            String tmpPath = dimensionXPath;
+            Node node = null;
+            while (node == null) {
+                tmpPath = dimensionXPath.substring(0, tmpPath.lastIndexOf("/"));
+                node = (Node) xp.evaluate(tmpPath, doc, XPathConstants.NODE);
+            }
+            // found the correct node to insert or ended at Document root, hence insert
+            insertElement(doc, node,
+                    dimensionXPath.substring(tmpPath.length()), value);
+
+            StringWriter writer = new StringWriter();
+            Result result = new StreamResult(writer);
+            trans.transform(new DOMSource(doc), result);
+            writer.close();
+            String xml = writer.toString();
+            logger.debug(xml);
+            storeProfile(tenantId, itemId, itemTypeId, xml);
+
+        } catch (Exception e) {
+            logger.error("Error inserting Simple Dimension: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void insertSimpleDimension(Integer tenantId, String itemId, String itemTypeId,
+                                      String dimensionXPath, String value) {
+        insertSimpleDimension(tenantId, idMappingDAO.lookup(itemId), itemTypeId,
+                dimensionXPath, value);
+    }
+
+
+    public boolean deleteValue(Integer tenantId, String itemId, String itemType, String deleteXPath) {
+
+        XPathFactory xpf = XPathFactory.newInstance();
+        try {
+            // load and parse the profile
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document doc = db.parse(new InputSource(new StringReader(
+                    getProfile(tenantId, itemId, itemType))));
+
+            // check if the element exists
+            XPath xp = xpf.newXPath();
+            NodeList nodeList = (NodeList) xp.evaluate(deleteXPath, doc, XPathConstants.NODESET);
+
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Node node = nodeList.item(i);
+                node.getParentNode().removeChild(node);
+            }
+
+            StringWriter writer = new StringWriter();
+            Result result = new StreamResult(writer);
+            trans.transform(new DOMSource(doc), result);
+            writer.close();
+            String xml = writer.toString();
+            logger.debug(xml);
+            storeProfile(tenantId, itemId, itemType, xml);
+
+            return true;
+
+        } catch (Exception e) {
+            logger.error("Error deleting field: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public List<ItemVO<Integer, Integer>> getItemsByDimensionValue(Integer tenantId, String itemType,
                                                                    String dimensionXPath, String value) {

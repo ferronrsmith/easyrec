@@ -39,10 +39,23 @@ public class WS implements InitializingBean {
     public static final String ACTION_ITEMTYPES = "itemtypes";
     public static final String ACTION_CLUSTERS = "clusters";
     public static final String ACTION_HISTORY = "actionhistory";
+
+    public static final String PROFILE_STORE = "profile/store";
+    public static final String PROFILE_DELETE = "profile/delete";
+    public static final String PROFILE_LOAD = "profile/load";
+    public static final String PROFILE_FIELD_STORE = "profile/field/store";
+    public static final String PROFILE_FIELD_DELETE = "profile/field/delete";
+    public static final String PROFILE_FIELD_LOAD = "profile/field/load";
+
     public final static String JSON_PATH = "1.0/json";
     public final static String RESPONSE_TYPE_XML = "application/xml";
     public final static String RESPONSE_TYPE_JSON = "application/json";
     public final static String RESPONSE_TYPE_JSCRIPT = "application/javascript";
+
+    // vocabulary for the profile webservice
+    public final static String RESPONSE_TYPE_PATH_JSON = "/json";
+    public final static String RESPONSE_TYPE_PATH_XML = "";
+
 
     public WS(Integer DEFAULT_NUMBER_OF_RESULTS, Integer MAX_NUMBER_OF_RANKING_RESULTS, Integer ACTION_HISTORY_DEPTH) {
         setDEFAULT_NUMBER_OF_RESULTS(DEFAULT_NUMBER_OF_RESULTS);

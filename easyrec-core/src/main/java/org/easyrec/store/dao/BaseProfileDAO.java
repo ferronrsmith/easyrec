@@ -63,6 +63,25 @@ public interface BaseProfileDAO<T, I, IT> extends TableCreatingDAO {
 
     public String getSimpleDimensionValue(T tenantId, I itemId, IT itemTypeId, String dimensionXPath);
 
+    /**
+     * This method replaces some parts of the <code>Profile XML</code>
+     * defined by a XPath with another string.
+     *
+     * @param tenantId    the tenantId of the item with the profile
+     * @param itemId      the itemId of the item with the profile
+     * @param itemTypeId  the itemTypeId of the item with the profile
+     * @param updateXPath an XPath which points to the part of the
+     *                    <code>Profile</code> which will be replaced
+     * @param newXML      the string which will be placed at the given
+     *                    XPath location
+     * @return <code>true</code> if the operation succeeds and
+     *         <code>false</code> otherwise
+     */
+    public boolean updateXML(T tenantId, I itemId, IT itemTypeId,
+                             String updateXPath, String newXML);
+
+    public boolean deleteProfile(T tenantId, I itemId, IT itemTypeId);
+
     public List<ItemVO<Integer, Integer>> getItemsByDimensionValue(T tenantId, IT itemType,
                                                                    String dimensionXPath, String value);
 

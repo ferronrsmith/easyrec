@@ -99,6 +99,27 @@ public interface ProfileService {
     public boolean storeProfile(Integer tenantId, Integer itemId, String itemTypeId, String profileXML);
 
     /**
+     * This function writes a profile as an XML string to the database
+     *
+     * @param tenantId   the tenantId of the profile
+     * @param itemId     the string itemId of the profile
+     * @param itemType   the itemType of the profile
+     * @param profileXML the profile as an XML string
+     * @return <code>true</code> if the operation succeeds <code>false</code> otherwise
+     */
+    public boolean storeProfile(Integer tenantId, String itemId, String itemType, String profileXML);
+
+    /**
+     * This function deletes a profile of an item
+     *
+     * @param tenantId the tenantId of the profile's item
+     * @param itemId   the string itemId of the profile's item
+     * @param itemType the itemType of the profile's item
+     * @return <code>true</code> if the operation succeeds <code>false</code> otherwise
+     */
+    public boolean deleteProfile(Integer tenantId, String itemId, String itemType);
+
+    /**
      * This function loads the first result as string value from the profile
      * based on the provided xpath.
      *
@@ -111,20 +132,45 @@ public interface ProfileService {
     public String getSimpleDimensionValue(Integer tenantId, Integer itemId, String itemTypeId, String dimensionXPath);
 
     /**
+     * This function loads the first result as string value from the profile
+     * based on the provided xpath.
+     *
+     * @param tenantId       the tenantId of the profile
+     * @param itemId         the itemId of the profile
+     * @param itemTypeId     the itemType of the profile
+     * @param dimensionXPath the XPath string addressing the wanted value
+     * @return string with the value on the given XPath location
+     */
+    public String getSimpleDimensionValue(Integer tenantId, String itemId, String itemTypeId, String dimensionXPath);
+
+    /**
      * This function loads all results as List of string values from
      * the profile based on the provided xpath.
      *
      * @param tenantId       the tenantId of the profile
      * @param itemId         the itemId of the profile
-     * @param itemTypeId     the itemTypeId of the profile
+     * @param itemType       the itemType of the profile
      * @param dimensionXPath the XPath of the value you want to load
      * @return the values of the given XPath
      */
-    public Set<String> getMultiDimensionValue(Integer tenantId, Integer itemId, String itemTypeId,
+    public Set<String> getMultiDimensionValue(Integer tenantId, Integer itemId, String itemType,
                                               String dimensionXPath);
 
     /**
-     * This function updates a item's ( based on tenantId, itemId, itemtypeId) XML Profile
+     * This function loads all results as List of string values from
+     * the profile based on the provided xpath.
+     *
+     * @param tenantId       the tenantId of the profile
+     * @param itemId         the itemId of the profile
+     * @param itemType       the itemTypeId of the profile
+     * @param dimensionXPath the XPath of the value you want to load
+     * @return the values of the given XPath
+     */
+    public Set<String> getMultiDimensionValue(Integer tenantId, String itemId, String itemType,
+                                              String dimensionXPath);
+
+    /**
+     * This function updates or inserts a item's ( based on tenantId, itemId, itemtypeId) XML Profile
      * at the specified XPath with the specified value.
      *
      * @param tenantId       the tenantId of the profile
@@ -137,17 +183,83 @@ public interface ProfileService {
                                               String dimensionXPath, String value);
 
     /**
-     * This function updates a item's ( based on tenantId, itemId, itemtypeId) XML Profile
-     * at the specified XPath with the specified values.
+     * This function updates or inserts a value into an item's
+     * (based on tenantId, itemId, itemtypeId) XML Profile
+     * at the specified XPath.
      *
      * @param tenantId       the tenantId of the profile
      * @param itemId         the itemId of the profile
      * @param itemTypeId     the itemTypeId of the profile
      * @param dimensionXPath the XPath of the value you want to update or insert
+     * @param value          the value you want to insert or update into the profile
+     */
+    public void insertOrUpdateSimpleDimension(Integer tenantId, String itemId, String itemTypeId,
+                                              String dimensionXPath, String value);
+
+    /**
+     * This function updates or inserts a value into an item's
+     * (based on tenantId, itemId, itemtypeId) XML Profile
+     * at the specified XPath.
+     *
+     * @param tenantId       the tenantId of the profile
+     * @param itemId         the itemId of the profile
+     * @param itemTypeId     the itemTypeId of the profile
+     * @param dimensionXPath the XPath of the value you want to update or insert
+     * @param value          the value you want to insert or update into the profile
+     */
+    public void insertSimpleDimension(Integer tenantId, Integer itemId, String itemTypeId,
+                                      String dimensionXPath, String value);
+
+    /**
+     * This function inserts a value into an item's ( based on tenantId, itemId, itemtypeId)
+     * XML Profile at the specified XPath.
+     *
+     * @param tenantId       the tenantId of the profile
+     * @param itemId         the itemId of the profile
+     * @param itemTypeId     the itemTypeId of the profile
+     * @param dimensionXPath the XPath of the value you want to update or insert
+     * @param value          the value you want to insert or update into the profile
+     */
+    public void insertSimpleDimension(Integer tenantId, String itemId, String itemTypeId,
+                                              String dimensionXPath, String value);
+
+    /**
+     * This function updates a item's ( based on tenantId, itemId, itemType) XML Profile
+     * at the specified XPath with the specified values.
+     *
+     * @param tenantId       the tenantId of the profile
+     * @param itemId         the itemId of the profile
+     * @param itemType       the itemType of the profile
+     * @param dimensionXPath the XPath of the value you want to update or insert
      * @param values         the value you want to insert or update into the profile
      */
-    public void insertOrUpdateMultiDimension(Integer tenantId, Integer itemId, String itemTypeId, String dimensionXPath,
+    public void insertOrUpdateMultiDimension(Integer tenantId, Integer itemId, String itemType, String dimensionXPath,
                                              List<String> values);
+
+    /**
+     * This function updates a item's ( based on tenantId, itemId, itemType) XML Profile
+     * at the specified XPath with the specified values.
+     *
+     * @param tenantId       the tenantId of the profile
+     * @param itemId         the itemId of the profile
+     * @param itemType       the itemType of the profile
+     * @param dimensionXPath the XPath of the value you want to update or insert
+     * @param values         the value you want to insert or update into the profile
+     */
+    public void insertOrUpdateMultiDimension(Integer tenantId, String itemId, String itemType, String dimensionXPath,
+                                             List<String> values);
+
+    /**
+     * This function deletes the nodes defined by <code>deleteXPath</code>.
+     *
+     * @param tenantId    the tenantId of the profile
+     * @param itemId      the itemId of the profile
+     * @param itemType    the itemType of the profile
+     * @param deleteXPath the XPath to the nodes which will be deleted
+     * @return returns <code>true</code> if the operation succeeded and
+     *         <code>false</code> otherwise
+     */
+    public boolean deleteValue(Integer tenantId, String itemId, String itemType, String deleteXPath);
 
     /**
      * This function loads all Item's based on the given profile values
