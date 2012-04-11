@@ -67,7 +67,7 @@ public class ProfileServiceImpl implements ProfileService {
     private final Log logger = LogFactory.getLog(this.getClass());
 
     public ProfileServiceImpl(ProfileDAO profileDAO, IDMappingDAO idMappingDAO, TypeMappingService typeMappingService) {
-        this(profileDAO, null, idMappingDAO,typeMappingService);
+        this(profileDAO, null, idMappingDAO, typeMappingService);
     }
 
 
@@ -118,6 +118,10 @@ public class ProfileServiceImpl implements ProfileService {
 
     public String getProfile(Item item) {
         return getProfile(item.getTenantId(), item.getItemId(), item.getItemType());
+    }
+
+    public String getProfile(ItemVO<Integer, Integer> item) {
+        return getProfile(item.getTenant(), item.getItem(), item.getType());
     }
 
     public String getProfile(Integer tenantId, String itemId, String itemTypeId) {
