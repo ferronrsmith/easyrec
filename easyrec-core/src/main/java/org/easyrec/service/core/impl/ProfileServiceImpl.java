@@ -134,6 +134,10 @@ public class ProfileServiceImpl implements ProfileService {
         return getProfile(item.getTenantId(), item.getItemId(), item.getItemType());
     }
 
+    public String getProfile(ItemVO<Integer, Integer> item) {
+        return getProfile(item.getTenant(), item.getItem(), item.getType());
+    }
+
     public String getProfile(Integer tenantId, String itemId, String itemTypeId) {
         Integer mappedItemId = idMappingDAO.lookup(itemId);
         return getProfile(tenantId, mappedItemId, itemTypeId);

@@ -72,6 +72,14 @@ public interface ProfileService {
     /**
      * This function loads a profile XML string from the database
      *
+     * @param item The Item Object of the profile (holds itemId, itemTypeId and tenantId)
+     * @return a string with the XML profile for the given item object
+     */
+    public String getProfile(ItemVO<Integer, Integer> item);
+
+    /**
+     * This function loads a profile XML string from the database
+     *
      * @param tenantId   the tenantId of the profile
      * @param itemId     the itemId of the profile
      * @param itemTypeId the itemTypeId of the profile
