@@ -170,9 +170,10 @@ public interface ProfileService {
      * @param itemTypeId     the itemTypeId of the profile
      * @param dimensionXPath the XPath of the value you want to update or insert
      * @param value          the value you want to insert or update into the profile
+     * @return <code>true</code> if the operation succeeds <code>false</code> otherwise
      */
-    public void insertOrUpdateSimpleDimension(Integer tenantId, Integer itemId, String itemTypeId,
-                                              String dimensionXPath, String value);
+    public boolean insertOrUpdateSimpleDimension(Integer tenantId, Integer itemId, String itemTypeId,
+                                                 String dimensionXPath, String value);
 
     /**
      * This function updates or inserts a value into an item's
@@ -184,9 +185,10 @@ public interface ProfileService {
      * @param itemTypeId     the itemTypeId of the profile
      * @param dimensionXPath the XPath of the value you want to update or insert
      * @param value          the value you want to insert or update into the profile
+     * @return <code>true</code> if the operation succeeds <code>false</code> otherwise
      */
-    public void insertOrUpdateSimpleDimension(Integer tenantId, String itemId, String itemTypeId,
-                                              String dimensionXPath, String value);
+    public boolean insertOrUpdateSimpleDimension(Integer tenantId, String itemId, String itemTypeId,
+                                                 String dimensionXPath, String value);
 
     /**
      * This function updates or inserts a value into an item's
@@ -198,9 +200,10 @@ public interface ProfileService {
      * @param itemTypeId     the itemTypeId of the profile
      * @param dimensionXPath the XPath of the value you want to update or insert
      * @param value          the value you want to insert or update into the profile
+     * @return <code>true</code> if the operation succeeds <code>false</code> otherwise
      */
-    public void insertSimpleDimension(Integer tenantId, Integer itemId, String itemTypeId,
-                                      String dimensionXPath, String value);
+    public boolean insertSimpleDimension(Integer tenantId, Integer itemId, String itemTypeId,
+                                         String dimensionXPath, String value);
 
     /**
      * This function inserts a value into an item's ( based on tenantId, itemId, itemtypeId)
@@ -211,9 +214,10 @@ public interface ProfileService {
      * @param itemTypeId     the itemTypeId of the profile
      * @param dimensionXPath the XPath of the value you want to update or insert
      * @param value          the value you want to insert or update into the profile
+     * @return <code>true</code> if the operation succeeds <code>false</code> otherwise
      */
-    public void insertSimpleDimension(Integer tenantId, String itemId, String itemTypeId,
-                                              String dimensionXPath, String value);
+    public boolean insertSimpleDimension(Integer tenantId, String itemId, String itemTypeId,
+                                         String dimensionXPath, String value);
 
     /**
      * This function updates a item's ( based on tenantId, itemId, itemType) XML Profile
@@ -224,9 +228,10 @@ public interface ProfileService {
      * @param itemType       the itemType of the profile
      * @param dimensionXPath the XPath of the value you want to update or insert
      * @param values         the value you want to insert or update into the profile
+     * @return <code>true</code> if the operation succeeds <code>false</code> otherwise
      */
-    public void insertOrUpdateMultiDimension(Integer tenantId, Integer itemId, String itemType, String dimensionXPath,
-                                             List<String> values);
+    public boolean insertOrUpdateMultiDimension(Integer tenantId, Integer itemId, String itemType, String dimensionXPath,
+                                                List<String> values);
 
     /**
      * This function updates a item's ( based on tenantId, itemId, itemType) XML Profile
@@ -237,9 +242,10 @@ public interface ProfileService {
      * @param itemType       the itemType of the profile
      * @param dimensionXPath the XPath of the value you want to update or insert
      * @param values         the value you want to insert or update into the profile
+     * @return <code>true</code> if the operation succeeds <code>false</code> otherwise
      */
-    public void insertOrUpdateMultiDimension(Integer tenantId, String itemId, String itemType, String dimensionXPath,
-                                             List<String> values);
+    public boolean insertOrUpdateMultiDimension(Integer tenantId, String itemId, String itemType, String dimensionXPath,
+                                                List<String> values);
 
     /**
      * This function deletes the nodes defined by <code>deleteXPath</code>.

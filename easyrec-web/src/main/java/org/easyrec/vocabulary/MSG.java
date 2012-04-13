@@ -142,12 +142,22 @@ public class MSG {
             314, "An error occurred while loading the profile!");
     public static final Message PROFILE_FIELD_SAVED = new SuccessMessage(
             315, "Profile field successfully saved!");
+    public static final Message PROFILE_FIELD_NOT_SAVED = new ErrorMessage(
+            315, "An error occurred while saving a profile field!");
     public static final Message PROFILE_FIELD_NOT_LOADED = new ErrorMessage(
             316, "An error occurred while loading the profile field!");
     public static final Message PROFILE_FIELD_DELETED = new SuccessMessage(
             317, "Profile field successfully deleted!");
     public static final Message PROFILE_FIELD_NOT_DELETED = new ErrorMessage(
             318, "An error occurred while deleting the profile field!");
+    public static final Message PROFILE_NO_API_KEY = new ErrorMessage(
+            330, "Necessary APIKey has not been provided!");
+    public static final Message PROFILE_NO_TENANT_ID = new ErrorMessage(
+            331, "Necessary tenantID has not been provided!");
+    public static final Message PROFILE_NO_ITEM_ID = new ErrorMessage(
+            332, "Necessary itemID has not been provided!");
+    public static final Message PROFILE_NO_ITEM_TYPE = new ErrorMessage(
+            333, "Necessary itemType has not been provided!");
 
     // user/login messages
     public static final Message USER_NO_SESSION_ID = new ErrorMessage(

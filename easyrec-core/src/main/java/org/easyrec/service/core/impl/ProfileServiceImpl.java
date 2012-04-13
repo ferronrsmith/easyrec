@@ -30,10 +30,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
@@ -44,6 +46,7 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
@@ -93,7 +96,7 @@ public class ProfileServiceImpl implements ProfileService {
         TransformerFactory tf = TransformerFactory.newInstance();
         try {
             trans = tf.newTransformer();
-            trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            //trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         } catch (Exception e) {
 
         }
@@ -162,15 +165,14 @@ public class ProfileServiceImpl implements ProfileService {
                 dimensionXPath);
     }
 
-    public void insertOrUpdateMultiDimension(Integer tenantId, Integer itemId, String itemType, String dimensionXPath,
+    public boolean insertOrUpdateMultiDimension(Integer tenantId, Integer itemId, String itemType, String dimensionXPath,
                                              List<String> values) {
 
         XPathFactory xpf = XPathFactory.newInstance();
 
         try {
             // load and parse the profile
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(new InputSource(new StringReader(getProfile(tenantId, itemId, itemType))));
+            Document doc = getProfileXMLDocument(tenantId, itemId, itemType);
             // check if the element exists
             Node node = null;
             Node parent = null;
@@ -186,7 +188,7 @@ public class ProfileServiceImpl implements ProfileService {
                     it.remove();
                 }
             }
-            if (values.isEmpty()) return; // nothing left to do
+            if (values.isEmpty()) return true; // nothing left to do
             String parentPath = dimensionXPath.substring(0, dimensionXPath.lastIndexOf("/"));
             parent = (Node) xp.evaluate(parentPath, doc, XPathConstants.NODE);
             // find path to parent
@@ -216,31 +218,32 @@ public class ProfileServiceImpl implements ProfileService {
         } catch (Exception e) {
             logger.error("Error inserting Multi Dimension: " + e.getMessage());
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
-    public void insertOrUpdateMultiDimension(Integer tenantId, String itemId,
+    public boolean insertOrUpdateMultiDimension(Integer tenantId, String itemId,
                                              String itemType, String dimensionXPath,
                                              List<String> values) {
-        insertOrUpdateMultiDimension(tenantId, idMappingDAO.lookup(itemId), itemType, dimensionXPath, values);
+        return insertOrUpdateMultiDimension(tenantId, idMappingDAO.lookup(itemId), itemType, dimensionXPath, values);
     }
 
 
-    public void insertOrUpdateSimpleDimension(Integer tenantId, Integer itemId, String itemTypeId,
+    public boolean insertOrUpdateSimpleDimension(Integer tenantId, Integer itemId, String itemTypeId,
                                               String dimensionXPath, String value) {
 
         XPathFactory xpf = XPathFactory.newInstance();
         try {
             // load and parse the profile
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(new InputSource(new StringReader(getProfile(tenantId, itemId, itemTypeId))));
+            Document doc = getProfileXMLDocument(tenantId, itemId, itemTypeId);
             // check if the element exists
             XPath xp = xpf.newXPath();
             Node node = (Node) xp.evaluate(dimensionXPath, doc, XPathConstants.NODE);
             // if the element exists, just update the value
             if (node != null) {
                 // if value doesn't change, there is no need to alter the profile and write it to database
-                if (value.equals(node.getTextContent())) return;
+                if (value.equals(node.getTextContent())) return true;
                 node.setTextContent(value);
             } else { // if the element cannot be found, insert it at the position given in the dimensionXPath
                 // follow the XPath from bottom to top until you find the first existing path element
@@ -265,24 +268,24 @@ public class ProfileServiceImpl implements ProfileService {
         } catch (Exception e) {
             logger.error("Error inserting Simple Dimension: " + e.getMessage());
             e.printStackTrace();
+            return false;
         }
-
+        return true;
     }
 
-    public void insertOrUpdateSimpleDimension(Integer tenantId, String itemId, String itemTypeId,
+    public boolean insertOrUpdateSimpleDimension(Integer tenantId, String itemId, String itemTypeId,
                                               String dimensionXPath, String value) {
-        insertOrUpdateSimpleDimension(tenantId, idMappingDAO.lookup(itemId), itemTypeId,
+        return insertOrUpdateSimpleDimension(tenantId, idMappingDAO.lookup(itemId), itemTypeId,
                 dimensionXPath, value);
     }
 
-    public void insertSimpleDimension(Integer tenantId, Integer itemId, String itemTypeId,
+    public boolean insertSimpleDimension(Integer tenantId, Integer itemId, String itemTypeId,
                                       String dimensionXPath, String value) {
 
         XPathFactory xpf = XPathFactory.newInstance();
         try {
             // load and parse the profile
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(new InputSource(new StringReader(getProfile(tenantId, itemId, itemTypeId))));
+            Document doc = getProfileXMLDocument(tenantId, itemId, itemTypeId);
 
             // follow the XPath from bottom to top until you find the first existing path element
             XPath xp = xpf.newXPath();
@@ -290,6 +293,8 @@ public class ProfileServiceImpl implements ProfileService {
             Node node = null;
             while (node == null) {
                 tmpPath = dimensionXPath.substring(0, tmpPath.lastIndexOf("/"));
+                if ("".equals(tmpPath))
+                    tmpPath = "/";
                 node = (Node) xp.evaluate(tmpPath, doc, XPathConstants.NODE);
             }
             // found the correct node to insert or ended at Document root, hence insert
@@ -307,12 +312,14 @@ public class ProfileServiceImpl implements ProfileService {
         } catch (Exception e) {
             logger.error("Error inserting Simple Dimension: " + e.getMessage());
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
-    public void insertSimpleDimension(Integer tenantId, String itemId, String itemTypeId,
+    public boolean insertSimpleDimension(Integer tenantId, String itemId, String itemTypeId,
                                       String dimensionXPath, String value) {
-        insertSimpleDimension(tenantId, idMappingDAO.lookup(itemId), itemTypeId,
+        return insertSimpleDimension(tenantId, idMappingDAO.lookup(itemId), itemTypeId,
                 dimensionXPath, value);
     }
 
@@ -364,7 +371,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     /**
      * Inserts a new element and value into an XML Document at the position given in xPathExpression
-     * relativ to the Node given in startNode.
+     * relative to the Node given in startNode.
      *
      * @param doc             the Document in which the Element is inserted
      * @param startNode       the Node in the Document used as start point for the XPath Expression
@@ -385,6 +392,16 @@ public class ProfileServiceImpl implements ProfileService {
             if (value != null) startNode.setTextContent(value);
         }
         return startNode;
+    }
+
+    private Document getProfileXMLDocument(Integer tenantId, Integer itemId, String itemTypeId)
+            throws ParserConfigurationException, SAXException, IOException  {
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        String profile = getProfile(tenantId, itemId, itemTypeId);
+        if (profile == null || profile.equals(""))
+            return db.newDocument();
+        else
+            return db.parse(new InputSource(new StringReader(profile)));
     }
 
 }

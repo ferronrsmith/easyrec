@@ -83,24 +83,29 @@ public class ProfileWebservice {
                                  @QueryParam("apikey") String apiKey,
                                  @QueryParam("tenantid") String tenantID,
                                  @QueryParam("itemid") String itemID,
-                                 @QueryParam("itemtype") String itemType,
+                                 @DefaultValue("ITEM") @QueryParam("itemtype") String itemType,
                                  @QueryParam("profile") String profile,
                                  @QueryParam("callback") String callback) {
 
-        List<Message> errorMessages = new ArrayList<Message>();
+        List<Message> messages = new ArrayList<Message>();
         Object response = null;
 
-        Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
-        if (coreTenantID == null)
-            errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
-        else {
-            if (profileService.storeProfile(coreTenantID, itemID, itemType, profile))
-                response = MSG.PROFILE_SAVED;
-            else
-                errorMessages.add(MSG.PROFILE_NOT_SAVED);
+        try {
+            if (checkParameters(apiKey, tenantID, itemID, itemType, messages)) {
+                Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
+                if (coreTenantID == null)
+                    messages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
+                else {
+                    if (profileService.storeProfile(coreTenantID, itemID, itemType, profile))
+                        messages.add(MSG.PROFILE_SAVED);
+                    else
+                        messages.add(MSG.PROFILE_NOT_SAVED);
+                }
+            }
+        } catch (RuntimeException runtimeException) {
+            messages.add(MSG.PROFILE_NOT_SAVED);
         }
-
-        return formatResponse(response, errorMessages, WS.PROFILE_STORE, responseType, callback);
+        return formatResponse(response, messages, WS.PROFILE_STORE, responseType, callback);
     }
 
     /**
@@ -122,23 +127,28 @@ public class ProfileWebservice {
                                   @QueryParam("apikey") String apiKey,
                                   @QueryParam("tenantid") String tenantID,
                                   @QueryParam("itemid") String itemID,
-                                  @QueryParam("itemtype") String itemType,
+                                  @DefaultValue("ITEM") @QueryParam("itemtype") String itemType,
                                   @QueryParam("callback") String callback) {
 
-        List<Message> errorMessages = new ArrayList<Message>();
+        List<Message> messages = new ArrayList<Message>();
         Object response = null;
 
-        Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
-        if (coreTenantID == null)
-            errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
-        else {
-            if (profileService.deleteProfile(coreTenantID, itemID, itemType))
-                response = MSG.PROFILE_DELETED;
-            else
-                errorMessages.add(MSG.PROFILE_NOT_DELETED);
+        try {
+            if (checkParameters(apiKey, tenantID, itemID, itemType, messages)) {
+                Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
+                if (coreTenantID == null)
+                    messages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
+                else {
+                    if (profileService.deleteProfile(coreTenantID, itemID, itemType))
+                        messages.add(MSG.PROFILE_DELETED);
+                    else
+                        messages.add(MSG.PROFILE_NOT_DELETED);
+                }
+            }
+        } catch (RuntimeException runtimeException) {
+            messages.add(MSG.PROFILE_NOT_DELETED);
         }
-
-        return formatResponse(response, errorMessages, WS.PROFILE_DELETE, responseType, callback);
+        return formatResponse(response, messages, WS.PROFILE_DELETE, responseType, callback);
     }
 
     /**
@@ -160,24 +170,29 @@ public class ProfileWebservice {
                                 @QueryParam("apikey") String apiKey,
                                 @QueryParam("tenantid") String tenantID,
                                 @QueryParam("itemid") String itemID,
-                                @QueryParam("itemtype") String itemType,
+                                @DefaultValue("ITEM") @QueryParam("itemtype") String itemType,
                                 @QueryParam("callback") String callback) {
 
-        List<Message> errorMessages = new ArrayList<Message>();
+        List<Message> messages = new ArrayList<Message>();
         Object response = null;
 
-        Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
-        if (coreTenantID == null)
-            errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
-        else {
-            String profile = profileService.getProfile(coreTenantID, itemID, itemType);
-            if (profile != null)
-                response = new ResponseProfile("/profile/load", tenantID, itemID, itemType, profile);
-            else
-                errorMessages.add(MSG.PROFILE_NOT_LOADED);
+        try {
+            if (checkParameters(apiKey, tenantID, itemID, itemType, messages)) {
+                Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
+                if (coreTenantID == null)
+                    messages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
+                else {
+                    String profile = profileService.getProfile(coreTenantID, itemID, itemType);
+                    if (profile != null)
+                        response = new ResponseProfile("/profile/load", tenantID, itemID, itemType, profile);
+                    else
+                        messages.add(MSG.PROFILE_NOT_LOADED);
+                }
+            }
+        } catch (RuntimeException runtimeException) {
+            messages.add(MSG.PROFILE_NOT_LOADED);
         }
-
-        return formatResponse(response, errorMessages, WS.PROFILE_LOAD, responseType, callback);
+        return formatResponse(response, messages, WS.PROFILE_LOAD, responseType, callback);
     }
 
     /**
@@ -203,25 +218,32 @@ public class ProfileWebservice {
                                @QueryParam("apikey") String apiKey,
                                @QueryParam("tenantid") String tenantID,
                                @QueryParam("itemid") String itemID,
-                               @QueryParam("itemtype") String itemType,
+                               @DefaultValue("ITEM") @QueryParam("itemtype") String itemType,
                                @QueryParam("field") String field,
                                @QueryParam("value") String value,
                                @QueryParam("callback") String callback) {
 
-        List<Message> errorMessages = new ArrayList<Message>();
+        List<Message> messages = new ArrayList<Message>();
         Object response = null;
 
-        Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
-        if (coreTenantID == null)
-            errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
-        else {
-            profileService.insertSimpleDimension(
-                    coreTenantID, itemID, itemType,
-                    field, value);
-            response = MSG.PROFILE_FIELD_SAVED;
+        try {
+            if (checkParameters(apiKey, tenantID, itemID, itemType, messages)) {
+                Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
+                if (coreTenantID == null)
+                    messages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
+                else {
+                    if (profileService.insertSimpleDimension(
+                            coreTenantID, itemID, itemType,
+                            field, value))
+                        messages.add(MSG.PROFILE_FIELD_SAVED);
+                    else
+                        messages.add(MSG.PROFILE_FIELD_NOT_SAVED);
+                }
+            }
+        } catch (RuntimeException runtimeException) {
+            messages.add(MSG.PROFILE_FIELD_NOT_SAVED);
         }
-
-        return formatResponse(response, errorMessages, WS.PROFILE_FIELD_STORE, responseType, callback);
+        return formatResponse(response, messages, WS.PROFILE_FIELD_STORE, responseType, callback);
     }
 
     /**
@@ -246,32 +268,36 @@ public class ProfileWebservice {
                                 @QueryParam("apikey") String apiKey,
                                 @QueryParam("tenantid") String tenantID,
                                 @QueryParam("itemid") String itemID,
-                                @QueryParam("itemtype") String itemType,
+                                @DefaultValue("ITEM") @QueryParam("itemtype") String itemType,
                                 @QueryParam("field") String field,
                                 @QueryParam("callback") String callback) {
 
-        List<Message> errorMessages = new ArrayList<Message>();
+        List<Message> messages = new ArrayList<Message>();
         Object response = null;
 
-        Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
-        if (coreTenantID == null)
-            errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
-        else {
-            if (profileService.deleteValue(coreTenantID, itemID, itemType, field))
-                response = MSG.PROFILE_FIELD_DELETED;
-            else
-                errorMessages.add(MSG.PROFILE_FIELD_NOT_DELETED);
+        try {
+            if (checkParameters(apiKey, tenantID, itemID, itemType, messages)) {
+                Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
+                if (coreTenantID == null)
+                    messages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
+                else {
+                    if (profileService.deleteValue(coreTenantID, itemID, itemType, field))
+                        messages.add(MSG.PROFILE_FIELD_DELETED);
+                    else
+                        messages.add(MSG.PROFILE_FIELD_NOT_DELETED);
+                }
+            }
+        } catch (RuntimeException runtimeException) {
+            messages.add(MSG.PROFILE_FIELD_NOT_DELETED);
         }
 
-        return formatResponse(response, errorMessages, WS.PROFILE_FIELD_DELETE, responseType, callback);
+        return formatResponse(response, messages, WS.PROFILE_FIELD_DELETE, responseType, callback);
     }
 
     /**
      * This method loads the values from a specific field of the profile which belongs to the item
      * defined by the tenantID, itemID and the itemTypeID. The field can be addressed
      * by a XPath expression
-     *
-     * @see ResponseProfileField
      *
      * @param responseType defines the media type of the result
      * @param apiKey       the apiKey which admits access to the API
@@ -283,6 +309,7 @@ public class ProfileWebservice {
      * @param callback     if set and responseType is jason the result will be returned
      *                     via this javascript callback function (optional)
      * @return a response object containing the values of the field.
+     * @see ResponseProfileField
      */
     @GET
     @Path("/field/load")
@@ -290,57 +317,63 @@ public class ProfileWebservice {
                               @QueryParam("apikey") String apiKey,
                               @QueryParam("tenantid") String tenantID,
                               @QueryParam("itemid") String itemID,
-                              @QueryParam("itemtype") String itemType,
+                              @DefaultValue("ITEM") @QueryParam("itemtype") String itemType,
                               @QueryParam("field") String field,
                               @QueryParam("callback") String callback) {
 
-        List<Message> errorMessages = new ArrayList<Message>();
+        List<Message> messages = new ArrayList<Message>();
         Object response = null;
 
-        Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
-        if (coreTenantID == null)
-            errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
-        else {
-            Set<String> values = profileService.getMultiDimensionValue(coreTenantID, itemID, itemType, field);
-            if (values != null)
-                response = new ResponseProfileField("/profile/field/load", tenantID, itemID, itemType, values);
-            else
-                errorMessages.add(MSG.PROFILE_FIELD_NOT_LOADED);
+        try {
+            if (checkParameters(apiKey, tenantID, itemID, itemType, messages)) {
+                Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
+                if (coreTenantID == null)
+                    messages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
+                else {
+                    Set<String> values = profileService.getMultiDimensionValue(coreTenantID, itemID, itemType, field);
+                    if (values != null)
+                        response = new ResponseProfileField("/profile/field/load", tenantID, itemID, itemType, values);
+                    else
+                        messages.add(MSG.PROFILE_FIELD_NOT_LOADED);
+                }
+            }
+        } catch (RuntimeException runtimeException) {
+            messages.add(MSG.PROFILE_FIELD_NOT_LOADED);
         }
-        return formatResponse(response, errorMessages, WS.PROFILE_FIELD_LOAD, responseType, callback);
+        return formatResponse(response, messages, WS.PROFILE_FIELD_LOAD, responseType, callback);
     }
 
 
     /**
      * This method takes an object and creates a <code>Response</code> object
-     * out of it which will be returned. If <code>errorMessages</code> contains error
+     * out of it which will be returned. If <code>messages</code> contains error
      * messages they will be send back instead.
      * The format of the <code>Response</code>
      * depends on the <code>responseType</code>.
      * Supported types are <code>application/xml</code> and <code>application/json</code>
      *
-     * @param respondData   an object which will be returned as a
-     *                      <code>Response</code> object
-     * @param errorMessages a list of <code>Message</code> objects which contain
-     *                      error messages of the API request
-     * @param responseType  defines the format of the <code>Response</code> object
-     * @param callback      if set and responseType is jason the result will be returned
-     *                      via this javascript callback function (optional)
+     * @param respondData  an object which will be returned as a
+     *                     <code>Response</code> object
+     * @param messages     a list of <code>Message</code> objects which contain
+     *                     error messages of the API request
+     * @param responseType defines the format of the <code>Response</code> object
+     * @param callback     if set and responseType is jason the result will be returned
+     *                     via this javascript callback function (optional)
      * @return a <code>Response</code> object containing the <code>responseData</code>
      *         in the format defined with <code>responseType</code>
      */
     private Response formatResponse(Object respondData,
-                                    List<Message> errorMessages,
+                                    List<Message> messages,
                                     String serviceName,
                                     String responseType,
                                     String callback) {
 
         //handle error messages if existing
-        if (errorMessages.size() > 0) {
+        if (messages.size() > 0) {
             if ((WS.RESPONSE_TYPE_PATH_JSON.equals(responseType)))
-                throw new EasyRecException(errorMessages, serviceName, WS.RESPONSE_TYPE_JSON, callback);
+                throw new EasyRecException(messages, serviceName, WS.RESPONSE_TYPE_JSON, callback);
             else
-                throw new EasyRecException(errorMessages, serviceName);
+                throw new EasyRecException(messages, serviceName);
         }
 
         //convert respondData to Respond object
@@ -358,5 +391,38 @@ public class ProfileWebservice {
         }
     }
 
-
+    /**
+     * This method checks if the <code>apiKey, tenantID, itemID</code> and <code>itemType</code>
+     * is not null or an empty string. If this is not the case the corresponding error message is
+     * added to the <code>messages</code> list.
+     *
+     * @param apiKey   the apiKey which will be checked
+     * @param tenantID the tenantID which will be checked
+     * @param itemID   the itemID which will be checked
+     * @param itemType the itemType which will be checked
+     * @param messages a <code>List&lt;Message&gt;</code> where the error messages are appended
+     * @return returns <code>true</code> if all parameters are positively checked and
+     *         <code>false</code> otherwise
+     */
+    private boolean checkParameters(String apiKey, String tenantID,
+                                    String itemID, String itemType, List<Message> messages) {
+        boolean result = true;
+        if (apiKey == null || apiKey.equals("")) {
+            messages.add(MSG.PROFILE_NO_API_KEY);
+            result = false;
+        }
+        if (tenantID == null || tenantID.equals("")) {
+            messages.add(MSG.PROFILE_NO_TENANT_ID);
+            result = false;
+        }
+        if (itemID == null || itemID.equals("")) {
+            messages.add(MSG.PROFILE_NO_ITEM_ID);
+            result = false;
+        }
+        if (itemType == null || itemType.equals("")) {
+            messages.add(MSG.PROFILE_NO_ITEM_TYPE);
+            result = false;
+        }
+        return result;
+    }
 }
