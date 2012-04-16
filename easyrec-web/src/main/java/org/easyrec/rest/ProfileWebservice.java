@@ -305,7 +305,7 @@ public class ProfileWebservice {
                                 @QueryParam("field") String field,
                                 @QueryParam("callback") String callback) {
 
-        Monitor mon = MonitorFactory.start(JAMON_PROFILE_DELETE);
+        Monitor mon = MonitorFactory.start(JAMON_PROFILE_FIELD_DELETE);
 
         List<Message> messages = new ArrayList<Message>();
         Object responseObject = null;
