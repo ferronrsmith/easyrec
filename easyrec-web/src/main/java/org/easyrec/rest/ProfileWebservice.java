@@ -528,7 +528,7 @@ public class ProfileWebservice {
      *         <code>false</code> otherwise
      */
     private boolean checkParameterProfile(String profile, List<Message> messages) {
-        if (profile == null || profile.equals("")) {
+        if (profile == null) {
             messages.add(MSG.PROFILE_NO_PROFILE_PROVIDED);
             return false;
         } else
@@ -564,7 +564,7 @@ public class ProfileWebservice {
      *         <code>false</code> otherwise
      */
     private boolean checkParameterValue(String value, List<Message> messages) {
-        if (value == null || value.equals("")) {
+        if (value == null) {
             messages.add(MSG.PROFILE_NO_VALUE_PROVIDED);
             return false;
         } else
