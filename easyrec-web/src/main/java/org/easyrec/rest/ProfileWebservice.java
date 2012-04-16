@@ -18,6 +18,8 @@
  */
 package org.easyrec.rest;
 
+import com.jamonapi.Monitor;
+import com.jamonapi.MonitorFactory;
 import com.sun.jersey.api.json.JSONWithPadding;
 import com.sun.jersey.spi.resource.Singleton;
 import org.easyrec.model.core.web.Message;
@@ -57,6 +59,13 @@ public class ProfileWebservice {
     private ProfileService profileService;
     private OperatorDAO operatorDAO;
 
+    private final static String JAMON_PROFILE_LOAD = "rest.profile.load";
+    private final static String JAMON_PROFILE_STORE = "rest.profile.store";
+    private final static String JAMON_PROFILE_DELETE = "rest.profile.delete";
+    private final static String JAMON_PROFILE_FIELD_STORE = "rest.profile.field.store";
+    private final static String JAMON_PROFILE_FIELD_LOAD = "rest.profile.field.load";
+    private final static String JAMON_PROFILE_FIELD_DELETE = "rest.profile.field.delete";
+
     public ProfileWebservice(ProfileService profileService, OperatorDAO operatorDAO) {
         this.profileService = profileService;
         this.operatorDAO = operatorDAO;
@@ -87,8 +96,10 @@ public class ProfileWebservice {
                                  @QueryParam("profile") String profile,
                                  @QueryParam("callback") String callback) {
 
+        Monitor mon = MonitorFactory.start(JAMON_PROFILE_STORE);
+
         List<Message> messages = new ArrayList<Message>();
-        Object response = null;
+        Object responseObject = null;
 
         try {
             if (checkParameters(apiKey, tenantID, itemID, itemType, messages)) {
@@ -105,7 +116,11 @@ public class ProfileWebservice {
         } catch (RuntimeException runtimeException) {
             messages.add(MSG.PROFILE_NOT_SAVED);
         }
-        return formatResponse(response, messages, WS.PROFILE_STORE, responseType, callback);
+
+        Response response = formatResponse(responseObject, messages,
+                WS.PROFILE_STORE, responseType, callback);
+        mon.stop();
+        return response;
     }
 
     /**
@@ -130,8 +145,10 @@ public class ProfileWebservice {
                                   @DefaultValue("ITEM") @QueryParam("itemtype") String itemType,
                                   @QueryParam("callback") String callback) {
 
+        Monitor mon = MonitorFactory.start(JAMON_PROFILE_DELETE);
+
         List<Message> messages = new ArrayList<Message>();
-        Object response = null;
+        Object responseObject = null;
 
         try {
             if (checkParameters(apiKey, tenantID, itemID, itemType, messages)) {
@@ -148,7 +165,11 @@ public class ProfileWebservice {
         } catch (RuntimeException runtimeException) {
             messages.add(MSG.PROFILE_NOT_DELETED);
         }
-        return formatResponse(response, messages, WS.PROFILE_DELETE, responseType, callback);
+
+        Response response = formatResponse(responseObject, messages,
+                WS.PROFILE_DELETE, responseType, callback);
+        mon.stop();
+        return response;
     }
 
     /**
@@ -173,8 +194,10 @@ public class ProfileWebservice {
                                 @DefaultValue("ITEM") @QueryParam("itemtype") String itemType,
                                 @QueryParam("callback") String callback) {
 
+        Monitor mon = MonitorFactory.start(JAMON_PROFILE_LOAD);
+
         List<Message> messages = new ArrayList<Message>();
-        Object response = null;
+        Object responseObject = null;
 
         try {
             if (checkParameters(apiKey, tenantID, itemID, itemType, messages)) {
@@ -184,7 +207,7 @@ public class ProfileWebservice {
                 else {
                     String profile = profileService.getProfile(coreTenantID, itemID, itemType);
                     if (profile != null)
-                        response = new ResponseProfile("/profile/load", tenantID, itemID, itemType, profile);
+                        responseObject = new ResponseProfile("/profile/load", tenantID, itemID, itemType, profile);
                     else
                         messages.add(MSG.PROFILE_NOT_LOADED);
                 }
@@ -192,7 +215,11 @@ public class ProfileWebservice {
         } catch (RuntimeException runtimeException) {
             messages.add(MSG.PROFILE_NOT_LOADED);
         }
-        return formatResponse(response, messages, WS.PROFILE_LOAD, responseType, callback);
+
+        Response response = formatResponse(responseObject, messages,
+                WS.PROFILE_LOAD, responseType, callback);
+        mon.stop();
+        return response;
     }
 
     /**
@@ -223,8 +250,10 @@ public class ProfileWebservice {
                                @QueryParam("value") String value,
                                @QueryParam("callback") String callback) {
 
+        Monitor mon = MonitorFactory.start(JAMON_PROFILE_FIELD_STORE);
+
         List<Message> messages = new ArrayList<Message>();
-        Object response = null;
+        Object responseObject = null;
 
         try {
             if (checkParameters(apiKey, tenantID, itemID, itemType, messages)) {
@@ -243,7 +272,11 @@ public class ProfileWebservice {
         } catch (RuntimeException runtimeException) {
             messages.add(MSG.PROFILE_FIELD_NOT_SAVED);
         }
-        return formatResponse(response, messages, WS.PROFILE_FIELD_STORE, responseType, callback);
+
+        Response response = formatResponse(responseObject, messages,
+                WS.PROFILE_FIELD_STORE, responseType, callback);
+        mon.stop();
+        return response;
     }
 
     /**
@@ -272,8 +305,10 @@ public class ProfileWebservice {
                                 @QueryParam("field") String field,
                                 @QueryParam("callback") String callback) {
 
+        Monitor mon = MonitorFactory.start(JAMON_PROFILE_DELETE);
+
         List<Message> messages = new ArrayList<Message>();
-        Object response = null;
+        Object responseObject = null;
 
         try {
             if (checkParameters(apiKey, tenantID, itemID, itemType, messages)) {
@@ -291,7 +326,10 @@ public class ProfileWebservice {
             messages.add(MSG.PROFILE_FIELD_NOT_DELETED);
         }
 
-        return formatResponse(response, messages, WS.PROFILE_FIELD_DELETE, responseType, callback);
+        Response response = formatResponse(responseObject, messages,
+                WS.PROFILE_FIELD_DELETE, responseType, callback);
+        mon.stop();
+        return response;
     }
 
     /**
@@ -321,8 +359,10 @@ public class ProfileWebservice {
                               @QueryParam("field") String field,
                               @QueryParam("callback") String callback) {
 
+        Monitor mon = MonitorFactory.start(JAMON_PROFILE_FIELD_LOAD);
+
         List<Message> messages = new ArrayList<Message>();
-        Object response = null;
+        Object responseObject = null;
 
         try {
             if (checkParameters(apiKey, tenantID, itemID, itemType, messages)) {
@@ -332,7 +372,7 @@ public class ProfileWebservice {
                 else {
                     Set<String> values = profileService.getMultiDimensionValue(coreTenantID, itemID, itemType, field);
                     if (values != null)
-                        response = new ResponseProfileField("/profile/field/load", tenantID, itemID, itemType, values);
+                        responseObject = new ResponseProfileField("/profile/field/load", tenantID, itemID, itemType, values);
                     else
                         messages.add(MSG.PROFILE_FIELD_NOT_LOADED);
                 }
@@ -340,7 +380,11 @@ public class ProfileWebservice {
         } catch (RuntimeException runtimeException) {
             messages.add(MSG.PROFILE_FIELD_NOT_LOADED);
         }
-        return formatResponse(response, messages, WS.PROFILE_FIELD_LOAD, responseType, callback);
+
+        Response response = formatResponse(responseObject, messages,
+                WS.PROFILE_FIELD_LOAD, responseType, callback);
+        mon.stop();
+        return response;
     }
 
 
@@ -416,7 +460,7 @@ public class ProfileWebservice {
             result = false;
         }
         if (itemID == null || itemID.equals("")) {
-            messages.add(MSG.PROFILE_NO_ITEM_ID);
+            messages.add(MSG.ITEM_NO_ID);
             result = false;
         }
         if (itemType == null || itemType.equals("")) {
