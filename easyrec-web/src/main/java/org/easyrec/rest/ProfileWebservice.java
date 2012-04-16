@@ -23,6 +23,7 @@ import com.jamonapi.MonitorFactory;
 import com.sun.jersey.api.json.JSONWithPadding;
 import com.sun.jersey.spi.resource.Singleton;
 import org.easyrec.model.core.web.Message;
+import org.easyrec.model.core.web.SuccessMessage;
 import org.easyrec.service.core.ProfileService;
 import org.easyrec.store.dao.web.OperatorDAO;
 import org.easyrec.vocabulary.MSG;
@@ -73,8 +74,9 @@ public class ProfileWebservice {
 
 
     /**
-     * This method stores the given profile to the item defined by the tenantID,
-     * itemID and the itemTypeID. If there is already a profile it will be overwritten.
+     * This method stores the given profile to the Item defined by the tenantID,
+     * itemID and the itemTypeID. If there is already a Profile it will be overwritten.
+     * If the Item does not exist it will be created.
      *
      * @param responseType defines the media type of the result
      * @param apiKey       the apiKey which admits access to the API
@@ -98,26 +100,32 @@ public class ProfileWebservice {
 
         Monitor mon = MonitorFactory.start(JAMON_PROFILE_STORE);
 
-        List<Message> messages = new ArrayList<Message>();
-        Object responseObject = null;
+        List<Message> errorMessages = new ArrayList<Message>();
+        List<Message> responseObject = new ArrayList<Message>();
 
         try {
-            if (checkParameters(apiKey, tenantID, itemID, itemType, messages)) {
+            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages)) {
                 Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
                 if (coreTenantID == null)
-                    messages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
+                    errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
                 else {
                     if (profileService.storeProfile(coreTenantID, itemID, itemType, profile))
-                        messages.add(MSG.PROFILE_SAVED);
+                        responseObject.add(MSG.PROFILE_SAVED);
                     else
-                        messages.add(MSG.PROFILE_NOT_SAVED);
+                        errorMessages.add(MSG.PROFILE_NOT_SAVED);
                 }
             }
+        } catch (IllegalArgumentException illegalArgumentException) {
+            if (illegalArgumentException.getMessage().contains("unknown item type")) {
+                errorMessages.add(MSG.OPERATION_FAILED.append(
+                        String.format(" itemType %s not found for tenant %s", itemType, tenantID)));
+            } else
+                errorMessages.add(MSG.PROFILE_NOT_SAVED);
         } catch (RuntimeException runtimeException) {
-            messages.add(MSG.PROFILE_NOT_SAVED);
+            errorMessages.add(MSG.PROFILE_NOT_SAVED);
         }
 
-        Response response = formatResponse(responseObject, messages,
+        Response response = formatResponse(responseObject, errorMessages,
                 WS.PROFILE_STORE, responseType, callback);
         mon.stop();
         return response;
@@ -147,26 +155,32 @@ public class ProfileWebservice {
 
         Monitor mon = MonitorFactory.start(JAMON_PROFILE_DELETE);
 
-        List<Message> messages = new ArrayList<Message>();
-        Object responseObject = null;
+        List<Message> errorMessages = new ArrayList<Message>();
+        List<Message> responseObject = new ArrayList<Message>();
 
         try {
-            if (checkParameters(apiKey, tenantID, itemID, itemType, messages)) {
+            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages)) {
                 Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
                 if (coreTenantID == null)
-                    messages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
+                    errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
                 else {
                     if (profileService.deleteProfile(coreTenantID, itemID, itemType))
-                        messages.add(MSG.PROFILE_DELETED);
+                        responseObject.add(MSG.PROFILE_DELETED);
                     else
-                        messages.add(MSG.PROFILE_NOT_DELETED);
+                        errorMessages.add(MSG.PROFILE_NOT_DELETED);
                 }
             }
+        } catch (IllegalArgumentException illegalArgumentException) {
+            if (illegalArgumentException.getMessage().contains("unknown item type")) {
+                errorMessages.add(MSG.OPERATION_FAILED.append(
+                        String.format(" itemType %s not found for tenant %s", itemType, tenantID)));
+            } else
+                errorMessages.add(MSG.PROFILE_NOT_DELETED);
         } catch (RuntimeException runtimeException) {
-            messages.add(MSG.PROFILE_NOT_DELETED);
+            errorMessages.add(MSG.PROFILE_NOT_DELETED);
         }
 
-        Response response = formatResponse(responseObject, messages,
+        Response response = formatResponse(responseObject, errorMessages,
                 WS.PROFILE_DELETE, responseType, callback);
         mon.stop();
         return response;
@@ -196,27 +210,33 @@ public class ProfileWebservice {
 
         Monitor mon = MonitorFactory.start(JAMON_PROFILE_LOAD);
 
-        List<Message> messages = new ArrayList<Message>();
+        List<Message> errorMessages = new ArrayList<Message>();
         Object responseObject = null;
 
         try {
-            if (checkParameters(apiKey, tenantID, itemID, itemType, messages)) {
+            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages)) {
                 Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
                 if (coreTenantID == null)
-                    messages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
+                    errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
                 else {
                     String profile = profileService.getProfile(coreTenantID, itemID, itemType);
                     if (profile != null)
                         responseObject = new ResponseProfile("/profile/load", tenantID, itemID, itemType, profile);
                     else
-                        messages.add(MSG.PROFILE_NOT_LOADED);
+                        errorMessages.add(MSG.PROFILE_NOT_LOADED);
                 }
             }
+        } catch (IllegalArgumentException illegalArgumentException) {
+            if (illegalArgumentException.getMessage().contains("unknown item type")) {
+                errorMessages.add(MSG.OPERATION_FAILED.append(
+                        String.format(" itemType %s not found for tenant %s", itemType, tenantID)));
+            } else
+                errorMessages.add(MSG.PROFILE_NOT_LOADED);
         } catch (RuntimeException runtimeException) {
-            messages.add(MSG.PROFILE_NOT_LOADED);
+            errorMessages.add(MSG.PROFILE_NOT_LOADED);
         }
 
-        Response response = formatResponse(responseObject, messages,
+        Response response = formatResponse(responseObject, errorMessages,
                 WS.PROFILE_LOAD, responseType, callback);
         mon.stop();
         return response;
@@ -252,28 +272,34 @@ public class ProfileWebservice {
 
         Monitor mon = MonitorFactory.start(JAMON_PROFILE_FIELD_STORE);
 
-        List<Message> messages = new ArrayList<Message>();
-        Object responseObject = null;
+        List<Message> errorMessages = new ArrayList<Message>();
+        List<Message> responseObject = new ArrayList<Message>();
 
         try {
-            if (checkParameters(apiKey, tenantID, itemID, itemType, messages)) {
+            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages)) {
                 Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
                 if (coreTenantID == null)
-                    messages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
+                    errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
                 else {
                     if (profileService.insertSimpleDimension(
                             coreTenantID, itemID, itemType,
                             field, value))
-                        messages.add(MSG.PROFILE_FIELD_SAVED);
+                        responseObject.add(MSG.PROFILE_FIELD_SAVED);
                     else
-                        messages.add(MSG.PROFILE_FIELD_NOT_SAVED);
+                        errorMessages.add(MSG.PROFILE_FIELD_NOT_SAVED);
                 }
             }
+        } catch (IllegalArgumentException illegalArgumentException) {
+            if (illegalArgumentException.getMessage().contains("unknown item type")) {
+                errorMessages.add(MSG.OPERATION_FAILED.append(
+                        String.format(" itemType %s not found for tenant %s", itemType, tenantID)));
+            } else
+                errorMessages.add(MSG.PROFILE_FIELD_NOT_SAVED);
         } catch (RuntimeException runtimeException) {
-            messages.add(MSG.PROFILE_FIELD_NOT_SAVED);
+            errorMessages.add(MSG.PROFILE_FIELD_NOT_SAVED);
         }
 
-        Response response = formatResponse(responseObject, messages,
+        Response response = formatResponse(responseObject, errorMessages,
                 WS.PROFILE_FIELD_STORE, responseType, callback);
         mon.stop();
         return response;
@@ -307,26 +333,32 @@ public class ProfileWebservice {
 
         Monitor mon = MonitorFactory.start(JAMON_PROFILE_FIELD_DELETE);
 
-        List<Message> messages = new ArrayList<Message>();
-        Object responseObject = null;
+        List<Message> errorMessages = new ArrayList<Message>();
+        List<Message> responseObject = new ArrayList<Message>();
 
         try {
-            if (checkParameters(apiKey, tenantID, itemID, itemType, messages)) {
+            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages)) {
                 Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
                 if (coreTenantID == null)
-                    messages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
+                    errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
                 else {
                     if (profileService.deleteValue(coreTenantID, itemID, itemType, field))
-                        messages.add(MSG.PROFILE_FIELD_DELETED);
+                        responseObject.add(MSG.PROFILE_FIELD_DELETED);
                     else
-                        messages.add(MSG.PROFILE_FIELD_NOT_DELETED);
+                        errorMessages.add(MSG.PROFILE_FIELD_NOT_DELETED);
                 }
             }
+        } catch (IllegalArgumentException illegalArgumentException) {
+            if (illegalArgumentException.getMessage().contains("unknown item type")) {
+                errorMessages.add(MSG.OPERATION_FAILED.append(
+                        String.format(" itemType %s not found for tenant %s", itemType, tenantID)));
+            } else
+                errorMessages.add(MSG.PROFILE_FIELD_NOT_DELETED);
         } catch (RuntimeException runtimeException) {
-            messages.add(MSG.PROFILE_FIELD_NOT_DELETED);
+            errorMessages.add(MSG.PROFILE_FIELD_NOT_DELETED);
         }
 
-        Response response = formatResponse(responseObject, messages,
+        Response response = formatResponse(responseObject, errorMessages,
                 WS.PROFILE_FIELD_DELETE, responseType, callback);
         mon.stop();
         return response;
@@ -361,27 +393,33 @@ public class ProfileWebservice {
 
         Monitor mon = MonitorFactory.start(JAMON_PROFILE_FIELD_LOAD);
 
-        List<Message> messages = new ArrayList<Message>();
+        List<Message> errorMessages = new ArrayList<Message>();
         Object responseObject = null;
 
         try {
-            if (checkParameters(apiKey, tenantID, itemID, itemType, messages)) {
+            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages)) {
                 Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
                 if (coreTenantID == null)
-                    messages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
+                    errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
                 else {
                     Set<String> values = profileService.getMultiDimensionValue(coreTenantID, itemID, itemType, field);
                     if (values != null)
                         responseObject = new ResponseProfileField("/profile/field/load", tenantID, itemID, itemType, values);
                     else
-                        messages.add(MSG.PROFILE_FIELD_NOT_LOADED);
+                        errorMessages.add(MSG.PROFILE_FIELD_NOT_LOADED);
                 }
             }
+        } catch (IllegalArgumentException illegalArgumentException) {
+            if (illegalArgumentException.getMessage().contains("unknown item type")) {
+                errorMessages.add(MSG.OPERATION_FAILED.append(
+                        String.format(" itemType %s not found for tenant %s", itemType, tenantID)));
+            } else
+                errorMessages.add(MSG.PROFILE_FIELD_NOT_LOADED);
         } catch (RuntimeException runtimeException) {
-            messages.add(MSG.PROFILE_FIELD_NOT_LOADED);
+            errorMessages.add(MSG.PROFILE_FIELD_NOT_LOADED);
         }
 
-        Response response = formatResponse(responseObject, messages,
+        Response response = formatResponse(responseObject, errorMessages,
                 WS.PROFILE_FIELD_LOAD, responseType, callback);
         mon.stop();
         return response;
@@ -418,6 +456,10 @@ public class ProfileWebservice {
                 throw new EasyRecException(messages, serviceName, WS.RESPONSE_TYPE_JSON, callback);
             else
                 throw new EasyRecException(messages, serviceName);
+        }
+
+        if (respondData instanceof List) {
+            respondData = new ResponseSuccessMessage(serviceName, (List<SuccessMessage>) respondData);
         }
 
         //convert respondData to Respond object
