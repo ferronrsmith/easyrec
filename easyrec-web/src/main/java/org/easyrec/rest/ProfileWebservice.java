@@ -104,7 +104,8 @@ public class ProfileWebservice {
         List<Message> responseObject = new ArrayList<Message>();
 
         try {
-            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages)) {
+            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages) &&
+                    checkParameterProfile(profile, errorMessages)) {
                 Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
                 if (coreTenantID == null)
                     errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
@@ -276,7 +277,9 @@ public class ProfileWebservice {
         List<Message> responseObject = new ArrayList<Message>();
 
         try {
-            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages)) {
+            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages) &&
+                    checkParameterField(field, errorMessages) &&
+                    checkParameterValue(value, errorMessages)) {
                 Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
                 if (coreTenantID == null)
                     errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
@@ -337,7 +340,8 @@ public class ProfileWebservice {
         List<Message> responseObject = new ArrayList<Message>();
 
         try {
-            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages)) {
+            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages) &&
+                    checkParameterField(field, errorMessages)) {
                 Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
                 if (coreTenantID == null)
                     errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
@@ -397,7 +401,8 @@ public class ProfileWebservice {
         Object responseObject = null;
 
         try {
-            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages)) {
+            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages) &&
+                    checkParameterField(field, errorMessages)) {
                 Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
                 if (coreTenantID == null)
                     errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
@@ -510,5 +515,59 @@ public class ProfileWebservice {
             result = false;
         }
         return result;
+    }
+
+    /**
+     * This method checks if the <code>profile</code> is not null
+     * or an empty string. If this is not the case the corresponding
+     * error message is added to the <code>messages</code> list.
+     *
+     * @param profile  the profile which will be checked
+     * @param messages a <code>List&lt;Message&gt;</code> where the error messages are appended
+     * @return returns <code>true</code> if all parameters are positively checked and
+     *         <code>false</code> otherwise
+     */
+    private boolean checkParameterProfile(String profile, List<Message> messages) {
+        if (profile == null || profile.equals("")) {
+            messages.add(MSG.PROFILE_NO_PROFILE_PROVIDED);
+            return false;
+        } else
+            return true;
+    }
+
+    /**
+     * This method checks if the <code>profile field</code> is not null
+     * or an empty string. If this is not the case the corresponding
+     * error message is added to the <code>messages</code> list.
+     *
+     * @param field    the field which will be checked
+     * @param messages a <code>List&lt;Message&gt;</code> where the error messages are appended
+     * @return returns <code>true</code> if all parameters are positively checked and
+     *         <code>false</code> otherwise
+     */
+    private boolean checkParameterField(String field, List<Message> messages) {
+        if (field == null || field.equals("")) {
+            messages.add(MSG.PROFILE_NO_FIELD_PROVIDED);
+            return false;
+        } else
+            return true;
+    }
+
+    /**
+     * This method checks if the <code>profile field value</code> is not null
+     * or an empty string. If this is not the case the corresponding
+     * error message is added to the <code>messages</code> list.
+     *
+     * @param value    the value which will be checked
+     * @param messages a <code>List&lt;Message&gt;</code> where the error messages are appended
+     * @return returns <code>true</code> if all parameters are positively checked and
+     *         <code>false</code> otherwise
+     */
+    private boolean checkParameterValue(String value, List<Message> messages) {
+        if (value == null || value.equals("")) {
+            messages.add(MSG.PROFILE_NO_VALUE_PROVIDED);
+            return false;
+        } else
+            return true;
     }
 }
