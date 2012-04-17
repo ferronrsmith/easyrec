@@ -42,17 +42,21 @@ public class ResponseProfileField {
     private String itemType;
 
     @XmlElement
-    private Set<String> values;
+    private String field;
+
+    @XmlElement
+    private String value;
 
     public ResponseProfileField() {}
 
     public ResponseProfileField(String action, String tenantID, String itemID,
-                                String itemType, Set<String> values) {
+                                String field, String itemType, String values) {
 
         this.action = action;
         this.tenantID = tenantID;
         this.itemID = itemID;
         this.itemType = itemType;
-        this.values = values;
+        this.field = field;
+        this.value = values;
     }
 }

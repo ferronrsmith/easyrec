@@ -164,6 +164,8 @@ public class MSG {
             335, "Necessary profile field has not been provided!");
     public static final Message PROFILE_NO_VALUE_PROVIDED = new ErrorMessage(
             336, "Necessary profile field value has not been provided!");
+    public static final Message PROFILE_MULTIPLE_FIELDS_WITH_SAME_NAME = new ErrorMessage(
+            337, "Multiple profile fields have been found!");
 
     // user/login messages
     public static final Message USER_NO_SESSION_ID = new ErrorMessage(

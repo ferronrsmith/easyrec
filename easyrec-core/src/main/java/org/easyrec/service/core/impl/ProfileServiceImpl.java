@@ -22,13 +22,11 @@ import org.apache.commons.logging.LogFactory;
 import org.easyrec.model.core.ItemVO;
 import org.easyrec.model.core.web.Item;
 import org.easyrec.service.core.ProfileService;
+import org.easyrec.service.core.exception.MultipleProfileFieldsFoundException;
 import org.easyrec.service.domain.TypeMappingService;
 import org.easyrec.store.dao.IDMappingDAO;
 import org.easyrec.store.dao.core.ProfileDAO;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -36,23 +34,19 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Result;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author szavrel
@@ -96,7 +90,7 @@ public class ProfileServiceImpl implements ProfileService {
         TransformerFactory tf = TransformerFactory.newInstance();
         try {
             trans = tf.newTransformer();
-            //trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         } catch (Exception e) {
 
         }
@@ -155,6 +149,43 @@ public class ProfileServiceImpl implements ProfileService {
                 typeMappingService.getIdOfItemType(tenantId, itemType), dimensionXPath);
     }
 
+    public Set<String> loadProfileField(Integer tenantId, String itemId, String itemType,
+                                        String dimensionXPath)
+            throws XPathExpressionException, SAXException {
+
+        Set<String> result = new HashSet<String>();
+
+        try {
+            int itemIntID = idMappingDAO.lookup(itemId);
+
+            XPathFactory xpf = XPathFactory.newInstance();
+
+            Document doc = getProfileXMLDocument(tenantId, itemIntID, itemType);
+
+            XPath xp = xpf.newXPath();
+            NodeList nodeList = (NodeList) xp.evaluate(dimensionXPath, doc, XPathConstants.NODESET);
+
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Node node = nodeList.item(i);
+                result.add(node.getTextContent());
+            }
+
+        } catch (Exception e) {
+            logger.error("Error loading profile field: " + e.getMessage());
+            e.printStackTrace();
+
+            if (e instanceof SAXException)
+                throw (SAXException) e;
+            if (e instanceof XPathExpressionException)
+                throw (XPathExpressionException) e;
+            if (e instanceof DOMException)
+                throw (DOMException) e;
+
+            return null;
+        }
+        return result;
+    }
+
     public String getSimpleDimensionValue(Integer tenantId, Integer itemId, String itemTypeId, String dimensionXPath) {
         return profileDAO
                 .getSimpleDimensionValue(tenantId, itemId, typeMappingService.getIdOfItemType(tenantId, itemTypeId),
@@ -170,7 +201,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     public boolean insertOrUpdateMultiDimension(Integer tenantId, Integer itemId, String itemType, String dimensionXPath,
-                                             List<String> values) {
+                                                List<String> values) {
 
         XPathFactory xpf = XPathFactory.newInstance();
 
@@ -228,14 +259,14 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     public boolean insertOrUpdateMultiDimension(Integer tenantId, String itemId,
-                                             String itemType, String dimensionXPath,
-                                             List<String> values) {
+                                                String itemType, String dimensionXPath,
+                                                List<String> values) {
         return insertOrUpdateMultiDimension(tenantId, idMappingDAO.lookup(itemId), itemType, dimensionXPath, values);
     }
 
 
     public boolean insertOrUpdateSimpleDimension(Integer tenantId, Integer itemId, String itemTypeId,
-                                              String dimensionXPath, String value) {
+                                                 String dimensionXPath, String value) {
 
         XPathFactory xpf = XPathFactory.newInstance();
         try {
@@ -278,32 +309,44 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     public boolean insertOrUpdateSimpleDimension(Integer tenantId, String itemId, String itemTypeId,
-                                              String dimensionXPath, String value) {
+                                                 String dimensionXPath, String value) {
         return insertOrUpdateSimpleDimension(tenantId, idMappingDAO.lookup(itemId), itemTypeId,
                 dimensionXPath, value);
     }
 
-    public boolean insertSimpleDimension(Integer tenantId, Integer itemId, String itemTypeId,
-                                      String dimensionXPath, String value) {
+    public boolean storeProfileField(Integer tenantId, String itemId, String itemTypeId,
+                                     String dimensionXPath, String value)
+            throws XPathExpressionException, TransformerException, SAXException,
+            DOMException, MultipleProfileFieldsFoundException {
 
-        XPathFactory xpf = XPathFactory.newInstance();
         try {
+            int itemIntID = idMappingDAO.lookup(itemId);
+
+            XPathFactory xpf = XPathFactory.newInstance();
+
             // load and parse the profile
-            Document doc = getProfileXMLDocument(tenantId, itemId, itemTypeId);
+            Document doc = getProfileXMLDocument(tenantId, itemIntID, itemTypeId);
 
             // follow the XPath from bottom to top until you find the first existing path element
             XPath xp = xpf.newXPath();
             String tmpPath = dimensionXPath;
+            NodeList nodeList = (NodeList) xp.evaluate(tmpPath, doc, XPathConstants.NODESET);
+            if (nodeList.getLength() > 1)
+                throw new MultipleProfileFieldsFoundException(nodeList.getLength() + " nodes found.");
+
             Node node = null;
-            while (node == null) {
-                tmpPath = dimensionXPath.substring(0, tmpPath.lastIndexOf("/"));
-                if ("".equals(tmpPath))
-                    tmpPath = "/";
-                node = (Node) xp.evaluate(tmpPath, doc, XPathConstants.NODE);
+            if (nodeList.getLength() == 1)
+                nodeList.item(0).setTextContent(value);
+            else {
+                while (node == null) {
+                    tmpPath = dimensionXPath.substring(0, tmpPath.lastIndexOf("/"));
+                    if ("".equals(tmpPath))
+                        tmpPath = "/";
+                    node = (Node) xp.evaluate(tmpPath, doc, XPathConstants.NODE);
+                }
+                insertElement(doc, node,
+                        dimensionXPath.substring(tmpPath.length()), value);
             }
-            // found the correct node to insert or ended at Document root, hence insert
-            insertElement(doc, node,
-                    dimensionXPath.substring(tmpPath.length()), value);
 
             StringWriter writer = new StringWriter();
             Result result = new StreamResult(writer);
@@ -312,23 +355,29 @@ public class ProfileServiceImpl implements ProfileService {
             String xml = writer.toString();
             logger.debug(xml);
             storeProfile(tenantId, itemId, itemTypeId, xml);
-
         } catch (Exception e) {
             logger.error("Error inserting Simple Dimension: " + e.getMessage());
             e.printStackTrace();
+
+            if (e instanceof SAXException)
+                throw (SAXException) e;
+            if (e instanceof TransformerException)
+                throw (TransformerException) e;
+            if (e instanceof XPathExpressionException)
+                throw (XPathExpressionException) e;
+            if (e instanceof DOMException)
+                throw (DOMException) e;
+            if (e instanceof MultipleProfileFieldsFoundException)
+                throw (MultipleProfileFieldsFoundException) e;
+
             return false;
         }
         return true;
     }
 
-    public boolean insertSimpleDimension(Integer tenantId, String itemId, String itemTypeId,
-                                      String dimensionXPath, String value) {
-        return insertSimpleDimension(tenantId, idMappingDAO.lookup(itemId), itemTypeId,
-                dimensionXPath, value);
-    }
 
-
-    public boolean deleteValue(Integer tenantId, String itemId, String itemType, String deleteXPath) {
+    public boolean deleteProfileField(Integer tenantId, String itemId, String itemType, String deleteXPath)
+            throws XPathExpressionException, TransformerException, SAXException {
 
         XPathFactory xpf = XPathFactory.newInstance();
         try {
@@ -359,6 +408,16 @@ public class ProfileServiceImpl implements ProfileService {
         } catch (Exception e) {
             logger.error("Error deleting field: " + e.getMessage());
             e.printStackTrace();
+
+            if (e instanceof SAXException)
+                throw (SAXException) e;
+            if (e instanceof TransformerException)
+                throw (TransformerException) e;
+            if (e instanceof XPathExpressionException)
+                throw (XPathExpressionException) e;
+            if (e instanceof DOMException)
+                throw (DOMException) e;
+
             return false;
         }
     }
@@ -399,7 +458,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     private Document getProfileXMLDocument(Integer tenantId, Integer itemId, String itemTypeId)
-            throws ParserConfigurationException, SAXException, IOException  {
+            throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilder db = dbf.newDocumentBuilder();
         String profile = getProfile(tenantId, itemId, itemTypeId);
         if (profile == null || profile.equals(""))
