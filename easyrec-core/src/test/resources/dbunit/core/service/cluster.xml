@@ -23,11 +23,11 @@
     <idmapping intId="4" stringId="SUBCLUSTER1" />
     <idmapping intId="5" stringId="SUBCLUSTER2" />
 
-    <item tenantId="1" itemid="1" itemtype="CLUSTER" profileData="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?>&lt;clusterVO>&lt;description>The root object of every cluster hierarchy. cannot be removed!&lt;/description>&lt;name>CLUSTERS&lt;/name>&lt;/clusterVO>" />
-    <item tenantId="1" itemid="2" itemtype="CLUSTER" profileData="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?>&lt;clusterVO>&lt;description>This is Cluster 1!&lt;/description>&lt;name>CLUSTER1&lt;/name>&lt;/clusterVO>" />
-    <item tenantId="1" itemid="3" itemtype="CLUSTER" profileData="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?>&lt;clusterVO>&lt;description>This is Cluster 2!&lt;/description>&lt;name>CLUSTER2&lt;/name>&lt;/clusterVO>" />
-    <item tenantId="1" itemid="4" itemtype="CLUSTER" profileData="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?>&lt;clusterVO>&lt;description>This is SubCluster 1!&lt;/description>&lt;name>SUBCLUSTER1&lt;/name>&lt;/clusterVO>" />
-    <item tenantId="1" itemid="5" itemtype="CLUSTER" profileData="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?>&lt;clusterVO>&lt;description>This is SubCluster 2!&lt;/description>&lt;name>SUBCLUSTER2&lt;/name>&lt;/clusterVO>" />
+    <item tenantId="1" itemid="CLUSTERS" itemtype="CLUSTER" profileData="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?>&lt;clusterVO>&lt;description>The root object of every cluster hierarchy. cannot be removed!&lt;/description>&lt;name>CLUSTERS&lt;/name>&lt;/clusterVO>" />
+    <item tenantId="1" itemid="CLUSTER1" itemtype="CLUSTER" profileData="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?>&lt;clusterVO>&lt;description>This is Cluster 1!&lt;/description>&lt;name>CLUSTER1&lt;/name>&lt;/clusterVO>" />
+    <item tenantId="1" itemid="CLUSTER2" itemtype="CLUSTER" profileData="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?>&lt;clusterVO>&lt;description>This is Cluster 2!&lt;/description>&lt;name>CLUSTER2&lt;/name>&lt;/clusterVO>" />
+    <item tenantId="1" itemid="SUBCLUSTER1" itemtype="CLUSTER" profileData="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?>&lt;clusterVO>&lt;description>This is SubCluster 1!&lt;/description>&lt;name>SUBCLUSTER1&lt;/name>&lt;/clusterVO>" />
+    <item tenantId="1" itemid="SUBCLUSTER2" itemtype="CLUSTER" profileData="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?>&lt;clusterVO>&lt;description>This is SubCluster 2!&lt;/description>&lt;name>SUBCLUSTER2&lt;/name>&lt;/clusterVO>" />
 
     <itemassoc id="1" tenantId="1" itemFromId="1" itemFromTypeId="2" assocTypeId="1" assocValue="1" itemToId="2"
                itemToTypeId="2" sourceTypeId="1" sourceInfo="abc" viewTypeId="1" active="true"

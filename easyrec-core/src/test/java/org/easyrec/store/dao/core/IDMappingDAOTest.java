@@ -52,7 +52,7 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(UnitilsJUnit4TestClassRunner.class)
 @SpringApplicationContext({"/spring/easyrecDataSource.xml", "/spring/core/dao/IDMappingDAO.xml"})
-@DataSet("/dbunit/IDMappingDAO/dbunit.idmapping.xml")
+@DataSet("/dbunit/core/dao/IDMappingDAO/dbunit.idmapping.xml")
 public class IDMappingDAOTest {
     @SpringApplicationContext
     private ApplicationContext context;
@@ -79,8 +79,8 @@ public class IDMappingDAOTest {
     }
 
     @Test
-    @DataSet("/dbunit/IDMappingDAO/dbunit.idmapping.one_less.xml")
-    @ExpectedDataSet("/dbunit/IDMappingDAO/dbunit.idmapping_no_id.xml")
+    @DataSet("/dbunit/core/dao/IDMappingDAO/dbunit.idmapping.one_less.xml")
+    @ExpectedDataSet("/dbunit/core/dao/IDMappingDAO/dbunit.idmapping_no_id.xml")
     public void lookup_nonExistantStringIsInserted() {
         mappingDAO.lookup("test3");
     }
