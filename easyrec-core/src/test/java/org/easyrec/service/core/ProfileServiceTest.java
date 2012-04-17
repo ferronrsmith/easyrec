@@ -69,7 +69,7 @@ public class ProfileServiceTest {
 
     @Test
     public void testGetProfile() {
-        String profileExpected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><profile><description>Description stored as a profile.</description><name>profileItem</name><property1>propvalue1</property1></profile>";
+        String profileExpected = "<profile><description>Description stored as a profile.</description><name>profileItem</name><property1>propvalue1</property1></profile>";
         String profileActual = profileService.getProfile(TENANT_ID, ITEM_ID_SINGLE_VALUE, ITEM_TYPE);
         Assert.assertEquals(profileExpected, profileActual);
     }
@@ -177,7 +177,7 @@ public class ProfileServiceTest {
           e.printStackTrace();
         }
 
-        String profileExpected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><profile><description>Description stored as a profile.</description><name>profileItem</name></profile>";
+        String profileExpected = "<profile><description>Description stored as a profile.</description><name>profileItem</name></profile>";
         String profileActual = profileService.getProfile(TENANT_ID, ITEM_ID_SINGLE_VALUE, ITEM_TYPE);
         Assert.assertEquals(profileExpected, profileActual);
     }
