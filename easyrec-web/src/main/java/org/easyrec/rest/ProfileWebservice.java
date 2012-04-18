@@ -25,14 +25,19 @@ import com.sun.jersey.spi.resource.Singleton;
 import org.easyrec.model.core.web.Message;
 import org.easyrec.model.core.web.SuccessMessage;
 import org.easyrec.service.core.ProfileService;
+import org.easyrec.service.core.exception.MultipleProfileFieldsFoundException;
 import org.easyrec.store.dao.web.OperatorDAO;
 import org.easyrec.vocabulary.MSG;
 import org.easyrec.vocabulary.WS;
+import org.w3c.dom.DOMException;
+import org.xml.sax.SAXException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -104,7 +109,8 @@ public class ProfileWebservice {
         List<Message> responseObject = new ArrayList<Message>();
 
         try {
-            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages)) {
+            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages) &&
+                    checkParameterProfile(profile, errorMessages)) {
                 Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
                 if (coreTenantID == null)
                     errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
@@ -245,7 +251,7 @@ public class ProfileWebservice {
     /**
      * This method stores a value into a specific field of the profile which belongs to the item
      * defined by the tenantID, itemID and the itemTypeID. The field can be addressed
-     * by a XPath expression
+     * by a XPath expression. If the field does not exist it will be created.
      *
      * @param responseType defines the media type of the result
      * @param apiKey       the apiKey which admits access to the API
@@ -276,12 +282,14 @@ public class ProfileWebservice {
         List<Message> responseObject = new ArrayList<Message>();
 
         try {
-            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages)) {
+            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages) &&
+                    checkParameterField(field, errorMessages) &&
+                    checkParameterValue(value, errorMessages)) {
                 Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
                 if (coreTenantID == null)
                     errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
                 else {
-                    if (profileService.insertSimpleDimension(
+                    if (profileService.storeProfileField(
                             coreTenantID, itemID, itemType,
                             field, value))
                         responseObject.add(MSG.PROFILE_FIELD_SAVED);
@@ -289,6 +297,20 @@ public class ProfileWebservice {
                         errorMessages.add(MSG.PROFILE_FIELD_NOT_SAVED);
                 }
             }
+        } catch (SAXException e) {
+            errorMessages.add(MSG.OPERATION_FAILED.append(
+                    " SAXException: " + e.getMessage()));
+        } catch (XPathExpressionException e) {
+            errorMessages.add(MSG.OPERATION_FAILED.append(
+                    " XPathExpressionException: " + e.getMessage()));
+        } catch (TransformerException e) {
+            errorMessages.add(MSG.OPERATION_FAILED.append(
+                    " TransformerException: " + e.getMessage()));
+        } catch (DOMException e) {
+            errorMessages.add(MSG.OPERATION_FAILED.append(
+                    " DOMException: " + e.getMessage()));
+        } catch (MultipleProfileFieldsFoundException e) {
+            errorMessages.add(MSG.PROFILE_MULTIPLE_FIELDS_WITH_SAME_NAME);
         } catch (IllegalArgumentException illegalArgumentException) {
             if (illegalArgumentException.getMessage().contains("unknown item type")) {
                 errorMessages.add(MSG.OPERATION_FAILED.append(
@@ -337,17 +359,30 @@ public class ProfileWebservice {
         List<Message> responseObject = new ArrayList<Message>();
 
         try {
-            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages)) {
+            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages) &&
+                    checkParameterField(field, errorMessages)) {
                 Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
                 if (coreTenantID == null)
                     errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
                 else {
-                    if (profileService.deleteValue(coreTenantID, itemID, itemType, field))
+                    if (profileService.deleteProfileField(coreTenantID, itemID, itemType, field))
                         responseObject.add(MSG.PROFILE_FIELD_DELETED);
                     else
                         errorMessages.add(MSG.PROFILE_FIELD_NOT_DELETED);
                 }
             }
+        } catch (SAXException e) {
+            errorMessages.add(MSG.OPERATION_FAILED.append(
+                    " SAXException: " + e.getMessage()));
+        } catch (XPathExpressionException e) {
+            errorMessages.add(MSG.OPERATION_FAILED.append(
+                    " XPathExpressionException: " + e.getMessage()));
+        } catch (TransformerException e) {
+            errorMessages.add(MSG.OPERATION_FAILED.append(
+                    " TransformerException: " + e.getMessage()));
+        } catch (DOMException e) {
+            errorMessages.add(MSG.OPERATION_FAILED.append(
+                    " DOMException: " + e.getMessage()));
         } catch (IllegalArgumentException illegalArgumentException) {
             if (illegalArgumentException.getMessage().contains("unknown item type")) {
                 errorMessages.add(MSG.OPERATION_FAILED.append(
@@ -365,9 +400,9 @@ public class ProfileWebservice {
     }
 
     /**
-     * This method loads the values from a specific field of the profile which belongs to the item
+     * This method loads the value from a specific field of the profile which belongs to the item
      * defined by the tenantID, itemID and the itemTypeID. The field can be addressed
-     * by a XPath expression
+     * by a XPath expression. If multiple profile fields are found an error message will be returned.
      *
      * @param responseType defines the media type of the result
      * @param apiKey       the apiKey which admits access to the API
@@ -378,7 +413,7 @@ public class ProfileWebservice {
      *                     whose value will be returned
      * @param callback     if set and responseType is jason the result will be returned
      *                     via this javascript callback function (optional)
-     * @return a response object containing the values of the field.
+     * @return a response object containing the value of the field.
      * @see ResponseProfileField
      */
     @GET
@@ -397,18 +432,32 @@ public class ProfileWebservice {
         Object responseObject = null;
 
         try {
-            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages)) {
+            if (checkParameters(apiKey, tenantID, itemID, itemType, errorMessages) &&
+                    checkParameterField(field, errorMessages)) {
                 Integer coreTenantID = operatorDAO.getTenantId(apiKey, tenantID);
                 if (coreTenantID == null)
                     errorMessages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
                 else {
-                    Set<String> values = profileService.getMultiDimensionValue(coreTenantID, itemID, itemType, field);
-                    if (values != null)
-                        responseObject = new ResponseProfileField("/profile/field/load", tenantID, itemID, itemType, values);
+                    Set<String> values = profileService.loadProfileField(coreTenantID, itemID, itemType, field);
+                    if (values != null || values.size() == 0)
+                        if (values.size() > 1)
+                            errorMessages.add(MSG.PROFILE_MULTIPLE_FIELDS_WITH_SAME_NAME);
+                        else
+                            responseObject = new ResponseProfileField("/profile/field/load",
+                                    tenantID, itemID, itemType, field, (String) values.toArray()[0]);
                     else
                         errorMessages.add(MSG.PROFILE_FIELD_NOT_LOADED);
                 }
             }
+        } catch (SAXException e) {
+            errorMessages.add(MSG.OPERATION_FAILED.append(
+                    " SAXException: " + e.getMessage()));
+        } catch (XPathExpressionException e) {
+            errorMessages.add(MSG.OPERATION_FAILED.append(
+                    " XPathExpressionException: " + e.getMessage()));
+        } catch (DOMException e) {
+            errorMessages.add(MSG.OPERATION_FAILED.append(
+                    " DOMException: " + e.getMessage()));
         } catch (IllegalArgumentException illegalArgumentException) {
             if (illegalArgumentException.getMessage().contains("unknown item type")) {
                 errorMessages.add(MSG.OPERATION_FAILED.append(
@@ -510,5 +559,59 @@ public class ProfileWebservice {
             result = false;
         }
         return result;
+    }
+
+    /**
+     * This method checks if the <code>profile</code> is not null
+     * or an empty string. If this is not the case the corresponding
+     * error message is added to the <code>messages</code> list.
+     *
+     * @param profile  the profile which will be checked
+     * @param messages a <code>List&lt;Message&gt;</code> where the error messages are appended
+     * @return returns <code>true</code> if all parameters are positively checked and
+     *         <code>false</code> otherwise
+     */
+    private boolean checkParameterProfile(String profile, List<Message> messages) {
+        if (profile == null) {
+            messages.add(MSG.PROFILE_NO_PROFILE_PROVIDED);
+            return false;
+        } else
+            return true;
+    }
+
+    /**
+     * This method checks if the <code>profile field</code> is not null
+     * or an empty string. If this is not the case the corresponding
+     * error message is added to the <code>messages</code> list.
+     *
+     * @param field    the field which will be checked
+     * @param messages a <code>List&lt;Message&gt;</code> where the error messages are appended
+     * @return returns <code>true</code> if all parameters are positively checked and
+     *         <code>false</code> otherwise
+     */
+    private boolean checkParameterField(String field, List<Message> messages) {
+        if (field == null || field.equals("")) {
+            messages.add(MSG.PROFILE_NO_FIELD_PROVIDED);
+            return false;
+        } else
+            return true;
+    }
+
+    /**
+     * This method checks if the <code>profile field value</code> is not null
+     * or an empty string. If this is not the case the corresponding
+     * error message is added to the <code>messages</code> list.
+     *
+     * @param value    the value which will be checked
+     * @param messages a <code>List&lt;Message&gt;</code> where the error messages are appended
+     * @return returns <code>true</code> if all parameters are positively checked and
+     *         <code>false</code> otherwise
+     */
+    private boolean checkParameterValue(String value, List<Message> messages) {
+        if (value == null) {
+            messages.add(MSG.PROFILE_NO_VALUE_PROVIDED);
+            return false;
+        } else
+            return true;
     }
 }

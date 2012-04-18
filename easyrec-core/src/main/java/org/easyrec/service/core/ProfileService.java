@@ -19,7 +19,12 @@ package org.easyrec.service.core;
 
 import org.easyrec.model.core.ItemVO;
 import org.easyrec.model.core.web.Item;
+import org.easyrec.service.core.exception.MultipleProfileFieldsFoundException;
+import org.w3c.dom.DOMException;
+import org.xml.sax.SAXException;
 
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import java.util.List;
 import java.util.Set;
 
@@ -170,6 +175,22 @@ public interface ProfileService {
                                               String dimensionXPath);
 
     /**
+     * This function loads all results as List of string values from
+     * the profile based on the provided XPath. In contrast to
+     * <code>getMultiDimensionValue</code> it also throws the XPath
+     * and DOM relevant Exceptions.
+     *
+     * @param tenantId       the tenantId of the profile
+     * @param itemId         the itemId of the profile
+     * @param itemType       the itemTypeId of the profile
+     * @param dimensionXPath the XPath of the value you want to load
+     * @return the values of the given XPath
+     */
+    public Set<String> loadProfileField(Integer tenantId, String itemId, String itemType,
+                                        String dimensionXPath)
+            throws XPathExpressionException, SAXException, DOMException;
+
+    /**
      * This function updates or inserts a item's ( based on tenantId, itemId, itemtypeId) XML Profile
      * at the specified XPath with the specified value.
      *
@@ -199,22 +220,7 @@ public interface ProfileService {
                                                  String dimensionXPath, String value);
 
     /**
-     * This function updates or inserts a value into an item's
-     * (based on tenantId, itemId, itemtypeId) XML Profile
-     * at the specified XPath.
-     *
-     * @param tenantId       the tenantId of the profile
-     * @param itemId         the itemId of the profile
-     * @param itemTypeId     the itemTypeId of the profile
-     * @param dimensionXPath the XPath of the value you want to update or insert
-     * @param value          the value you want to insert or update into the profile
-     * @return <code>true</code> if the operation succeeds <code>false</code> otherwise
-     */
-    public boolean insertSimpleDimension(Integer tenantId, Integer itemId, String itemTypeId,
-                                         String dimensionXPath, String value);
-
-    /**
-     * This function inserts a value into an item's ( based on tenantId, itemId, itemtypeId)
+     * This function inserts a value into an item's ( based on tenantId, itemId, itemTypeId)
      * XML Profile at the specified XPath.
      *
      * @param tenantId       the tenantId of the profile
@@ -224,8 +230,10 @@ public interface ProfileService {
      * @param value          the value you want to insert or update into the profile
      * @return <code>true</code> if the operation succeeds <code>false</code> otherwise
      */
-    public boolean insertSimpleDimension(Integer tenantId, String itemId, String itemTypeId,
-                                         String dimensionXPath, String value);
+    public boolean storeProfileField(Integer tenantId, String itemId, String itemTypeId,
+                                     String dimensionXPath, String value)
+            throws XPathExpressionException, TransformerException, SAXException,
+            DOMException, MultipleProfileFieldsFoundException;
 
     /**
      * This function updates a item's ( based on tenantId, itemId, itemType) XML Profile
@@ -265,7 +273,8 @@ public interface ProfileService {
      * @return returns <code>true</code> if the operation succeeded and
      *         <code>false</code> otherwise
      */
-    public boolean deleteValue(Integer tenantId, String itemId, String itemType, String deleteXPath);
+    public boolean deleteProfileField(Integer tenantId, String itemId, String itemType, String deleteXPath)
+            throws XPathExpressionException, TransformerException, SAXException, DOMException;
 
     /**
      * This function loads all Item's based on the given profile values

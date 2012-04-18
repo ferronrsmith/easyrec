@@ -12,20 +12,20 @@
 
     <!-- profile with single dimension /profile/name -->
     <item tenantId="1" itemid="1" itemtype="ITEM"
-          profileData="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?>&lt;profile>&lt;description>Description stored as a profile.&lt;/description>&lt;name>profileItem&lt;/name>&lt;property1>propvalue1&lt;/property1>&lt;/profile>" />
+          profileData="&lt;profile>&lt;description>Description stored as a profile.&lt;/description>&lt;name>profileItem&lt;/name>&lt;property1>propvalue1&lt;/property1>&lt;/profile>" />
 
     <!-- profile with multi dimension value /profile/genres -->
     <item tenantId="1" itemid="2" itemtype="ITEM"
-          profileData="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?>&lt;profile>&lt;description>Description stored as a profile.&lt;/description>&lt;name>profileItem&lt;/name>&lt;genre>g1&lt;/genre>&lt;genre>g2&lt;/genre>&lt;genre>g3&lt;/genre>&lt;property1>propvalue2&lt;/property1>&lt;/profile>" />
+          profileData="&lt;profile>&lt;description>Description stored as a profile.&lt;/description>&lt;name>profileItem&lt;/name>&lt;genre>g1&lt;/genre>&lt;genre>g2&lt;/genre>&lt;genre>g3&lt;/genre>&lt;property1>propvalue2&lt;/property1>&lt;/profile>" />
 
     <item tenantId="1" itemid="3" itemtype="ITEM"
-          profileData="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?>&lt;profile>&lt;description>Description stored as a profile.&lt;/description>&lt;name>profileItem&lt;/name>&lt;property1>propvalue1&lt;/property1>&lt;/profile>" />
+          profileData="&lt;profile>&lt;description>Description stored as a profile.&lt;/description>&lt;name>profileItem&lt;/name>&lt;property1>propvalue1&lt;/property1>&lt;/profile>" />
 
     <item tenantId="1" itemid="4" itemtype="ANOTHER_ITEM"
-          profileData="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?>&lt;profile>&lt;description>Description stored as a profile.&lt;/description>&lt;name>anotherItem&lt;/name>/profile>" />
+          profileData="&lt;profile>&lt;description>Description stored as a profile.&lt;/description>&lt;name>anotherItem&lt;/name>/profile>" />
 
     <item tenantId="1" itemid="5" itemtype="ANOTHER_ITEM"
-          profileData="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?>&lt;profile>&lt;description>Description stored as a profile.&lt;/description>&lt;name>anotherItem&lt;/name>/profile>" />
+          profileData="&lt;profile>&lt;description>Description stored as a profile.&lt;/description>&lt;name>anotherItem&lt;/name>/profile>" />
 
 
 </dataset>

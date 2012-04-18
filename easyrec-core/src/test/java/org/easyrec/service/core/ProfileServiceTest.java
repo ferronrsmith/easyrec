@@ -69,7 +69,7 @@ public class ProfileServiceTest {
 
     @Test
     public void testGetProfile() {
-        String profileExpected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><profile><description>Description stored as a profile.</description><name>profileItem</name><property1>propvalue1</property1></profile>";
+        String profileExpected = "<profile><description>Description stored as a profile.</description><name>profileItem</name><property1>propvalue1</property1></profile>";
         String profileActual = profileService.getProfile(TENANT_ID, ITEM_ID_SINGLE_VALUE, ITEM_TYPE);
         Assert.assertEquals(profileExpected, profileActual);
     }
@@ -171,9 +171,13 @@ public class ProfileServiceTest {
     @DataSet("/dbunit/core/service/profile.xml")
     public void testDeleteValue() {
 
-        profileService.deleteValue(TENANT_ID, ITEM_ID_SINGLE_VALUE, ITEM_TYPE, "/profile/property1");
+        try {
+        profileService.deleteProfileField(TENANT_ID, ITEM_ID_SINGLE_VALUE, ITEM_TYPE, "/profile/property1");
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
 
-        String profileExpected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><profile><description>Description stored as a profile.</description><name>profileItem</name></profile>";
+        String profileExpected = "<profile><description>Description stored as a profile.</description><name>profileItem</name></profile>";
         String profileActual = profileService.getProfile(TENANT_ID, ITEM_ID_SINGLE_VALUE, ITEM_TYPE);
         Assert.assertEquals(profileExpected, profileActual);
     }
