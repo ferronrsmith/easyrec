@@ -32,7 +32,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -42,7 +41,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.validation.SchemaFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
@@ -62,8 +60,7 @@ public class ProfileServiceImpl implements ProfileService {
     private ProfileDAO profileDAO;
     private IDMappingDAO idMappingDAO;
     private TypeMappingService typeMappingService;
-    private SchemaFactory sf;
-    private DocumentBuilderFactory dbf;
+
 
     private Transformer trans;
 
@@ -83,9 +80,7 @@ public class ProfileServiceImpl implements ProfileService {
         this.typeMappingService = typeMappingService;
         if (docBuilderFactory != null)
             System.setProperty("javax.xml.parsers.DocumentBuilderFactory", docBuilderFactory);
-        dbf = DocumentBuilderFactory.newInstance();
-        dbf.setNamespaceAware(true);
-        sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        DocumentBuilderFactory dbf = instantiateDocumentBuilderFactory();
         if (logger.isDebugEnabled()) {
             logger.debug("DocumentBuilderFactory: " + dbf.getClass().getName());
             ClassLoader cl = Thread.currentThread().getContextClassLoader().getSystemClassLoader();
@@ -96,7 +91,7 @@ public class ProfileServiceImpl implements ProfileService {
         TransformerFactory tf = TransformerFactory.newInstance();
         try {
             trans = tf.newTransformer();
-            //trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         } catch (Exception e) {
 
         }
@@ -283,7 +278,8 @@ public class ProfileServiceImpl implements ProfileService {
                 dimensionXPath, value);
     }
 
-    public boolean insertSimpleDimension(Integer tenantId, Integer itemId, String itemTypeId,
+
+    public synchronized boolean insertSimpleDimension(Integer tenantId, Integer itemId, String itemTypeId,
                                       String dimensionXPath, String value) {
 
         XPathFactory xpf = XPathFactory.newInstance();
@@ -333,7 +329,7 @@ public class ProfileServiceImpl implements ProfileService {
         XPathFactory xpf = XPathFactory.newInstance();
         try {
             // load and parse the profile
-            DocumentBuilder db = dbf.newDocumentBuilder();
+            DocumentBuilder db = instantiateDocumentBuilderFactory().newDocumentBuilder();
             Document doc = db.parse(new InputSource(new StringReader(
                     getProfile(tenantId, itemId, itemType))));
 
@@ -400,7 +396,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     private Document getProfileXMLDocument(Integer tenantId, Integer itemId, String itemTypeId)
             throws ParserConfigurationException, SAXException, IOException  {
-        DocumentBuilder db = dbf.newDocumentBuilder();
+        DocumentBuilder db = instantiateDocumentBuilderFactory().newDocumentBuilder();
         String profile = getProfile(tenantId, itemId, itemTypeId);
         if (profile == null || profile.equals(""))
             return db.newDocument();
@@ -408,4 +404,13 @@ public class ProfileServiceImpl implements ProfileService {
             return db.parse(new InputSource(new StringReader(profile)));
     }
 
+    /**
+     * This function initialize the Document Builder Factory which is used for XML generation.
+     * @return a initialized documentBuilder Factory which is used for XML generation.
+     */
+    private DocumentBuilderFactory instantiateDocumentBuilderFactory(){
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(true);
+        return documentBuilderFactory;
+    }
 }

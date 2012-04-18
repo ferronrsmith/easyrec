@@ -6,9 +6,6 @@
 package org.easyrec.plugin.arm;
 
 import gnu.trove.map.hash.TObjectIntHashMap;
-import java.net.URI;
-import java.util.*;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.easyrec.model.core.ItemAssocVO;
@@ -19,8 +16,13 @@ import org.easyrec.plugin.arm.model.ARMStatistics;
 import org.easyrec.plugin.arm.model.TupleVO;
 import org.easyrec.plugin.arm.store.dao.RuleminingItemAssocDAO;
 import org.easyrec.plugin.model.Version;
-import org.easyrec.plugin.support.ExecutablePluginSupport.ExecutionControl;
 import org.easyrec.plugin.support.GeneratorPluginSupport;
+
+import java.net.URI;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.SortedSet;
 
 /**
  *
@@ -29,7 +31,7 @@ import org.easyrec.plugin.support.GeneratorPluginSupport;
 public class ARMGenerator extends GeneratorPluginSupport<ARMConfiguration, ARMStatistics> {
 
     public static final String DISPLAY_NAME = "ARM";
-    public static final Version VERSION = new Version("0.97");
+    public static final Version VERSION = new Version("0.98");
     public static final URI ID = URI.create("http://www.easyrec.org/plugins/ARM");
 
     private static final Log logger = LogFactory.getLog(ARMGenerator.class);
