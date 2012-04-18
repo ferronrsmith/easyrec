@@ -46,7 +46,10 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author szavrel
@@ -314,7 +317,7 @@ public class ProfileServiceImpl implements ProfileService {
                 dimensionXPath, value);
     }
 
-    public boolean storeProfileField(Integer tenantId, String itemId, String itemTypeId,
+    public synchronized boolean storeProfileField(Integer tenantId, String itemId, String itemTypeId,
                                      String dimensionXPath, String value)
             throws XPathExpressionException, TransformerException, SAXException,
             DOMException, MultipleProfileFieldsFoundException {
