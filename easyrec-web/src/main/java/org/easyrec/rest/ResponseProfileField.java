@@ -50,7 +50,7 @@ public class ResponseProfileField {
     public ResponseProfileField() {}
 
     public ResponseProfileField(String action, String tenantID, String itemID,
-                                String field, String itemType, String values) {
+                                String itemType, String field, String values) {
 
         this.action = action;
         this.tenantID = tenantID;

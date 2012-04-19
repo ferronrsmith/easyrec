@@ -22,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 import org.easyrec.model.core.ItemVO;
 import org.easyrec.model.core.web.Item;
 import org.easyrec.service.core.ProfileService;
+import org.easyrec.service.core.exception.FieldNotFoundException;
 import org.easyrec.service.core.exception.MultipleProfileFieldsFoundException;
 import org.easyrec.service.domain.TypeMappingService;
 import org.easyrec.store.dao.IDMappingDAO;
@@ -180,6 +181,8 @@ public class ProfileServiceImpl implements ProfileService {
                 throw (XPathExpressionException) e;
             if (e instanceof DOMException)
                 throw (DOMException) e;
+            if (e instanceof IllegalArgumentException)
+                throw (IllegalArgumentException) e;
 
             return null;
         }
@@ -369,6 +372,8 @@ public class ProfileServiceImpl implements ProfileService {
                 throw (DOMException) e;
             if (e instanceof MultipleProfileFieldsFoundException)
                 throw (MultipleProfileFieldsFoundException) e;
+            if (e instanceof IllegalArgumentException)
+                throw (IllegalArgumentException) e;
 
             return false;
         }
@@ -377,7 +382,7 @@ public class ProfileServiceImpl implements ProfileService {
 
 
     public boolean deleteProfileField(Integer tenantId, String itemId, String itemType, String deleteXPath)
-            throws XPathExpressionException, TransformerException, SAXException {
+            throws XPathExpressionException, TransformerException, SAXException, FieldNotFoundException {
 
         XPathFactory xpf = XPathFactory.newInstance();
         try {
@@ -390,6 +395,8 @@ public class ProfileServiceImpl implements ProfileService {
             XPath xp = xpf.newXPath();
             NodeList nodeList = (NodeList) xp.evaluate(deleteXPath, doc, XPathConstants.NODESET);
 
+            if (nodeList.getLength() == 0)
+                throw new FieldNotFoundException("Field does not exist in this profile!");
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Node node = nodeList.item(i);
                 node.getParentNode().removeChild(node);
@@ -417,6 +424,10 @@ public class ProfileServiceImpl implements ProfileService {
                 throw (XPathExpressionException) e;
             if (e instanceof DOMException)
                 throw (DOMException) e;
+            if (e instanceof FieldNotFoundException)
+                throw (FieldNotFoundException) e;
+            if (e instanceof IllegalArgumentException)
+                throw (IllegalArgumentException) e;
 
             return false;
         }

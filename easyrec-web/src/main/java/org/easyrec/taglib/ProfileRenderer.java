@@ -234,6 +234,7 @@ public class ProfileRenderer implements Tag {
             format.setLineWidth(65);
             format.setIndenting(true);
             format.setIndent(2);
+            format.setOmitXMLDeclaration(true);
             Writer out = new StringWriter();
             XMLSerializer serializer = new XMLSerializer(out, format);
             serializer.serialize(document);

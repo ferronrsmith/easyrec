@@ -19,6 +19,7 @@ package org.easyrec.service.core;
 
 import org.easyrec.model.core.ItemVO;
 import org.easyrec.model.core.web.Item;
+import org.easyrec.service.core.exception.FieldNotFoundException;
 import org.easyrec.service.core.exception.MultipleProfileFieldsFoundException;
 import org.w3c.dom.DOMException;
 import org.xml.sax.SAXException;
@@ -274,7 +275,7 @@ public interface ProfileService {
      *         <code>false</code> otherwise
      */
     public boolean deleteProfileField(Integer tenantId, String itemId, String itemType, String deleteXPath)
-            throws XPathExpressionException, TransformerException, SAXException, DOMException;
+            throws XPathExpressionException, TransformerException, SAXException, DOMException, FieldNotFoundException;
 
     /**
      * This function loads all Item's based on the given profile values

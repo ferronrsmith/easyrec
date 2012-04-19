@@ -36,25 +36,150 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
-
- *
  * @author Fabian Salcher
  */
+
 @RunWith(UnitilsJUnit4TestClassRunner.class)
 @DataSet(AbstractApiTest.DATASET_BASE)
 public abstract class StoreAPITest extends AbstractApiTest {
 
     public static class JSON extends StoreAPITest {
-        public JSON() throws TestContainerException { super(METHOD_JSON); }
+        public JSON() throws TestContainerException {
+            super(METHOD_JSON);
+        }
     }
 
     public static class XML extends StoreAPITest {
-        public XML() throws TestContainerException { super(METHOD_XML); }
+        public XML() throws TestContainerException {
+            super(METHOD_XML);
+        }
     }
 
     public StoreAPITest(String method) throws TestContainerException {
-        super("store", method);
+        super("profile/store", method);
     }
 
+    private static final String ACTION = "profile/store";
+
+    @Test
+    @ExpectedDataSet("/dbunit/web/rest/profile/store_success.xml")
+    public void storeSuccess() {
+
+
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        JSONObject json;
+
+        //store profile for a not existing item
+        params.add("tenantid", TENANT_ID);
+        params.add("apikey", API_KEY);
+        params.add("itemid", "ITEM_PROFILE_STORE_1");
+        params.add("profile", "<profile><name>test profile</name></profile>");
+
+        json = makeAPIRequest(params);
+
+        assertThat(json, not(is(nullValue())));
+        assertThat(json.getString("action"), is(ACTION));
+        assertThat(json.getJSONObject("success").getString("@code"), is("310"));
+
+        //store profile for an existing item
+        params = new MultivaluedMapImpl();
+        params.add("tenantid", TENANT_ID);
+        params.add("apikey", API_KEY);
+        params.add("itemid", "ITEM_A");
+        params.add("profile", "<profile><name>test profile</name></profile>");
+
+        json = makeAPIRequest(params);
+
+        assertThat(json, not(is(nullValue())));
+        assertThat(json.getString("action"), is(ACTION));
+        assertThat(json.getJSONObject("success").getString("@code"), is("310"));
+    }
+
+    @Test
+    public void storeWrongAPIKeyTenantCombination() {
+
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        params.add("tenantid", TENANT_ID);
+        params.add("apikey", API_KEY + "x");
+        params.add("itemid", "ITEM_PROFILE_STORE_2");
+        params.add("profile", "<profile><name>test profile</name></profile>");
+
+        JSONObject json = makeAPIRequest(params);
+
+        assertThat(json, not(is(nullValue())));
+        assertThat(json.getJSONObject("error").getString("@code"), is("299"));
+    }
+
+    @Test
+    public void storeNoAPIKey() {
+
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        params.add("tenantid", TENANT_ID);
+        params.add("itemid", "ITEM_PROFILE_STORE_2");
+        params.add("profile", "<profile><name>test profile</name></profile>");
+
+        JSONObject json = makeAPIRequest(params);
+
+        assertThat(json, not(is(nullValue())));
+        assertThat(json.getJSONObject("error").getString("@code"), is("330"));
+    }
+
+    @Test
+    public void storeNoTenantID() {
+
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        params.add("apikey", API_KEY);
+        params.add("itemid", "ITEM_PROFILE_STORE_2");
+        params.add("profile", "<profile><name>test profile</name></profile>");
+
+        JSONObject json = makeAPIRequest(params);
+
+        assertThat(json, not(is(nullValue())));
+        assertThat(json.getJSONObject("error").getString("@code"), is("331"));
+    }
+
+    @Test
+    public void storeNoItemID() {
+
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        params.add("tenantid", TENANT_ID);
+        params.add("apikey", API_KEY);
+        params.add("profile", "<profile><name>test profile</name></profile>");
+
+        JSONObject json = makeAPIRequest(params);
+
+        assertThat(json, not(is(nullValue())));
+        assertThat(json.getJSONObject("error").getString("@code"), is("301"));
+    }
+
+    @Test
+    public void storeNoProfile() {
+
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        params.add("tenantid", TENANT_ID);
+        params.add("apikey", API_KEY);
+        params.add("itemid", "ITEM_PROFILE_STORE_2");
+
+        JSONObject json = makeAPIRequest(params);
+
+        assertThat(json, not(is(nullValue())));
+        assertThat(json.getJSONObject("error").getString("@code"), is("334"));
+    }
+
+    @Test
+    public void storeItemTypeNotFound() {
+
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        params.add("tenantid", TENANT_ID);
+        params.add("apikey", API_KEY);
+        params.add("itemid", "ITEM_PROFILE_STORE_2");
+        params.add("itemtype", "I_DO_NOT_EXIST");
+        params.add("profile", "<profile><name>test profile</name></profile>");
+
+        JSONObject json = makeAPIRequest(params);
+
+        assertThat(json, not(is(nullValue())));
+        assertThat(json.getJSONObject("error").getString("@code"), is("912"));
+    }
 
 }

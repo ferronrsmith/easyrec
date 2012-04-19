@@ -120,6 +120,10 @@
     <idmapping intId="50" stringId="TEST_A"/>
     <idmapping intId="51" stringId="TEST_OTHER_A"/>
     <idmapping intId="60" stringId="TEST_SESSION"/>
+    <idmapping intId="120" stringId="PROFILE_TEST_ITEM_1" />
+    <idmapping intId="121" stringId="PROFILE_TEST_ITEM_2" />
+    <idmapping intId="122" stringId="PROFILE_TEST_ITEM_3" />
+    <idmapping intId="123" stringId="PROFILE_TEST_ITEM_4" />
 
 
     <item tenantId="1" itemid="ITEM_A" itemtype="ITEM" description="Item A"
@@ -152,6 +156,14 @@
     <item tenantId="1" itemid="INVISIBLE_C" itemtype="INVISIBLE_ITEM" description="Invisible C"
           url="http://testtenant.com/test/invisible/c" imageurl="http://testtenant.com/test/invisible/c/img.png"
           active="0" creationdate="2011-06-22 12:09:00"/>
+    <item tenantId="1" itemid="PROFILE_TEST_ITEM_1" itemtype="ITEM"
+            profileData="&lt;profile>&lt;name>test profile&lt;/name>&lt;/profile>" />
+    <item tenantId="1" itemid="PROFILE_TEST_ITEM_2" itemtype="ITEM"
+            profileData="&lt;profile>&lt;name>test profile 1&lt;/name>&lt;name>test profile 2&lt;/name>&lt;/profile>" />
+    <item tenantId="1" itemid="PROFILE_TEST_ITEM_3" itemtype="ITEM"
+            profileData="&lt;profile>&lt;name>test profile&lt;/name>&lt;/profile>" />
+    <item tenantId="1" itemid="PROFILE_TEST_ITEM_4" itemtype="ITEM"
+            profileData="&lt;profile>&lt;name>test profile&lt;/name>&lt;/profile>" />
 
     <!-- view actions -->
     <!-- user 1 -->

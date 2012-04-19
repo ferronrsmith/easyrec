@@ -36,7 +36,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
-
  *
  * @author Fabian Salcher
  */
@@ -53,8 +52,109 @@ public abstract class LoadAPITest extends AbstractApiTest {
     }
 
     public LoadAPITest(String method) throws TestContainerException {
-        super("store", method);
+        super("profile/load", method);
     }
 
+    private static final String ACTION = "profile/load";
+
+    @Test
+    public void loadSuccess() {
+
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        params.add("tenantid", TENANT_ID);
+        params.add("apikey", API_KEY);
+        params.add("itemid", "PROFILE_TEST_ITEM_1");
+
+        JSONObject json = makeAPIRequest(params);
+
+        assertThat(json, not(is(nullValue())));
+        assertThat(json.getString("action"), is(ACTION));
+        assertThat(json.getString("tenantID"), is(TENANT_ID));
+        assertThat(json.getString("itemID"), is("PROFILE_TEST_ITEM_1"));
+        assertThat(json.getString("itemType"), is("ITEM"));
+        assertThat(json.getString("profile"), is("<profile><name>test profile</name></profile>"));
+    }
+
+    @Test
+    public void loadNotExistingItemProfile() {
+
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        params.add("tenantid", TENANT_ID);
+        params.add("apikey", API_KEY);
+        params.add("itemid", "PROFILE_TEST_ITEM_X");
+
+        JSONObject json = makeAPIRequest(params);
+
+        assertThat(json, not(is(nullValue())));
+        assertThat(json.getJSONObject("error").getString("@code"), is("314"));
+    }
+
+    @Test
+    public void loadWrongAPIKeyTenantCombination() {
+
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        params.add("tenantid", TENANT_ID);
+        params.add("apikey", API_KEY + "x");
+        params.add("itemid", "PROFILE_TEST_ITEM_1");
+
+        JSONObject json = makeAPIRequest(params);
+
+        assertThat(json, not(is(nullValue())));
+        assertThat(json.getJSONObject("error").getString("@code"), is("299"));
+    }
+
+    @Test
+    public void loadNoAPIKey() {
+
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        params.add("tenantid", TENANT_ID);
+        params.add("itemid", "PROFILE_TEST_ITEM_1");
+
+        JSONObject json = makeAPIRequest(params);
+
+        assertThat(json, not(is(nullValue())));
+        assertThat(json.getJSONObject("error").getString("@code"), is("330"));
+    }
+
+    @Test
+    public void loadNoTenantID() {
+
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        params.add("apikey", API_KEY);
+        params.add("itemid", "PROFILE_TEST_ITEM_1");
+
+        JSONObject json = makeAPIRequest(params);
+
+        assertThat(json, not(is(nullValue())));
+        assertThat(json.getJSONObject("error").getString("@code"), is("331"));
+    }
+
+    @Test
+    public void loadNoItemID() {
+
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        params.add("tenantid", TENANT_ID);
+        params.add("apikey", API_KEY);
+
+        JSONObject json = makeAPIRequest(params);
+
+        assertThat(json, not(is(nullValue())));
+        assertThat(json.getJSONObject("error").getString("@code"), is("301"));
+    }
+
+    @Test
+    public void loadItemTypeNotFound() {
+
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        params.add("tenantid", TENANT_ID);
+        params.add("apikey", API_KEY);
+        params.add("itemid", "PROFILE_TEST_ITEM_1");
+        params.add("itemtype", "I_DO_NOT_EXIST");
+
+        JSONObject json = makeAPIRequest(params);
+
+        assertThat(json, not(is(nullValue())));
+        assertThat(json.getJSONObject("error").getString("@code"), is("912"));
+    }
 
 }

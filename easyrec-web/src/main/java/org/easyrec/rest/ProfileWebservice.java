@@ -25,6 +25,7 @@ import com.sun.jersey.spi.resource.Singleton;
 import org.easyrec.model.core.web.Message;
 import org.easyrec.model.core.web.SuccessMessage;
 import org.easyrec.service.core.ProfileService;
+import org.easyrec.service.core.exception.FieldNotFoundException;
 import org.easyrec.service.core.exception.MultipleProfileFieldsFoundException;
 import org.easyrec.store.dao.web.OperatorDAO;
 import org.easyrec.vocabulary.MSG;
@@ -227,7 +228,7 @@ public class ProfileWebservice {
                 else {
                     String profile = profileService.getProfile(coreTenantID, itemID, itemType);
                     if (profile != null)
-                        responseObject = new ResponseProfile("/profile/load", tenantID, itemID, itemType, profile);
+                        responseObject = new ResponseProfile("profile/load", tenantID, itemID, itemType, profile);
                     else
                         errorMessages.add(MSG.PROFILE_NOT_LOADED);
                 }
@@ -383,6 +384,9 @@ public class ProfileWebservice {
         } catch (DOMException e) {
             errorMessages.add(MSG.OPERATION_FAILED.append(
                     " DOMException: " + e.getMessage()));
+        } catch (FieldNotFoundException e) {
+            errorMessages.add(MSG.OPERATION_FAILED.append(
+                    " FieldNotFoundException: " + e.getMessage()));
         } catch (IllegalArgumentException illegalArgumentException) {
             if (illegalArgumentException.getMessage().contains("unknown item type")) {
                 errorMessages.add(MSG.OPERATION_FAILED.append(
@@ -443,7 +447,7 @@ public class ProfileWebservice {
                         if (values.size() > 1)
                             errorMessages.add(MSG.PROFILE_MULTIPLE_FIELDS_WITH_SAME_NAME);
                         else
-                            responseObject = new ResponseProfileField("/profile/field/load",
+                            responseObject = new ResponseProfileField("profile/field/load",
                                     tenantID, itemID, itemType, field, (String) values.toArray()[0]);
                     else
                         errorMessages.add(MSG.PROFILE_FIELD_NOT_LOADED);
