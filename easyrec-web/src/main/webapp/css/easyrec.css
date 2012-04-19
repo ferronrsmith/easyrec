@@ -1491,3 +1491,8 @@ div#clusterManagerSearchItems form#searchForm p input#toCreationDate {
 .legendLabel{
    padding-right:20px;
 }
+
+.itemDetailTabContainer div.ui-tabs-panel h1{
+    font-size:18px;
+    color:#000;
+}
