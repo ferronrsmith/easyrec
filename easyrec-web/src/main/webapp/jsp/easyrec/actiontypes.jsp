@@ -92,7 +92,7 @@
                 <input type="hidden" name="tenantId" value="${tenantId}"/>
                 <input type="hidden" name="operatorId" value="${operatorId}"/>
 
-                <label for="actionTypeName"> Enter the name of the new item type </label>
+                <label for="actionTypeName"> Enter the name of the new action type </label>
                 <input type="text" id="actionTypeName" name="actionTypeName"/>
 
                 <br>
