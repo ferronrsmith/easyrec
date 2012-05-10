@@ -28,6 +28,7 @@ import org.easyrec.service.core.TenantService;
 import org.easyrec.service.domain.TypeMappingService;
 
 import java.util.*;
+
 import org.easyrec.plugin.arm.ARMGenerator;
 import org.easyrec.plugin.arm.AssocRuleMiningService;
 import org.easyrec.plugin.arm.TupleCounter;
@@ -134,7 +135,7 @@ public class AssocRuleMiningServiceImpl implements AssocRuleMiningService {
             return ruleminingActionDAO.getNumberOfBasketsESIB(configuration.getTenantId(), configuration.getActionType(), configuration.getRatingNeutral(), configuration.getItemTypes());
         } else {
             return ruleminingActionDAO.getNumberOfBaskets(configuration.getTenantId(), configuration.getActionType(), configuration.getRatingNeutral(), configuration.getItemTypes());
-       }
+        }
     }
 
 
@@ -155,7 +156,7 @@ public class AssocRuleMiningServiceImpl implements AssocRuleMiningService {
     }
 
     public List<TupleVO> defineL2(TObjectIntHashMap<ItemVO<Integer, Integer>> L1, TupleCounter tupleCounter, ARMConfigurationInt configuration, ARMStatistics stats) {
-            
+
         return ruleminingActionDAO.defineL2(L1, tupleCounter, configuration, stats);
     }
 
@@ -165,25 +166,25 @@ public class AssocRuleMiningServiceImpl implements AssocRuleMiningService {
         ARMConfigurationInt ret;
 
         ret = new ARMConfigurationInt(configuration.getTenantId(),
-                                      null,
-                                      configuration.getSupport(),
-                                      new ArrayList<Integer>(),
-                                      null,
-                                      configuration.getSupportPrcnt(),
-                                      configuration.getSupportMinAbs(),
-                                      configuration.getConfidencePrcnt(),
-                                      configuration.getMaxRulesPerItem(),
-                                      configuration.getRatingNeutral(),
-                                      configuration.getMetricType(),
-                                      configuration.getMaxSizeL1(),
-                                      configuration.getDoDeltaUpdate());
+                null,
+                configuration.getSupport(),
+                new ArrayList<Integer>(),
+                null,
+                configuration.getSupportPrcnt(),
+                configuration.getSupportMinAbs(),
+                configuration.getConfidencePrcnt(),
+                configuration.getMaxRulesPerItem(),
+                configuration.getRatingNeutral(),
+                configuration.getMetricType(),
+                configuration.getMaxSizeL1(),
+                configuration.getDoDeltaUpdate());
 
         Integer actionId = typeMappingService.getIdOfActionType(configuration.getTenantId(), configuration.getActionType());
         if (actionId == null) {
             StringBuilder sb = new StringBuilder("Action '").append(configuration.getActionType())
-                                                            .append("' not valid for Tenant '")
-                                                            .append(configuration.getTenantId())
-                                                            .append("'! Action will not be considered in Rulemining!");
+                    .append("' not valid for Tenant '")
+                    .append(configuration.getTenantId())
+                    .append("'! Action will not be considered in Rulemining!");
             logger.info(sb.toString());
             throw new Exception(sb.toString());
         }
@@ -199,9 +200,9 @@ public class AssocRuleMiningServiceImpl implements AssocRuleMiningService {
             }
         }
         if (ret.getItemTypes() == null) {
-                            StringBuilder sb = new StringBuilder("No valid ItemTypes defined for Tenant '" )
-                                                                  .append(configuration.getTenantId())
-                                                                  .append("'! Skipping this rulemining configuration!");
+            StringBuilder sb = new StringBuilder("No valid ItemTypes defined for Tenant '")
+                    .append(configuration.getTenantId())
+                    .append("'! Skipping this rulemining configuration!");
             logger.info(sb.toString());
             throw new Exception(sb.toString());
         }
@@ -209,10 +210,10 @@ public class AssocRuleMiningServiceImpl implements AssocRuleMiningService {
         Integer assocTypeId = typeMappingService.getIdOfAssocType(configuration.getTenantId(), configuration.getAssociationType());
         if (assocTypeId == null) {
             StringBuilder sb = new StringBuilder("AssocType '")
-                                          .append(configuration.getAssociationType())
-                                          .append("' not valid for Tenant '")
-                                          .append(configuration.getTenantId())
-                                          .append("'! Skipping analysis!");
+                    .append(configuration.getAssociationType())
+                    .append("' not valid for Tenant '")
+                    .append(configuration.getTenantId())
+                    .append("'! Skipping analysis!");
             logger.info(sb.toString());
             throw new Exception(sb.toString());
         }
@@ -232,15 +233,15 @@ public class AssocRuleMiningServiceImpl implements AssocRuleMiningService {
     /**
      * @param tuples        Vector
      * @param L1            HashMap
-     * @param configuration      int
+     * @param configuration int
      * @param minConfidence minConfidence
      * @return Vector
      */
-    public List<ItemAssocVO<Integer,Integer>> createRules(List<TupleVO> tuples,
-                                                                                                TObjectIntHashMap<ItemVO<Integer, Integer>> L1,
-                                                                                                ARMConfigurationInt configuration,
-                                                                                                ARMStatistics stats,
-                                                                                                Double minConfidence) {
+    public List<ItemAssocVO<Integer, Integer>> createRules(List<TupleVO> tuples,
+                                                           TObjectIntHashMap<ItemVO<Integer, Integer>> L1,
+                                                           ARMConfigurationInt configuration,
+                                                           ARMStatistics stats,
+                                                           Double minConfidence) {
 
         // Integer h1, h2;
         Double dh1, dh2;
@@ -250,7 +251,7 @@ public class AssocRuleMiningServiceImpl implements AssocRuleMiningService {
 
         Double baskets = new Double(stats.getNrBaskets());
         stats.setMetricType(configuration.getMetricType());
-        Vector<ItemAssocVO<Integer,Integer>> ret = new Vector<ItemAssocVO<Integer,Integer>>();
+        Vector<ItemAssocVO<Integer, Integer>> ret = new Vector<ItemAssocVO<Integer, Integer>>();
 
         for (TupleVO tuple : tuples) {
             sup1 = L1.get(tuple.getItem1());
@@ -314,7 +315,7 @@ public class AssocRuleMiningServiceImpl implements AssocRuleMiningService {
                         .append(" sup1=").append(String.format("%04f", dsup1)).append(" sup2=")
                         .append(String.format("%04f", dsup2)).append(" tsup=").append(tuple.getSupport()).toString();
 
-                ItemAssocVO<Integer,Integer> rule = new ItemAssocVO<Integer,Integer>(
+                ItemAssocVO<Integer, Integer> rule = new ItemAssocVO<Integer, Integer>(
                         configuration.getTenantId(), tuple.getItem1(), configuration.getAssocType(), assocValue1/*new Double(h1)*/,
                         tuple.getItem2(),
                         typeMappingService.getIdOfSourceType(configuration.getTenantId(), ARMGenerator.ID.toString() + "/" + ARMGenerator.VERSION),
@@ -332,7 +333,7 @@ public class AssocRuleMiningServiceImpl implements AssocRuleMiningService {
                         .append(" sup2=").append(String.format("%04f", dsup2)).append(" sup1=")
                         .append(String.format("%04f", dsup1)).append(" tsup=").append(tuple.getSupport()).toString();
 
-                ItemAssocVO<Integer,Integer> rule = new ItemAssocVO<Integer,Integer>(
+                ItemAssocVO<Integer, Integer> rule = new ItemAssocVO<Integer, Integer>(
                         configuration.getTenantId(), tuple.getItem2(), configuration.getAssocType(), assocValue2/*new Double(h2)*/,
                         tuple.getItem1(),
                         typeMappingService.getIdOfSourceType(configuration.getTenantId(), ARMGenerator.ID.toString() + "/" + ARMGenerator.VERSION),
@@ -345,8 +346,8 @@ public class AssocRuleMiningServiceImpl implements AssocRuleMiningService {
         return ret;
     }
 
-    public Collection<SortedSet<ItemAssocVO<Integer,Integer>>> createBestRules(
-            List<TupleVO> tuples, 
+    public Collection<SortedSet<ItemAssocVO<Integer, Integer>>> createBestRules(
+            List<TupleVO> tuples,
             TObjectIntHashMap<ItemVO<Integer, Integer>> L1,
             ARMConfigurationInt configuration,
             ARMStatistics stats,
@@ -360,7 +361,7 @@ public class AssocRuleMiningServiceImpl implements AssocRuleMiningService {
         Double baskets = new Double(stats.getNrBaskets());
         stats.setMetricType(configuration.getMetricType());
         //Vector<ItemAssocVO<Integer,Integer>> ret = new Vector<ItemAssocVO<Integer,Integer>>();
-        Map<ItemVO<Integer, Integer>, SortedSet<ItemAssocVO<Integer,Integer>>> ret = new HashMap<ItemVO<Integer, Integer>, SortedSet<ItemAssocVO<Integer,Integer>>>();
+        Map<ItemVO<Integer, Integer>, SortedSet<ItemAssocVO<Integer, Integer>>> ret = new HashMap<ItemVO<Integer, Integer>, SortedSet<ItemAssocVO<Integer, Integer>>>();
         for (TupleVO tuple : tuples) {
             sup1 = L1.get(tuple.getItem1());
             dsup1 = new Double(sup1);
@@ -417,10 +418,10 @@ public class AssocRuleMiningServiceImpl implements AssocRuleMiningService {
 
             if (dh1 >= (minConfidence)) {
 
-                SortedSet<ItemAssocVO<Integer,Integer>> bestRules = ret
+                SortedSet<ItemAssocVO<Integer, Integer>> bestRules = ret
                         .get(tuple.getItem1());
                 if (bestRules == null) {
-                    bestRules = new TreeSet<ItemAssocVO<Integer,Integer>>();
+                    bestRules = new TreeSet<ItemAssocVO<Integer, Integer>>();
                 }
                 if ((bestRules.size() < configuration.getMaxRulesPerItem()) || (assocValue1 > bestRules.first()
                         .getAssocValue())) { // no need to create objects if limit already reached and rule shows worse quality
@@ -431,7 +432,7 @@ public class AssocRuleMiningServiceImpl implements AssocRuleMiningService {
                             .append(" sup2=").append(String.format("%04f", dsup2)).append(" tsup=")
                             .append(tuple.getSupport()).toString();
 
-                    ItemAssocVO<Integer,Integer> rule = new ItemAssocVO<Integer,Integer>(
+                    ItemAssocVO<Integer, Integer> rule = new ItemAssocVO<Integer, Integer>(
                             configuration.getTenantId(), tuple.getItem1(), configuration.getAssocType(), assocValue1
                             /*new Double(h1)*/, tuple.getItem2(), typeMappingService
                             .getIdOfSourceType(configuration.getTenantId(), ARMGenerator.ID.toString() + "/" + ARMGenerator.VERSION), comment1,
@@ -449,10 +450,10 @@ public class AssocRuleMiningServiceImpl implements AssocRuleMiningService {
 
             if (dh2 >= (minConfidence)) {
 
-                SortedSet<ItemAssocVO<Integer,Integer>> bestRules = ret
+                SortedSet<ItemAssocVO<Integer, Integer>> bestRules = ret
                         .get(tuple.getItem2());
                 if (bestRules == null) {
-                    bestRules = new TreeSet<ItemAssocVO<Integer,Integer>>();
+                    bestRules = new TreeSet<ItemAssocVO<Integer, Integer>>();
                 }
                 if ((bestRules.size() < configuration.getMaxRulesPerItem()) || (assocValue2 > bestRules.first()
                         .getAssocValue())) { // no need to create objects if limit already reached and rule shows worse quality
@@ -464,7 +465,7 @@ public class AssocRuleMiningServiceImpl implements AssocRuleMiningService {
                             .append(" sup1=").append(String.format("%04f", dsup1)).append(" tsup=")
                             .append(tuple.getSupport()).toString();
 
-                    ItemAssocVO<Integer,Integer> rule = new ItemAssocVO<Integer,Integer>(
+                    ItemAssocVO<Integer, Integer> rule = new ItemAssocVO<Integer, Integer>(
                             configuration.getTenantId(), tuple.getItem2(), configuration.getAssocType(), assocValue2
                             /*new Double(h2)*/, tuple.getItem1(), typeMappingService
                             .getIdOfSourceType(configuration.getTenantId(), ARMGenerator.ID.toString() + "/" + ARMGenerator.VERSION), comment2,

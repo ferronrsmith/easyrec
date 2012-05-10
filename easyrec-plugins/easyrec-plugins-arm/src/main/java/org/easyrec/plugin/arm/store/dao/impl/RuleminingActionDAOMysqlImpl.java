@@ -264,7 +264,7 @@ public class RuleminingActionDAOMysqlImpl extends JdbcDaoSupport implements Rule
         TObjectIntHashMap<ItemVO<Integer, Integer>> ret = getJdbcTemplate()
                 .query(query.toString(),  args.toArray(), Ints.toArray(argt), rse);
 
-        if (ret.size() == configuration.getMaxSizeL1()) configuration.setSupport(rse.getMinSupp());
+        //if (ret.size() == configuration.getMaxSizeL1()) configuration.setSupport(rse.getMinSupp());
 
         return ret;
     }
