@@ -119,7 +119,7 @@ public class RuleminingItemAssocDAOMysqlImpl extends ItemAssocDAOMysqlImpl imple
                     itemAssoc.getChangeDate()};
             argTypes = new int[]{Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.DOUBLE,
                     Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.BOOLEAN,
-                    Types.TIMESTAMP, Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.BOOLEAN, Types.TIMESTAMP,};
+                    Types.TIMESTAMP, Types.DOUBLE, Types.INTEGER, Types.VARCHAR, Types.BOOLEAN, Types.TIMESTAMP,};
         } else {
             args = new Object[]{itemAssoc.getTenant(), itemAssoc.getItemFrom().getItem(),
                     itemAssoc.getItemFrom().getType(), itemAssoc.getAssocType(), itemAssoc.getAssocValue(),
@@ -129,7 +129,7 @@ public class RuleminingItemAssocDAOMysqlImpl extends ItemAssocDAOMysqlImpl imple
                     itemAssoc.getChangeDate()};
             argTypes = new int[]{Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.DOUBLE,
                     Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.TIMESTAMP,
-                    Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.TIMESTAMP,};
+                    Types.DOUBLE, Types.INTEGER, Types.VARCHAR, Types.TIMESTAMP,};
         }
         PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(sqlString.toString(), argTypes);
 
