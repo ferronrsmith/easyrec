@@ -28,6 +28,7 @@ import org.easyrec.model.core.ClusterVO;
 import org.easyrec.model.core.web.*;
 import org.easyrec.model.core.transfer.TimeConstraintVO;
 import org.easyrec.model.web.*;
+import org.easyrec.service.core.ProfileService;
 import org.easyrec.service.core.TenantService;
 import org.easyrec.service.domain.TypeMappingService;
 import org.easyrec.service.web.RemoteAssocService;
@@ -71,6 +72,8 @@ public class EasyRec {
     private ShopRecommenderService shopRecommenderService;
     private TypeMappingService typeMappingService;
     private SimpleDateFormat dateFormatter;
+    //added by FK on 2012-12-18 to enable adding profile data to recommendations
+    private ProfileService profileService;
 
     // Jamon Loggers
     private final static String JAMON_REST_VIEW = "rest.view";
@@ -97,6 +100,8 @@ public class EasyRec {
     public EasyRec(OperatorDAO operatorDAO, RemoteTenantDAO remoteTenantDAO,
                    ShopRecommenderService shopRecommenderService, TenantService tenantService,
                    TypeMappingService typeMappingService, ItemDAO itemDAO, RemoteAssocService remoteAssocService,
+                   //added by FK on 2012-12-18 for enabling profile data in recommendations
+                   ProfileService profileService,
                    String dateFormatString) {
         this.operatorDAO = operatorDAO;
         this.remoteTenantDAO = remoteTenantDAO;
@@ -106,6 +111,7 @@ public class EasyRec {
         this.itemDAO = itemDAO;
         this.remoteAssocService = remoteAssocService;
         this.dateFormatter = new SimpleDateFormat(dateFormatString);
+        this.profileService = profileService;
     }
 
     @GET
@@ -386,7 +392,8 @@ public class EasyRec {
                                          @QueryParam("numberOfResults") Integer numberOfResults,
                                          @QueryParam("itemtype") String itemType,
                                          @QueryParam("requesteditemtype") String requestedItemType,
-                                         @QueryParam("callback") String callback) throws EasyRecException {
+                                         @QueryParam("callback") String callback,
+                                         @QueryParam("withProfile") @DefaultValue("false") boolean withProfile) throws EasyRecException {
         Monitor mon = MonitorFactory.start(JAMON_REST_ALSO_VIEWED);
         Recommendation rec = null;
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
@@ -409,6 +416,13 @@ public class EasyRec {
 
             rec = shopRecommenderService.alsoViewedItems(coreTenantId, userId, itemId, itemType, requestedItemType,
                     session, numberOfResults);
+            if (withProfile){
+                //added by FK on 2012-12-18 for adding profile data to recommendations.
+                for (Item item: rec.getRecommendedItems()){
+                    String profileData = this.profileService.getProfile(item);
+                    item.setProfileData(profileData);
+                }
+            }
         } catch (EasyRecRestException sre) {
             exceptionResponse(WS.ACTION_OTHER_USERS_ALSO_VIEWED, sre.getMessageObject(), type,
                     callback);

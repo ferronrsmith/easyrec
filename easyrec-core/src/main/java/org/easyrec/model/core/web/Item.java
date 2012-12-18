@@ -68,6 +68,9 @@ public class Item implements Serializable {
     private boolean active;
     private String creationDate;
 
+    //added by FK on 2012-12-18 to enable adding profile data to recommended items
+    private String profileData;
+
     // TODO: move to vocabulary?
     public static final String DEFAULT_STRING_ITEM_TYPE = "ITEM";
 
@@ -276,6 +279,14 @@ public class Item implements Serializable {
         return absoluteUrl;
     }
 
+    @XmlElement(nillable = true)
+    public String getProfileData() {
+        return profileData;
+    }
+
+    public void setProfileData(String profileData) {
+        this.profileData = profileData;
+    }
 
     /**
      * sets the url for backtracking an item.

@@ -11,6 +11,7 @@
         <constructor-arg ref="typeMappingService"/>
         <constructor-arg ref="itemDAO"/>
         <constructor-arg ref="remoteAssocService"/>
+        <constructor-arg ref="profileService" />
         <constructor-arg value="$easyrec{easyrec.dateFormat}"/>
     </bean>
 </beans>
