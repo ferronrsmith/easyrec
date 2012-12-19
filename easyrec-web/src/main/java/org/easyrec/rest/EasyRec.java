@@ -416,12 +416,9 @@ public class EasyRec {
 
             rec = shopRecommenderService.alsoViewedItems(coreTenantId, userId, itemId, itemType, requestedItemType,
                     session, numberOfResults);
-            if (withProfile){
-                //added by FK on 2012-12-18 for adding profile data to recommendations.
-                for (Item item: rec.getRecommendedItems()){
-                    String profileData = this.profileService.getProfile(item);
-                    item.setProfileData(profileData);
-                }
+            //added by FK on 2012-12-18 for adding profile data to recommendations.
+            if (withProfile) {
+                addProfileDataToItems(rec);
             }
         } catch (EasyRecRestException sre) {
             exceptionResponse(WS.ACTION_OTHER_USERS_ALSO_VIEWED, sre.getMessageObject(), type,
@@ -446,7 +443,8 @@ public class EasyRec {
                                            @QueryParam("numberOfResults") Integer numberOfResults,
                                            @QueryParam("requesteditemtype") String requestedItemType,
                                            @QueryParam("callback") String callback,
-                                           @QueryParam("actiontype") @DefaultValue(TypeMappingService.ACTION_TYPE_VIEW) String actiontype)
+                                           @QueryParam("actiontype") @DefaultValue(TypeMappingService.ACTION_TYPE_VIEW) String actiontype,
+                                           @QueryParam("withProfile") @DefaultValue("false") boolean withProfile)
             throws EasyRecException {
         Monitor mon = MonitorFactory.start(JAMON_REST_RECS_FOR_USER);
 
@@ -480,6 +478,10 @@ public class EasyRec {
             try {
                 rec = shopRecommenderService.itemsBasedOnActionHistory(coreTenantId, userId, session, actiontype, null, WS.ACTION_HISTORY_DEPTH, null,
                         requestedItemType, numberOfResults);
+                //added by FK on 2012-12-18 for adding profile data to recommendations.
+                if (withProfile) {
+                    addProfileDataToItems(rec);
+                }
             } catch (EasyRecRestException sre) {
                 exceptionResponse(WS.ACTION_RECOMMENDATIONS_FOR_USER, sre.getMessageObject(), type, callback);
             }
@@ -561,7 +563,8 @@ public class EasyRec {
                                          @QueryParam("numberOfResults") Integer numberOfResults,
                                          @QueryParam("itemtype") String itemType,
                                          @QueryParam("requesteditemtype") String requestedItemType,
-                                         @QueryParam("callback") String callback)
+                                         @QueryParam("callback") String callback,
+                                         @QueryParam("withProfile") @DefaultValue("false") boolean withProfile)
             throws EasyRecException {
         Monitor mon = MonitorFactory.start(JAMON_REST_ALSO_BOUGHT);
         Recommendation rec = null;
@@ -585,6 +588,10 @@ public class EasyRec {
 
             rec = shopRecommenderService.alsoBoughtItems(coreTenantId, userId, itemId, itemType, requestedItemType,
                     session, numberOfResults);
+            //added by FK on 2012-12-18 for adding profile data to recommendations.
+            if (withProfile) {
+                addProfileDataToItems(rec);
+            }
         } catch (EasyRecRestException sre) {
             exceptionResponse(WS.ACTION_OTHER_USERS_ALSO_BOUGHT, sre.getMessageObject(), type, callback);
         }
@@ -610,7 +617,8 @@ public class EasyRec {
                                                @QueryParam("numberOfResults") Integer numberOfResults,
                                                @QueryParam("itemtype") String itemType,
                                                @QueryParam("requesteditemtype") String requestedItemType,
-                                               @QueryParam("callback") String callback) throws EasyRecException {
+                                               @QueryParam("callback") String callback,
+                                               @QueryParam("withProfile") @DefaultValue("false") boolean withProfile) throws EasyRecException {
 
         Monitor mon = MonitorFactory.start(JAMON_REST_ALSO_RATED);
         Recommendation rec = null;
@@ -635,6 +643,10 @@ public class EasyRec {
 
             rec = shopRecommenderService.alsoGoodRatedItems(coreTenantId, userId, itemId, itemType, requestedItemType,
                     session, numberOfResults);
+            //added by FK on 2012-12-18 for adding profile data to recommendations.
+            if (withProfile) {
+                addProfileDataToItems(rec);
+            }
         } catch (EasyRecRestException sre) {
             exceptionResponse(WS.ACTION_ITEMS_RATED_GOOD_BY_OTHER_USERS, sre.getMessageObject(),
                     type, callback);
@@ -659,7 +671,8 @@ public class EasyRec {
                                     @QueryParam("timeRange") String timeRange,
                                     @QueryParam("startDate") String startDate, @QueryParam("endDate") String endDate,
                                     @QueryParam("requesteditemtype") String requesteditemtype,
-                                    @QueryParam("callback") String callback) throws EasyRecException {
+                                    @QueryParam("callback") String callback,
+                                    @QueryParam("withProfile") @DefaultValue("false") boolean withProfile) throws EasyRecException {
         Monitor mon = MonitorFactory.start(JAMON_REST_MOST_BOUGHT);
         Recommendation rr = null;
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
@@ -686,6 +699,10 @@ public class EasyRec {
                     new Session(null, request));
 
             rr = new Recommendation(tenantId, WS.ACTION_MOST_BOUGHT, null, null, null, items);
+            //added by FK on 2012-12-18 for adding profile data to recommendations.
+            if (withProfile) {
+                addProfileDataToItems(rr);
+            }
         }
 
         mon.stop();
@@ -707,7 +724,8 @@ public class EasyRec {
                                     @QueryParam("timeRange") String timeRange,
                                     @QueryParam("startDate") String startDate, @QueryParam("endDate") String endDate,
                                     @QueryParam("requesteditemtype") String requestedItemType,
-                                    @QueryParam("callback") String callback)
+                                    @QueryParam("callback") String callback,
+                                    @QueryParam("withProfile") @DefaultValue("false") boolean withProfile)
             throws EasyRecException {
         Monitor mon = MonitorFactory.start(JAMON_REST_MOST_VIEWED);
         Recommendation rr = null;
@@ -735,6 +753,10 @@ public class EasyRec {
                     new Session(null, request));
 
             rr = new Recommendation(tenantId, WS.ACTION_MOST_VIEWED, null, null, null, items);
+            //added by FK on 2012-12-18 for adding profile data to recommendations.
+            if (withProfile) {
+                addProfileDataToItems(rr);
+            }
         }
 
         mon.stop();
@@ -756,7 +778,8 @@ public class EasyRec {
                                    @QueryParam("timeRange") String timeRange, @QueryParam("startDate") String startDate,
                                    @QueryParam("endDate") String endDate,
                                    @QueryParam("requesteditemtype") String requestedItemType,
-                                   @QueryParam("callback") String callback) throws EasyRecException {
+                                   @QueryParam("callback") String callback,
+                                   @QueryParam("withProfile") @DefaultValue("false") boolean withProfile) throws EasyRecException {
         Monitor mon = MonitorFactory.start(JAMON_REST_MOST_RATED);
         Recommendation rr = null;
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
@@ -783,6 +806,10 @@ public class EasyRec {
                     timeRange, tc, new Session(null, request));
 
             rr = new Recommendation(tenantId, WS.ACTION_MOST_RATED, null, null, null, items);
+            //added by FK on 2012-12-18 for adding profile data to recommendations.
+            if (withProfile) {
+                addProfileDataToItems(rr);
+            }
         }
 
         mon.stop();
@@ -806,7 +833,8 @@ public class EasyRec {
                                       @QueryParam("strategy") String strategy,
                                       @QueryParam("usefallback") @DefaultValue("false") Boolean useFallback,
                                       @QueryParam("requesteditemtype") String requestedItemType,
-                                      @QueryParam("callback") String callback) {
+                                      @QueryParam("callback") String callback,
+                                      @QueryParam("withProfile") @DefaultValue("false") boolean withProfile) {
         Monitor monitor = MonitorFactory.start(JAMON_REST_MOST_RATED);
         Recommendation recommendation = null;
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
@@ -834,6 +862,10 @@ public class EasyRec {
                         coreItemType, new Session(null, request));
 
                 recommendation = new Recommendation(tenantId, WS.ACTION_ITEMS_OF_CLUSTER, null, null, null, items);
+                //added by FK on 2012-12-18 for adding profile data to recommendations.
+                if (withProfile) {
+                    addProfileDataToItems(recommendation);
+                }
             } catch (EasyRecRestException sre) {
                 exceptionResponse(WS.ACTION_ITEMS_OF_CLUSTER, sre.getMessageObject(), type,
                         callback);
@@ -858,7 +890,8 @@ public class EasyRec {
                                    @QueryParam("timeRange") String timeRange, @QueryParam("startDate") String startDate,
                                    @QueryParam("endDate") String endDate,
                                    @QueryParam("requesteditemtype") String requestedItemType,
-                                   @QueryParam("callback") String callback)
+                                   @QueryParam("callback") String callback,
+                                   @QueryParam("withProfile") @DefaultValue("false") boolean withProfile)
             throws EasyRecException {
         Monitor mon = MonitorFactory.start(JAMON_REST_BEST_RATED);
         Recommendation rr = null;
@@ -886,6 +919,10 @@ public class EasyRec {
                     new Session(null, request));
 
             rr = new Recommendation(tenantId, WS.ACTION_BEST_RATED, null, null, null, items);
+            //added by FK on 2012-12-18 for adding profile data to recommendations.
+            if (withProfile) {
+                addProfileDataToItems(rr);
+            }
         }
 
         mon.stop();
@@ -907,7 +944,8 @@ public class EasyRec {
                                     @QueryParam("timeRange") String timeRange,
                                     @QueryParam("startDate") String startDate, @QueryParam("endDate") String endDate,
                                     @QueryParam("requesteditemtype") String requestedItemType,
-                                    @QueryParam("callback") String callback)
+                                    @QueryParam("callback") String callback,
+                                    @QueryParam("withProfile") @DefaultValue("false") boolean withProfile)
             throws EasyRecException {
         Monitor mon = MonitorFactory.start(JAMON_REST_WORST_RATED);
         Recommendation rr = null;
@@ -935,6 +973,10 @@ public class EasyRec {
                     new Session(null, request));
 
             rr = new Recommendation(tenantId, WS.ACTION_WORST_RATED, null, null, null, items);
+            //added by FK on 2012-12-18 for adding profile data to recommendations.
+            if (withProfile) {
+                addProfileDataToItems(rr);
+            }
         }
 
         mon.stop();
@@ -957,7 +999,8 @@ public class EasyRec {
                                  @QueryParam("numberOfResults") Integer numberOfResults,
                                  @QueryParam("itemtype") String itemType,
                                  @QueryParam("requesteditemtype") String requestedItemType,
-                                 @QueryParam("callback") String callback)
+                                 @QueryParam("callback") String callback,
+                                 @QueryParam("withProfile") @DefaultValue("false") boolean withProfile)
             throws EasyRecException {
 
         Monitor mon = MonitorFactory.start(JAMON_REST_RELATED_ITEMS);
@@ -993,6 +1036,10 @@ public class EasyRec {
 
             rec = shopRecommenderService.relatedItems(coreTenantId, assocType, userId, itemId, itemType, requestedItemType, session,
                     numberOfResults);
+            //added by FK on 2012-12-18 for adding profile data to recommendations.
+            if (withProfile) {
+                addProfileDataToItems(rec);
+            }
         } catch (EasyRecRestException e) {
             exceptionResponse(WS.ACTION_RELATED_ITEMS, e.getMessageObject(), type,
                     callback);
@@ -1270,6 +1317,12 @@ public class EasyRec {
     }
 
     // private methods
+
+    private void addProfileDataToItems(Recommendation recommendation){
+        for(Item item: recommendation.getRecommendedItems()){
+            item.setProfileData(profileService.getProfile(item));
+        }
+    }
 
     private void exceptionResponse(String operation, Message message, String type, String callback)
             throws EasyRecException {
