@@ -147,44 +147,51 @@ public interface ShopRecommenderService {
     /**
      * returns 'bought items' (of a given item type for a given tenant) ranked by the frequency of 'buy' actions
      *
+     *
      * @param tenant          tenant identifier
      * @param itemType        the item type of interest
-     * @param numberOfResults maximum number of {@link RankedItem}s in the result
+     * @param cluster
+     *@param numberOfResults maximum number of {@link org.easyrec.model.web.RankedItem}s in the result
      * @param timeRange       an optional time range (fromTime and toTime), only buys within that range are taken into the rankings computation
      * @param constraint      TODO
-     * @param session         TODO
-     * @return an array of {@link RankedItem}s, sorted by rank
+     * @param session         TODO     @return an array of {@link RankedItem}s, sorted by rank
      */
-    public List<Item> mostBoughtItems(Integer tenant, @Nullable String itemType, Integer numberOfResults,
+    public List<Item> mostBoughtItems(Integer tenant, @Nullable String itemType, Integer cluster, Integer numberOfResults,
                                       String timeRange, @Nullable TimeConstraintVO constraint, Session session);
 
     /**
      * returns 'viewed items' (of a given item type for a given tenant) ranked by the frequency of 'view' actions
      *
+     *
+     *
      * @param tenant          tenant identifier
      * @param itemType        the item type of interest
-     * @param numberOfResults maximum number of {@link RankedItem}s in the result
+     * @param cluster
+     * @param numberOfResults maximum number of {@link org.easyrec.model.web.RankedItem}s in the result
      * @param timeRange       an optional time range (fromTime and toTime), only buys within that range are taken into the rankings computation
      * @param constraint      TODO
      * @param session         TODO
      * @return an array of {@link RankedItem}s, sorted by rank
      */
-    public List<Item> mostViewedItems(Integer tenant, @Nullable String itemType, Integer numberOfResults,
+    public List<Item> mostViewedItems(Integer tenant, @Nullable String itemType, Integer cluster, Integer numberOfResults,
                                       String timeRange, @Nullable TimeConstraintVO constraint, Session session);
 
     /**
      * returns 'rated items' (of a given item type for a given tenant) ranked by the frequency of 'rate' actions
      * rating values are NOT taken into consideration, thus simply showing how often an item was rated at all
      *
+     *
+     *
      * @param tenant          tenant identifier
      * @param itemType        the item type of interest
-     * @param numberOfResults maximum number of {@link RankedItem}s in the result
+     * @param cluster
+     * @param numberOfResults maximum number of {@link org.easyrec.model.web.RankedItem}s in the result
      * @param timeRange       an optional time range (fromTime and toTime), only buys within that range are taken into the rankings computation
      * @param constraint      TODO
      * @param session         TODO
      * @return an array of {@link RankedItem}s, sorted by rank
      */
-    public List<Item> mostRatedItems(Integer tenant, @Nullable String itemType, Integer numberOfResults,
+    public List<Item> mostRatedItems(Integer tenant, @Nullable String itemType, Integer cluster, Integer numberOfResults,
                                      String timeRange, @Nullable TimeConstraintVO constraint, Session session);
 
     /**

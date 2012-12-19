@@ -141,6 +141,20 @@ public class TypedActionDAOMysqlImpl extends
                         sortDesc));
     }
 
+    @Override
+    public List<RankedItemVO<Integer, String>> getRankedItemsByActionTypeAndCluster(Integer tenant,
+                                                                          String actionType,
+                                                                          Integer cluster,
+                                                                          String itemType,
+                                                                          Integer numberOfResults,
+                                                                          TimeConstraintVO timeConstraints,
+                                                                          Boolean sortDesc) {
+        return typeMappingService.convertListOfRankedItemVOs(tenant, actionDAO
+                .getRankedItemsByActionTypeAndCluster(tenant, typeMappingService.getIdOfActionType(tenant, actionType),cluster,
+                        typeMappingService.getIdOfItemType(tenant, itemType), numberOfResults, timeConstraints,
+                        sortDesc));
+    }
+
 
     public List<ItemVO<Integer, String>> getItemsOfTenant(final Integer tenant,
                                                                    final String consideredItemType) {

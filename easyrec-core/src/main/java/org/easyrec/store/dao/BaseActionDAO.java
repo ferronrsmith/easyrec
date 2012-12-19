@@ -18,9 +18,11 @@
 package org.easyrec.store.dao;
 
 import org.easyrec.model.core.ItemVO;
+import org.easyrec.model.core.RankedItemVO;
 import org.easyrec.model.core.transfer.TimeConstraintVO;
 import org.easyrec.utils.spring.store.dao.TableCreatingDAO;
 
+import javax.annotation.Nullable;
 import javax.sql.DataSource;
 import java.util.Date;
 import java.util.Iterator;
@@ -147,6 +149,13 @@ public interface BaseActionDAO<A, RI, AT, IT, I, RAT, T, U> extends TableCreatin
     public List<RI> getRankedItemsByActionType(T tenant, AT actionType, IT itemType, Integer numberOfResults,
                                                TimeConstraintVO timeConstraints, Boolean sortDesc);
 
+    List<RI> getRankedItemsByActionTypeAndCluster(T tenant,
+                                                      AT actionType,
+                                                      T clusterId,
+                                                      @Nullable IT itemTypeId,
+                                                      @Nullable Integer numberOfResults,
+                                                      @Nullable TimeConstraintVO timeConstraints,
+                                                      @Nullable Boolean sortDesc);
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // Ratings
     ///////////////////////////////////////////////////////////////////////////////////////////////

@@ -206,39 +206,65 @@ public class DomainActionServiceImpl implements DomainActionService {
     // Rankings
     ///////////////////////////////////////////////////////////////////////////////////////////////
     public List<RankedItemVO<Integer, String>> mostBoughtItems(Integer tenant, String itemType,
-                                                                                Integer numberOfResults,
-                                                                                TimeConstraintVO timeRange,
-                                                                                Boolean sortDescending) {
-        return typedActionDAO
+                                                               Integer cluster, Integer numberOfResults,
+                                                               TimeConstraintVO timeRange,
+                                                               Boolean sortDescending) {
+        if (cluster == null) {
+            return typedActionDAO
                 .getRankedItemsByActionType(tenant, TypeMappingService.ACTION_TYPE_BUY, itemType, numberOfResults,
                         timeRange, sortDescending);
+        } else {
+            return typedActionDAO
+                    .getRankedItemsByActionTypeAndCluster(tenant, TypeMappingService.ACTION_TYPE_BUY, cluster, itemType, numberOfResults,
+                            timeRange, sortDescending);
+        }
     }
 
     public List<RankedItemVO<Integer, String>> mostViewedItems(Integer tenant, String itemType,
-                                                                                Integer numberOfResults,
-                                                                                TimeConstraintVO timeRange,
-                                                                                Boolean sortDescending) {
-        return typedActionDAO
+                                                               Integer cluster, Integer numberOfResults,
+                                                               TimeConstraintVO timeRange,
+                                                               Boolean sortDescending) {
+        if (cluster == null) {
+            return typedActionDAO
                 .getRankedItemsByActionType(tenant, TypeMappingService.ACTION_TYPE_VIEW, itemType, numberOfResults,
                         timeRange, sortDescending);
+        } else {
+            return typedActionDAO
+                    .getRankedItemsByActionTypeAndCluster(tenant, TypeMappingService.ACTION_TYPE_VIEW, cluster,
+                            itemType, numberOfResults,
+                            timeRange, sortDescending);
+        }
     }
 
     public List<RankedItemVO<Integer, String>> mostRatedItems(Integer tenant, String itemType,
-                                                                               Integer numberOfResults,
-                                                                               TimeConstraintVO timeRange,
-                                                                               Boolean sortDescending) {
-        return typedActionDAO
+                                                              Integer cluster, Integer numberOfResults,
+                                                              TimeConstraintVO timeRange,
+                                                              Boolean sortDescending) {
+        if (cluster == null){
+            return typedActionDAO
                 .getRankedItemsByActionType(tenant, TypeMappingService.ACTION_TYPE_RATE, itemType, numberOfResults,
                         timeRange, sortDescending);
+        } else {
+            return typedActionDAO
+                    .getRankedItemsByActionTypeAndCluster(tenant, TypeMappingService.ACTION_TYPE_RATE, cluster, itemType, numberOfResults,
+                            timeRange, sortDescending);
+        }
     }
 
     public List<RankedItemVO<Integer, String>> mostSearchedItems(Integer tenant, String itemType,
-                                                                                  Integer numberOfResults,
-                                                                                  TimeConstraintVO timeRange,
-                                                                                  Boolean sortDescending) {
-        return typedActionDAO
+                                                                 Integer cluster, Integer numberOfResults,
+                                                                 TimeConstraintVO timeRange,
+                                                                 Boolean sortDescending) {
+
+        if (cluster == null) {
+            return typedActionDAO
                 .getRankedItemsByActionType(tenant, TypeMappingService.ACTION_TYPE_SEARCH, itemType, numberOfResults,
                         timeRange, sortDescending);
+        } else {
+            return typedActionDAO
+                    .getRankedItemsByActionTypeAndCluster(tenant, TypeMappingService.ACTION_TYPE_SEARCH, cluster, itemType, numberOfResults,
+                            timeRange, sortDescending);
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

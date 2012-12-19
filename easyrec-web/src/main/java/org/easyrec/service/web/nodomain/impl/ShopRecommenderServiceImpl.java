@@ -573,7 +573,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
     @IOLog
     @Profiled
     @Override
-    public List<Item> mostBoughtItems(Integer tenantId, String itemType, Integer numberOfResults, String timeRange,
+    public List<Item> mostBoughtItems(Integer tenantId, String itemType, Integer cluster, Integer numberOfResults, String timeRange,
                                       TimeConstraintVO constraint, Session session) {
         List<Item> items;
 
@@ -587,7 +587,8 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
         if (timeRange == null) {
             timeRange = "ALL";
         } // default timeRange
-        Element e = cache.get(tenantId + WS.ACTION_MOST_BOUGHT + itemType + timeRange);
+        String cacheKey = tenantId + WS.ACTION_MOST_BOUGHT + itemType + cluster + timeRange ;
+        Element e = cache.get(cacheKey);
         if ((e != null) && (!e.isExpired())) {
             items = itemService.filterDeactivatedItems((List<Item>) e.getValue());
             return items.subList(0, Math.min(items.size(), numberOfResults));
@@ -599,7 +600,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
         Monitor monCore = MonitorFactory.start(JAMON_REST_MOST_BOUGHT_CORE);
 
         List<RankedItemVO<Integer, String>> rankedItems = domainActionService
-                .mostBoughtItems(tenantId, itemType, WS.MAX_NUMBER_OF_RANKING_RESULTS, constraint, Boolean.TRUE);
+                .mostBoughtItems(tenantId, itemType, cluster, WS.MAX_NUMBER_OF_RANKING_RESULTS, constraint, Boolean.TRUE);
 
         // filter invisible items
         Set<String> invisibleItemTypes = typeMappingService.getItemTypes(tenantId, false);
@@ -619,7 +620,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
 
         items = idMappingService.mapRankedItems(rankedItems, remoteTenant, session, WS.MAX_NUMBER_OF_RANKING_RESULTS);
 
-        cache.put(new Element(tenantId + WS.ACTION_MOST_BOUGHT + itemType + timeRange, items));
+        cache.put(new Element(cacheKey, items));
 
         return items.subList(0, Math.min(items.size(), numberOfResults));
     }
@@ -628,7 +629,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
     @IOLog
     @Profiled
     @Override
-    public List<Item> mostViewedItems(Integer tenantId, String itemType, Integer numberOfResults, String timeRange,
+    public List<Item> mostViewedItems(Integer tenantId, String itemType, Integer cluster, Integer numberOfResults, String timeRange,
                                       TimeConstraintVO constraint, Session session) {
         List<Item> items;
 
@@ -642,7 +643,8 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
         if (timeRange == null) {
             timeRange = "ALL";
         } // default timeRange
-        Element e = cache.get(tenantId + WS.ACTION_MOST_VIEWED + itemType + timeRange);
+        String cacheKey = tenantId + WS.ACTION_MOST_VIEWED + itemType + cluster +timeRange;
+        Element e = cache.get(cacheKey);
         if ((e != null) && (!e.isExpired())) {
             logger.debug("most viewed - cache hit");
             items = itemService.filterDeactivatedItems((List<Item>) e.getValue());
@@ -654,7 +656,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
         logger.debug("most viewed - cache miss - fetching new data from db");
         Monitor monCore = MonitorFactory.start(JAMON_REST_MOST_VIEWED_CORE);
         List<RankedItemVO<Integer, String>> rankedItems = domainActionService
-                .mostViewedItems(tenantId, itemType, WS.MAX_NUMBER_OF_RANKING_RESULTS, constraint, Boolean.TRUE);
+                .mostViewedItems(tenantId, itemType, cluster, WS.MAX_NUMBER_OF_RANKING_RESULTS, constraint, Boolean.TRUE);
 
         // filter invisible items
         Set<String> invisibleItemTypes = typeMappingService.getItemTypes(tenantId, false);
@@ -674,7 +676,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
 
         items = idMappingService.mapRankedItems(rankedItems, remoteTenant, session, WS.MAX_NUMBER_OF_RANKING_RESULTS);
 
-        cache.put(new Element(tenantId + WS.ACTION_MOST_VIEWED + itemType + timeRange, items));
+        cache.put(new Element(cacheKey, items));
         return items.subList(0, Math.min(items.size(), numberOfResults));
     }
 
@@ -682,7 +684,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
     @IOLog
     @Profiled
     @Override
-    public List<Item> mostRatedItems(Integer tenantId, String itemType, Integer numberOfResults, String timeRange,
+    public List<Item> mostRatedItems(Integer tenantId, String itemType, Integer cluster, Integer numberOfResults, String timeRange,
                                      TimeConstraintVO constraint, Session session) {
         List<Item> items;
 
@@ -696,7 +698,8 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
         if (timeRange == null) {
             timeRange = "ALL";
         } // default timeRange
-        Element e = cache.get(tenantId + WS.ACTION_MOST_RATED + itemType + timeRange);
+        String cacheKey = tenantId + WS.ACTION_MOST_RATED + itemType + cluster + timeRange;
+        Element e = cache.get(cacheKey);
         if ((e != null) && (!e.isExpired())) {
             items = itemService.filterDeactivatedItems((List<Item>) e.getValue());
             return items.subList(0, Math.min(items.size(), numberOfResults));
@@ -707,7 +710,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
         Monitor monCore = MonitorFactory.start(JAMON_REST_MOST_RATED_CORE);
 
         List<RankedItemVO<Integer, String>> rankedItems = domainActionService
-                .mostRatedItems(tenantId, itemType, WS.MAX_NUMBER_OF_RANKING_RESULTS, constraint, Boolean.TRUE);
+                .mostRatedItems(tenantId, itemType, cluster, WS.MAX_NUMBER_OF_RANKING_RESULTS, constraint, Boolean.TRUE);
 
         // filter invisible items
         Set<String> invisibleItemTypes = typeMappingService.getItemTypes(tenantId, false);
@@ -727,7 +730,7 @@ public class ShopRecommenderServiceImpl implements ShopRecommenderService {
 
         items = idMappingService.mapRankedItems(rankedItems, remoteTenant, session, WS.MAX_NUMBER_OF_RANKING_RESULTS);
 
-        cache.put(new Element(tenantId + WS.ACTION_MOST_RATED + itemType + timeRange, items));
+        cache.put(new Element(cacheKey, items));
         return items.subList(0, Math.min(items.size(), numberOfResults));
     }
 

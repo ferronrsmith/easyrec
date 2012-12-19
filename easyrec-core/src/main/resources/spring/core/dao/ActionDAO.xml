@@ -19,5 +19,6 @@
         <constructor-arg ref="easyrecDataSource"/>
         <constructor-arg ref="tenantService"/>
         <constructor-arg ref="easyrecSqlScriptService"/>
+        <constructor-arg ref="assocTypeDAO" />
     </bean>
 </beans>

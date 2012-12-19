@@ -134,21 +134,21 @@ public class MusicActionServiceImpl extends DomainActionServiceImpl implements M
                                                                                  Integer numberOfResults,
                                                                                  TimeConstraintVO timeRange,
                                                                                  Boolean sortDescending) {
-        return mostBoughtItems(tenant, TypeMappingService.ITEM_TYPE_TRACK, numberOfResults, timeRange, sortDescending);
+        return mostBoughtItems(tenant, TypeMappingService.ITEM_TYPE_TRACK, null, numberOfResults, timeRange, sortDescending);
     }
 
     public List<RankedItemVO<Integer, String>> mostViewedArtists(Integer tenant,
                                                                                   Integer numberOfResults,
                                                                                   TimeConstraintVO timeRange,
                                                                                   Boolean sortDescending) {
-        return mostViewedItems(tenant, TypeMappingService.ITEM_TYPE_ARTIST, numberOfResults, timeRange, sortDescending);
+        return mostViewedItems(tenant, TypeMappingService.ITEM_TYPE_ARTIST, null, numberOfResults, timeRange, sortDescending);
     }
 
     public List<RankedItemVO<Integer, String>> mostViewedGenres(Integer tenant,
                                                                                  Integer numberOfResults,
                                                                                  TimeConstraintVO timeRange,
                                                                                  Boolean sortDescending) {
-        return mostViewedItems(tenant, TypeMappingService.ITEM_TYPE_GENRE_CLUSTER, numberOfResults, timeRange,
+        return mostViewedItems(tenant, TypeMappingService.ITEM_TYPE_GENRE_CLUSTER, null, numberOfResults, timeRange,
                 sortDescending);
     }
 
@@ -156,27 +156,27 @@ public class MusicActionServiceImpl extends DomainActionServiceImpl implements M
                                                                                  Integer numberOfResults,
                                                                                  TimeConstraintVO timeRange,
                                                                                  Boolean sortDescending) {
-        return mostViewedItems(tenant, TypeMappingService.ITEM_TYPE_TRACK, numberOfResults, timeRange, sortDescending);
+        return mostViewedItems(tenant, TypeMappingService.ITEM_TYPE_TRACK, null, numberOfResults, timeRange, sortDescending);
     }
 
     public List<RankedItemVO<Integer, String>> mostRatedArtists(Integer tenant,
                                                                                  Integer numberOfResults,
                                                                                  TimeConstraintVO timeRange,
                                                                                  Boolean sortDescending) {
-        return mostRatedItems(tenant, TypeMappingService.ITEM_TYPE_ARTIST, numberOfResults, timeRange, sortDescending);
+        return mostRatedItems(tenant, TypeMappingService.ITEM_TYPE_ARTIST, null, numberOfResults, timeRange, sortDescending);
     }
 
     public List<RankedItemVO<Integer, String>> mostRatedTracks(Integer tenant, Integer numberOfResults,
                                                                                 TimeConstraintVO timeRange,
                                                                                 Boolean sortDescending) {
-        return mostRatedItems(tenant, TypeMappingService.ITEM_TYPE_TRACK, numberOfResults, timeRange, sortDescending);
+        return mostRatedItems(tenant, TypeMappingService.ITEM_TYPE_TRACK, null, numberOfResults, timeRange, sortDescending);
     }
 
     public List<RankedItemVO<Integer, String>> mostSearchedArtists(Integer tenant,
                                                                                     Integer numberOfResults,
                                                                                     TimeConstraintVO timeRange,
                                                                                     Boolean sortDescending) {
-        return mostSearchedItems(tenant, TypeMappingService.ITEM_TYPE_ARTIST, numberOfResults, timeRange,
+        return mostSearchedItems(tenant, TypeMappingService.ITEM_TYPE_ARTIST, null, numberOfResults, timeRange,
                 sortDescending);
     }
 
@@ -184,7 +184,7 @@ public class MusicActionServiceImpl extends DomainActionServiceImpl implements M
                                                                                    Integer numberOfResults,
                                                                                    TimeConstraintVO timeRange,
                                                                                    Boolean sortDescending) {
-        return mostSearchedItems(tenant, TypeMappingService.ITEM_TYPE_TRACK, numberOfResults, timeRange,
+        return mostSearchedItems(tenant, TypeMappingService.ITEM_TYPE_TRACK, null, numberOfResults, timeRange,
                 sortDescending);
     }
 

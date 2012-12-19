@@ -21,7 +21,11 @@ import org.easyrec.model.core.ActionVO;
 import org.easyrec.model.core.ItemVO;
 import org.easyrec.model.core.RankedItemVO;
 import org.easyrec.model.core.RatingVO;
+import org.easyrec.model.core.transfer.TimeConstraintVO;
 import org.easyrec.store.dao.BaseActionDAO;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * This interface provides methods to store data into and read <code>Action</code> entries from a SAT recommender database.
@@ -41,5 +45,6 @@ import org.easyrec.store.dao.BaseActionDAO;
  */
 public interface ActionDAO extends
         BaseActionDAO<ActionVO<Integer, Integer>, RankedItemVO<Integer, Integer>, Integer, Integer, ItemVO<Integer, Integer>, RatingVO<Integer, Integer>, Integer, Integer> {
+
 
 }

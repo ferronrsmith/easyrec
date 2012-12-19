@@ -89,28 +89,28 @@ public interface DomainActionService extends
     // Rankings
     ///////////////////////////////////////////////////////////////////////////////////////////////   
     public List<RankedItemVO<Integer, String>> mostBoughtItems(Integer tenant,
-                                                                                @Nullable String itemType,
-                                                                                Integer numberOfResults,
-                                                                                @Nullable TimeConstraintVO timeRange,
-                                                                                Boolean sortDescending);
+                                                               @Nullable String itemType,
+                                                               Integer cluster, Integer numberOfResults,
+                                                               @Nullable TimeConstraintVO timeRange,
+                                                               Boolean sortDescending);
 
     public List<RankedItemVO<Integer, String>> mostViewedItems(Integer tenant,
-                                                                                @Nullable String itemType,
-                                                                                Integer numberOfResults,
-                                                                                @Nullable TimeConstraintVO timeRange,
-                                                                                Boolean sortDescending);
+                                                               @Nullable String itemType,
+                                                               Integer cluster, Integer numberOfResults,
+                                                               @Nullable TimeConstraintVO timeRange,
+                                                               Boolean sortDescending);
 
     public List<RankedItemVO<Integer, String>> mostRatedItems(Integer tenant,
-                                                                               @Nullable String itemType,
-                                                                               Integer numberOfResults,
-                                                                               @Nullable TimeConstraintVO timeRange,
-                                                                               Boolean sortDescending);
+                                                              @Nullable String itemType,
+                                                              Integer cluster, Integer numberOfResults,
+                                                              @Nullable TimeConstraintVO timeRange,
+                                                              Boolean sortDescending);
 
     public List<RankedItemVO<Integer, String>> mostSearchedItems(Integer tenant,
-                                                                                  @Nullable String itemType,
-                                                                                  Integer numberOfResults,
-                                                                                  @Nullable TimeConstraintVO timeRange,
-                                                                                  Boolean sortDescending);
+                                                                 @Nullable String itemType,
+                                                                 Integer cluster, Integer numberOfResults,
+                                                                 @Nullable TimeConstraintVO timeRange,
+                                                                 Boolean sortDescending);
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // Ratings

@@ -31,9 +31,11 @@ import org.easyrec.model.web.*;
 import org.easyrec.service.core.ProfileService;
 import org.easyrec.service.core.TenantService;
 import org.easyrec.service.domain.TypeMappingService;
+import org.easyrec.service.web.IDMappingService;
 import org.easyrec.service.web.RemoteAssocService;
 import org.easyrec.service.web.nodomain.ShopRecommenderService;
 import org.easyrec.rest.nodomain.exception.EasyRecRestException;
+import org.easyrec.store.dao.IDMappingDAO;
 import org.easyrec.store.dao.core.ItemDAO;
 import org.easyrec.store.dao.core.types.AssocTypeDAO;
 import org.easyrec.store.dao.web.OperatorDAO;
@@ -72,8 +74,11 @@ public class EasyRec {
     private ShopRecommenderService shopRecommenderService;
     private TypeMappingService typeMappingService;
     private SimpleDateFormat dateFormatter;
+    private IDMappingDAO idMappingDAO;
     //added by FK on 2012-12-18 to enable adding profile data to recommendations
     private ProfileService profileService;
+
+
 
     // Jamon Loggers
     private final static String JAMON_REST_VIEW = "rest.view";
@@ -100,6 +105,7 @@ public class EasyRec {
     public EasyRec(OperatorDAO operatorDAO, RemoteTenantDAO remoteTenantDAO,
                    ShopRecommenderService shopRecommenderService, TenantService tenantService,
                    TypeMappingService typeMappingService, ItemDAO itemDAO, RemoteAssocService remoteAssocService,
+                   IDMappingDAO idMappingDAO,
                    //added by FK on 2012-12-18 for enabling profile data in recommendations
                    ProfileService profileService,
                    String dateFormatString) {
@@ -112,6 +118,7 @@ public class EasyRec {
         this.remoteAssocService = remoteAssocService;
         this.dateFormatter = new SimpleDateFormat(dateFormatString);
         this.profileService = profileService;
+        this.idMappingDAO = idMappingDAO;
     }
 
     @GET
@@ -671,10 +678,15 @@ public class EasyRec {
                                     @QueryParam("timeRange") String timeRange,
                                     @QueryParam("startDate") String startDate, @QueryParam("endDate") String endDate,
                                     @QueryParam("requesteditemtype") String requesteditemtype,
+                                    @QueryParam("clusterid") String clusterId,
                                     @QueryParam("callback") String callback,
                                     @QueryParam("withProfile") @DefaultValue("false") boolean withProfile) throws EasyRecException {
         Monitor mon = MonitorFactory.start(JAMON_REST_MOST_BOUGHT);
         Recommendation rr = null;
+        Integer cluster = null;
+        if (clusterId != null) {
+            cluster = this.idMappingDAO.lookup(clusterId);
+        }
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
 
         if (coreTenantId == null)
@@ -695,7 +707,7 @@ public class EasyRec {
 
         if (tc != null) {
             items = shopRecommenderService.mostBoughtItems(coreTenantId, requesteditemtype,
-                    numberOfResults != null ? numberOfResults : WS.DEFAULT_NUMBER_OF_RESULTS, timeRange, tc,
+                    cluster, numberOfResults != null ? numberOfResults : WS.DEFAULT_NUMBER_OF_RESULTS, timeRange, tc,
                     new Session(null, request));
 
             rr = new Recommendation(tenantId, WS.ACTION_MOST_BOUGHT, null, null, null, items);
@@ -724,12 +736,18 @@ public class EasyRec {
                                     @QueryParam("timeRange") String timeRange,
                                     @QueryParam("startDate") String startDate, @QueryParam("endDate") String endDate,
                                     @QueryParam("requesteditemtype") String requestedItemType,
+                                    @QueryParam("clusterid") String clusterId,
                                     @QueryParam("callback") String callback,
                                     @QueryParam("withProfile") @DefaultValue("false") boolean withProfile)
             throws EasyRecException {
         Monitor mon = MonitorFactory.start(JAMON_REST_MOST_VIEWED);
         Recommendation rr = null;
+        Integer cluster = null;
+        if (clusterId != null) {
+            cluster = this.idMappingDAO.lookup(clusterId);
+        }
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
+
 
         if (coreTenantId == null)
             exceptionResponse(WS.ACTION_MOST_VIEWED, MSG.TENANT_WRONG_TENANT_APIKEY, type, callback);
@@ -749,7 +767,7 @@ public class EasyRec {
 
         if (tc != null) {
             items = shopRecommenderService.mostViewedItems(coreTenantId, requestedItemType,
-                    numberOfResults != null ? numberOfResults : WS.DEFAULT_NUMBER_OF_RESULTS, timeRange, tc,
+                    cluster, numberOfResults != null ? numberOfResults : WS.DEFAULT_NUMBER_OF_RESULTS, timeRange, tc,
                     new Session(null, request));
 
             rr = new Recommendation(tenantId, WS.ACTION_MOST_VIEWED, null, null, null, items);
@@ -778,10 +796,15 @@ public class EasyRec {
                                    @QueryParam("timeRange") String timeRange, @QueryParam("startDate") String startDate,
                                    @QueryParam("endDate") String endDate,
                                    @QueryParam("requesteditemtype") String requestedItemType,
+                                   @QueryParam("clusterid") String clusterId,
                                    @QueryParam("callback") String callback,
                                    @QueryParam("withProfile") @DefaultValue("false") boolean withProfile) throws EasyRecException {
         Monitor mon = MonitorFactory.start(JAMON_REST_MOST_RATED);
         Recommendation rr = null;
+        Integer cluster = null;
+        if (clusterId != null) {
+            cluster = this.idMappingDAO.lookup(clusterId);
+        }
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
 
         if (coreTenantId == null)
@@ -802,7 +825,7 @@ public class EasyRec {
 
         if (tc != null) {
             items = shopRecommenderService.mostRatedItems(coreTenantId, requestedItemType,
-                    numberOfResults != null ? numberOfResults : WS.DEFAULT_NUMBER_OF_RESULTS,
+                    cluster, numberOfResults != null ? numberOfResults : WS.DEFAULT_NUMBER_OF_RESULTS,
                     timeRange, tc, new Session(null, request));
 
             rr = new Recommendation(tenantId, WS.ACTION_MOST_RATED, null, null, null, items);

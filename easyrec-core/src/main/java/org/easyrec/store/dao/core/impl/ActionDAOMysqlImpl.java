@@ -25,8 +25,10 @@ import org.easyrec.model.core.ItemVO;
 import org.easyrec.model.core.RankedItemVO;
 import org.easyrec.model.core.RatingVO;
 import org.easyrec.model.core.transfer.TimeConstraintVO;
+import org.easyrec.service.core.ClusterService;
 import org.easyrec.service.core.TenantService;
 import org.easyrec.store.dao.core.ActionDAO;
+import org.easyrec.store.dao.core.types.AssocTypeDAO;
 import org.easyrec.store.dao.impl.AbstractBaseActionDAOMysqlImpl;
 import org.easyrec.utils.spring.store.ResultSetIteratorMysql;
 import org.easyrec.utils.spring.store.dao.DaoUtils;
@@ -71,7 +73,7 @@ public class ActionDAOMysqlImpl extends
     private final static String DEFAULT_COUNT_ALIAS_NAME = "itemCounter";
     private final static String DEFAULT_RATING_ALIAS_NAME = "rating";
     private final static String DEFAULT_LAST_ACTION_TIME_ALIAS_NAME = "lastActionTime";
-
+    private final static String DEFAULT_CLUSTER_ID_COLUMN_NAME = "clusterId";
     // Prepared DAO Statment for Insert Action
     private static final int[] ARG_TYPES_INSERT;
     private static final String SQL_INSERT_ACTION;
@@ -80,6 +82,7 @@ public class ActionDAOMysqlImpl extends
 
     // members
     private TenantService tenantService;
+    private AssocTypeDAO assocTypeDAO;
 
     private ActionVORowMapper actionVORowMapper = new ActionVORowMapper();
     private RankedItemVORowMapper rankedItemVORowMapper = new RankedItemVORowMapper();
@@ -110,9 +113,11 @@ public class ActionDAOMysqlImpl extends
     }
 
     // constructor
-    public ActionDAOMysqlImpl(DataSource dataSource, TenantService tenantService, SqlScriptService sqlScriptService) {
+    public ActionDAOMysqlImpl(DataSource dataSource, TenantService tenantService,
+                              SqlScriptService sqlScriptService, AssocTypeDAO assocTypeDAO) {
         super(sqlScriptService);
         this.tenantService = tenantService;
+        this.assocTypeDAO = assocTypeDAO;
         setDataSource(dataSource);
 
         // output connection information
@@ -348,6 +353,123 @@ public class ActionDAOMysqlImpl extends
                 }
             } else {
                 query.append(" AND ");
+                query.append(DEFAULT_ACTION_TIME_COLUMN_NAME);
+                query.append(" <= ?");
+
+                args.add(timeConstraints.getDateTo());
+                argt.add(Types.TIMESTAMP);
+            }
+        }
+
+        query.append(" GROUP BY ");
+        query.append(interestingColumns);
+
+        if (sortDesc != null) {
+            query.append(" ORDER BY ");
+            query.append(DEFAULT_COUNT_ALIAS_NAME);
+            query.append(" ");
+            if (sortDesc) {
+                query.append(DaoUtils.ORDER_DESC);
+            } else {
+                query.append(DaoUtils.ORDER_ASC);
+            }
+        }
+
+        // Note: for a non-mysql implementation this is need to be changed
+        if (numberOfResults != null && numberOfResults > 0) {
+            query.append(" LIMIT ?");
+
+            args.add(numberOfResults);
+            argt.add(Types.INTEGER);
+        }
+
+        return getJdbcTemplate().query(query.toString(), args.toArray(), Ints.toArray(argt),
+                rankedItemVORowMapper);
+    }
+
+    @Override
+    public List<RankedItemVO<Integer, Integer>> getRankedItemsByActionTypeAndCluster(Integer tenantId,
+                                                                           Integer actionTypeId,
+                                                                           Integer clusterId,
+                                                                           @Nullable Integer itemTypeId,
+                                                                           @Nullable Integer numberOfResults,
+                                                                           @Nullable TimeConstraintVO timeConstraints,
+                                                                           @Nullable Boolean sortDesc) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("retrieving rankedItemsByActionTypeAndCluster(tenantId=" + tenantId + ", actionTypeId=" + actionTypeId +
+                    ", clusterId=" + clusterId +
+                    ", itemTypeId=" + itemTypeId + ", numberOfResults=" + numberOfResults + ", timeConstraints=" +
+                    timeConstraints + ", sortDesc=" + sortDesc);
+        }
+
+        // validate
+        if (tenantId == null) {
+            throw new IllegalArgumentException("missing constraints, missing 'tenantId'");
+        }
+        if (actionTypeId == null) {
+            throw new IllegalArgumentException("missing constraints, missing 'actionTypeId'");
+        }
+        if (clusterId == null){
+            throw new IllegalArgumentException("missing constraints, missing 'clusterId'");
+        }
+
+        Integer assocTypeBelongsTo = assocTypeDAO.getIdOfType(tenantId, ClusterService.ASSOCTYPE_BELONGSTO);
+
+
+        StringBuilder interestingColumns = new StringBuilder("action.").append(DEFAULT_TENANT_COLUMN_NAME);
+        interestingColumns.append(", action.");
+        interestingColumns.append(DEFAULT_ACTION_TYPE_COLUMN_NAME);
+        interestingColumns.append(", action.");
+        interestingColumns.append(DEFAULT_ITEM_TYPE_COLUMN_NAME);
+        interestingColumns.append(", action.");
+        interestingColumns.append(DEFAULT_ITEM_COLUMN_NAME);
+
+        StringBuilder query = new StringBuilder("SELECT ");
+        query.append(interestingColumns);
+        query.append(", COUNT(*) AS ");
+        query.append(DEFAULT_COUNT_ALIAS_NAME);
+        query.append(" FROM ");
+        query.append(DEFAULT_TABLE_NAME);
+        query.append(" action, itemassoc assoc ");
+        query.append(" WHERE action.");
+        query.append(DEFAULT_TENANT_COLUMN_NAME);
+        query.append("=? AND action.");
+        query.append(DEFAULT_ACTION_TYPE_COLUMN_NAME);
+        query.append("=? AND ");
+        query.append("action.tenantId = assoc.tenantId AND action.itemId = assoc.itemFromId ");
+        query.append(" AND assoc.assocTypeId = ? AND assoc.itemToId = ?");
+
+        List<Object> args = Lists.newArrayList((Object) tenantId, actionTypeId, assocTypeBelongsTo, clusterId);
+        List<Integer> argt = Lists.newArrayList(Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER);
+
+        if (itemTypeId != null) {
+            query.append(" AND action.");
+            query.append(DEFAULT_ITEM_TYPE_COLUMN_NAME);
+            query.append("=?");
+
+            args.add(itemTypeId);
+            argt.add(Types.INTEGER);
+        }
+
+        if (timeConstraints != null && (timeConstraints.getDateFrom() != null || timeConstraints.getDateTo() != null)) {
+            if (timeConstraints.getDateFrom() != null) {
+                query.append(" AND action.");
+                query.append(DEFAULT_ACTION_TIME_COLUMN_NAME);
+                query.append(" >= ?");
+
+                args.add(timeConstraints.getDateFrom());
+                argt.add(Types.TIMESTAMP);
+
+                if (timeConstraints.getDateTo() != null) {
+                    query.append(" AND action.");
+                    query.append(DEFAULT_ACTION_TIME_COLUMN_NAME);
+                    query.append(" <= ?");
+
+                    args.add(timeConstraints.getDateTo());
+                    argt.add(Types.TIMESTAMP);
+                }
+            } else {
+                query.append(" AND action.");
                 query.append(DEFAULT_ACTION_TIME_COLUMN_NAME);
                 query.append(" <= ?");
 

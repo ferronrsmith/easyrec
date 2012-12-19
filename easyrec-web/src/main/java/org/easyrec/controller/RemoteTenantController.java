@@ -687,21 +687,21 @@ public class RemoteTenantController extends MultiActionController {
 
             if ("mostviewed".equals(assocType) || Strings.isNullOrEmpty(assocType)) {
                 List<Item> items =
-                        shopRecommenderService.mostViewedItems(remoteTenant.getId(), null, 50, timerange, null,
+                        shopRecommenderService.mostViewedItems(remoteTenant.getId(), null, null, 50, timerange, null,
                                 new Session(null, request.getRemoteAddr()));
                 mav.addObject("items", items);
             }
 
             if ("mostbought".equals(assocType)) {
                 List<Item> items =
-                        shopRecommenderService.mostBoughtItems(remoteTenant.getId(), null, 50, timerange, null,
+                        shopRecommenderService.mostBoughtItems(remoteTenant.getId(), null, null, 50, timerange, null,
                                 new Session(null, request.getRemoteAddr()));
                 mav.addObject("items", items);
             }
 
             if ("mostrated".equals(assocType)) {
                 List<Item> items =
-                        shopRecommenderService.mostRatedItems(remoteTenant.getId(), null, 50, timerange, null,
+                        shopRecommenderService.mostRatedItems(remoteTenant.getId(), null, null, 50, timerange, null,
                                 new Session(null, request.getRemoteAddr()));
                 mav.addObject("items", items);
             }
