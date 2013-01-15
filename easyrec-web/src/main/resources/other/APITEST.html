@@ -65,6 +65,7 @@ strategy<input id="strategy" style="width:100%"><br>
 usefallback<input id="usefallback" style="width:100%"><br>
 <hr/>
 token<input id="token" style="width:100%"><br>
+assoctype<input id="assoctype" style="width:100%"><br>
 <a href="javascript:send();">SEND ACTION</a>
 
 <script>
@@ -93,6 +94,7 @@ token<input id="token" style="width:100%"><br>
         addValue("strategy");
         addValue("usefallback");
         addValue("token");
+        addValue("assoctype");
 
         document.getElementById("iframe").src = url;
         document.getElementById("debug").innerHTML = url;
