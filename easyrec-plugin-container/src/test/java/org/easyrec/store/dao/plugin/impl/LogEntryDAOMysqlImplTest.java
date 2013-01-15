@@ -85,14 +85,14 @@ public class LogEntryDAOMysqlImplTest {
         return new MatchesLogEntryWithoutId(logEntry);
     }
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     // TODO add tests for getLogEntries(assocTypeId, offset, limit)
     // TODO add tests for getLogEntriesForTenant(tenantId, assocTypeId, offset, limit)
 
     private static Date date(String date) {
+      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
-            return DATE_FORMAT.parse(date);
+            return dateFormat.parse(date);
         } catch (ParseException e) {
             fail("Could not parse date!");
             return null;

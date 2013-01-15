@@ -70,7 +70,7 @@ public class EasyRec {
     private TenantService tenantService;
     private ShopRecommenderService shopRecommenderService;
     private TypeMappingService typeMappingService;
-    private SimpleDateFormat dateFormatter;
+    private String dateFormatString;
 
     // Jamon Loggers
     private final static String JAMON_REST_VIEW = "rest.view";
@@ -105,7 +105,7 @@ public class EasyRec {
         this.typeMappingService = typeMappingService;
         this.itemDAO = itemDAO;
         this.remoteAssocService = remoteAssocService;
-        this.dateFormatter = new SimpleDateFormat(dateFormatString);
+        this.dateFormatString = dateFormatString;
     }
 
     @GET
@@ -118,6 +118,7 @@ public class EasyRec {
                          @QueryParam("itemtype") String itemType, @QueryParam("callback") String callback)
             throws EasyRecException {
         Monitor mon = MonitorFactory.start(JAMON_REST_VIEW);
+
 
         // Collect a List of messages for the user to understand,
         // what went wrong (e.g. Wrong API key).
@@ -134,7 +135,8 @@ public class EasyRec {
         Date actionDate = null;
 
         if (actionTime != null) {
-            actionDate = MyUtils.dateFormatCheck(actionTime, dateFormatter);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(this.dateFormatString);
+            actionDate = MyUtils.dateFormatCheck(actionTime, simpleDateFormat);
 
             if (actionDate == null)
                 messages.add(MSG.DATE_PARSE);
@@ -193,7 +195,8 @@ public class EasyRec {
         Date actionDate = null;
 
         if (actionTime != null) {
-            actionDate = MyUtils.dateFormatCheck(actionTime, dateFormatter);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(this.dateFormatString);
+            actionDate = MyUtils.dateFormatCheck(actionTime, simpleDateFormat);
 
             if (actionDate == null)
                 messages.add(MSG.DATE_PARSE);
@@ -263,7 +266,8 @@ public class EasyRec {
         Date actionDate = null;
 
         if (actionTime != null) {
-            actionDate = MyUtils.dateFormatCheck(actionTime, dateFormatter);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(this.dateFormatString);
+            actionDate = MyUtils.dateFormatCheck(actionTime, simpleDateFormat);
 
             if (actionDate == null)
                 messages.add(MSG.DATE_PARSE);
@@ -344,7 +348,8 @@ public class EasyRec {
         Date actionDate = null;
 
         if (actionTime != null) {
-            actionDate = MyUtils.dateFormatCheck(actionTime, dateFormatter);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(this.dateFormatString);
+            actionDate = MyUtils.dateFormatCheck(actionTime, simpleDateFormat);
 
             if (actionDate == null)
                 messages.add(MSG.DATE_PARSE);
@@ -1324,9 +1329,10 @@ public class EasyRec {
     private TimeConstraintVO checkTimeConstraints(String startTime, String endTime) {
         Date startDate = null;
         Date endDate;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(this.dateFormatString);
 
         if (startTime != null) {
-            startDate = MyUtils.dateFormatCheck(startTime, dateFormatter);
+            startDate = MyUtils.dateFormatCheck(startTime, simpleDateFormat);
 
             if (startDate == null)
                 return null;
@@ -1335,7 +1341,7 @@ public class EasyRec {
         if (endTime == null)
             endDate = new Date(System.currentTimeMillis());
         else {
-            endDate = MyUtils.dateFormatCheck(endTime, dateFormatter);
+            endDate = MyUtils.dateFormatCheck(endTime, simpleDateFormat);
 
             if (endDate == null)
                 return null;

@@ -41,7 +41,6 @@ import static org.junit.Assert.assertThat;
  * @author Patrick Marschik
  */
 public abstract class AbstractActionDAOTest {
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     protected abstract ActionDAO getActionDAO();
 
@@ -246,6 +245,7 @@ public abstract class AbstractActionDAOTest {
     }
 
     protected static Date makeDate(String date) {
+      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             return dateFormat.parse(date);
         } catch (ParseException ex) {

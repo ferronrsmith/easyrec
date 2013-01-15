@@ -237,11 +237,11 @@ public class ItemAssocDAOMysqlImpl extends
         }
     }
 
-    private static final SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private void writeItemAssoc(Writer writer,
                                 ItemAssocVO<Integer,Integer> itemAssoc)
             throws IOException {
+        SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         writer.append(itemAssoc.getTenant().toString());
         writer.append('\t');
 
