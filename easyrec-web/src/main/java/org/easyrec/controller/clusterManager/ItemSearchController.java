@@ -53,7 +53,7 @@ public class ItemSearchController extends MultiActionController {
 
     private ItemDAO itemDAO;
     private RemoteTenantDAO remoteTenantDAO;
-    private SimpleDateFormat dateFormat;
+    private String dateFormat;
     private ItemTypeDAO itemTypeDAO;
     private AssocTypeDAO assocTypeDAO;
 
@@ -63,7 +63,7 @@ public class ItemSearchController extends MultiActionController {
     public ItemSearchController(ItemDAO itemDAO, String dateFormat, RemoteTenantDAO remoteTenantDAO,
                                 ItemTypeDAO itemTypeDAO, AssocTypeDAO assocTypeDAO) {
         this.itemDAO = itemDAO;
-        this.dateFormat = new SimpleDateFormat(dateFormat);
+        this.dateFormat = dateFormat;
         this.remoteTenantDAO = remoteTenantDAO;
         this.itemTypeDAO = itemTypeDAO;
         this.assocTypeDAO = assocTypeDAO;
@@ -132,12 +132,13 @@ public class ItemSearchController extends MultiActionController {
 
         Date from = null;
         Date to = null;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(this.dateFormat);
 
         if (!Strings.isNullOrEmpty(creationDateFrom))
-            from = dateFormat.parse(creationDateFrom);
+            from = simpleDateFormat.parse(creationDateFrom);
 
         if (!Strings.isNullOrEmpty(creationDateTo))
-            to = dateFormat.parse(creationDateTo);
+            to = simpleDateFormat.parse(creationDateTo);
 
         if (Strings.isNullOrEmpty(itemId))
             itemId = null;
