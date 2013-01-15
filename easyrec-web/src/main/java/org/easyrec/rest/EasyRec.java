@@ -25,16 +25,15 @@ import com.jamonapi.MonitorFactory;
 import com.sun.jersey.api.json.JSONWithPadding;
 import com.sun.jersey.spi.resource.Singleton;
 import org.easyrec.model.core.ClusterVO;
-import org.easyrec.model.core.web.*;
 import org.easyrec.model.core.transfer.TimeConstraintVO;
-import org.easyrec.model.web.*;
+import org.easyrec.model.core.web.*;
+import org.easyrec.model.web.Recommendation;
+import org.easyrec.rest.nodomain.exception.EasyRecRestException;
 import org.easyrec.service.core.ProfileService;
 import org.easyrec.service.core.TenantService;
 import org.easyrec.service.domain.TypeMappingService;
-import org.easyrec.service.web.IDMappingService;
 import org.easyrec.service.web.RemoteAssocService;
 import org.easyrec.service.web.nodomain.ShopRecommenderService;
-import org.easyrec.rest.nodomain.exception.EasyRecRestException;
 import org.easyrec.store.dao.IDMappingDAO;
 import org.easyrec.store.dao.core.ItemDAO;
 import org.easyrec.store.dao.core.types.AssocTypeDAO;
@@ -73,7 +72,7 @@ public class EasyRec {
     private TenantService tenantService;
     private ShopRecommenderService shopRecommenderService;
     private TypeMappingService typeMappingService;
-    private SimpleDateFormat dateFormatter;
+    private String dateFormat;
     private IDMappingDAO idMappingDAO;
     //added by FK on 2012-12-18 to enable adding profile data to recommendations
     private ProfileService profileService;
@@ -116,7 +115,7 @@ public class EasyRec {
         this.typeMappingService = typeMappingService;
         this.itemDAO = itemDAO;
         this.remoteAssocService = remoteAssocService;
-        this.dateFormatter = new SimpleDateFormat(dateFormatString);
+        this.dateFormat = dateFormatString;
         this.profileService = profileService;
         this.idMappingDAO = idMappingDAO;
     }
@@ -147,6 +146,7 @@ public class EasyRec {
         Date actionDate = null;
 
         if (actionTime != null) {
+            SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat);
             actionDate = MyUtils.dateFormatCheck(actionTime, dateFormatter);
 
             if (actionDate == null)
@@ -206,6 +206,7 @@ public class EasyRec {
         Date actionDate = null;
 
         if (actionTime != null) {
+            SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat);
             actionDate = MyUtils.dateFormatCheck(actionTime, dateFormatter);
 
             if (actionDate == null)
@@ -276,6 +277,7 @@ public class EasyRec {
         Date actionDate = null;
 
         if (actionTime != null) {
+            SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat);
             actionDate = MyUtils.dateFormatCheck(actionTime, dateFormatter);
 
             if (actionDate == null)
@@ -357,6 +359,7 @@ public class EasyRec {
         Date actionDate = null;
 
         if (actionTime != null) {
+            SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat);
             actionDate = MyUtils.dateFormatCheck(actionTime, dateFormatter);
 
             if (actionDate == null)
@@ -1415,6 +1418,7 @@ public class EasyRec {
         Date startDate = null;
         Date endDate;
 
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat);
         if (startTime != null) {
             startDate = MyUtils.dateFormatCheck(startTime, dateFormatter);
 
