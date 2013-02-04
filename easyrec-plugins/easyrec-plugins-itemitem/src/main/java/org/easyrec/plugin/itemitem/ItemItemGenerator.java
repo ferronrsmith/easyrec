@@ -49,7 +49,7 @@ public class ItemItemGenerator extends GeneratorPluginSupport<ItemItemConfigurat
     // ------------------------------ FIELDS ------------------------------
 
     public static final String DISPLAY_NAME = "Item-Item";
-    public static final Version VERSION = new Version("0.97");
+    public static final Version VERSION = new Version("0.98");
     public static final URI ID = URI.create("http://www.easyrec.org/plugins/itemitem");
 
     private Map<PredictionComputationType, PredictionComputationStrategy> predictionComputationTypes;

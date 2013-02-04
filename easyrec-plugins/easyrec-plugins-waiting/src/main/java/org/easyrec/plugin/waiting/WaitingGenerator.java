@@ -23,7 +23,7 @@ public class WaitingGenerator extends GeneratorPluginSupport<WaitingGeneratorCon
     //   major - complete reworks of your generator, major new features
     //   minor - small feature improvements
     //   misc  - bugfix releases or anything else
-    public static final Version VERSION = new Version("0.97");
+    public static final Version VERSION = new Version("0.98");
 
     // The URI that uniquely identifies the plugin. While any valid URI is technically ok here, implementors
     // should choose their URIs wisely, ideally the URI should be 'cool'

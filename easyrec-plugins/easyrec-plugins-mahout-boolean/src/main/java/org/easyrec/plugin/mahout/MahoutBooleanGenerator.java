@@ -45,7 +45,7 @@ import org.easyrec.service.core.ItemAssocService;
 import org.easyrec.service.domain.TypeMappingService;
 import org.easyrec.store.dao.core.types.AssocTypeDAO;
 import org.easyrec.store.dao.core.types.ItemTypeDAO;
-import org.easyrec.store.dao.web.ItemDAO;
+import org.easyrec.store.dao.core.ItemDAO;
 
 import java.net.URI;
 import java.util.Date;
@@ -61,7 +61,7 @@ public class MahoutBooleanGenerator extends GeneratorPluginSupport<MahoutBoolean
     public static final String DISPLAY_NAME = "Mahout Boolean Generator";
 
     // version of the generator, should be ascending for each new release
-    public static final Version VERSION = new Version("0.97");
+    public static final Version VERSION = new Version("0.98");
 
     // The URI that uniquely identifies the plugin. While any valid URI is technically ok here, implementors
     // should choose their URIs wisely, ideally the URI should be 'cool'

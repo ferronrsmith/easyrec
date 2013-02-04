@@ -447,7 +447,7 @@ public class Movielens100kImporter extends AbstractDependencyInjectionSpringCLI 
             return;
         }
 
-        pluginRegistry.installPlugin(URI.create("http://www.easyrec.org/plugins/ARM"), new Version("0.97"));
+        pluginRegistry.installPlugin(URI.create("http://www.easyrec.org/plugins/ARM"), new Version("0.98"));
         
         Map<Integer, Movie> movies = parseMovies(moviesFile);
 
