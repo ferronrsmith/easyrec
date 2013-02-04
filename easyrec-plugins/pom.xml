@@ -33,6 +33,7 @@
         <module>easyrec-plugins-slopeone</module>
         <module>easyrec-plugins-itemitem</module>
         <module>easyrec-plugins-pearson</module>
+        <module>easyrec-plugins-profile-duke</module>
         <module>easyrec-plugins-sample</module>
         <module>easyrec-plugins-waiting</module>
 <!--        <module>easyrec-plugins-mahout-boolean</module>
