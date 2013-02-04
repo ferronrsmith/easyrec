@@ -6,6 +6,7 @@
 *.iws
 *.iml
 *.jar
+/.idea/*
 /.idea/.name
 /.idea/ant.xml
 /.idea/artifacts/easyrec_web_war.xml
