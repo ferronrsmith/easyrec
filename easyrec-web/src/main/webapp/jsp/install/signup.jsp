@@ -31,7 +31,7 @@
                 <tr>
                     <td>
                         Once again: make sure to check out the recommended innodb settings at <a target="_blank"
-                                                                                                 href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=InnoDB_settings">
+                                                                                                 href="http://easyrec.sourceforge.net/wiki/index.php/InnoDB_settings">
                         our Wiki!</a>
                     </td>
                 </tr>

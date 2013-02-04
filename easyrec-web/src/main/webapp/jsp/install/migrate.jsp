@@ -42,7 +42,7 @@
                                                     jAlert("The installer has detected an easyrec version older than 0.95.<br/>" +
                                                             "With version 0.95 easyrec switched to InnoDB as its default database engine. Please <b>make sure that InnoDB is enabled</b> on your MySQL installation.<br/>" +
                                                             "Also make sure to use the <b>appropriate settings</b> to ensure good performance." +
-                                                            "The settings can be found at <br/><br/><b><i>http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=InnoDB_settings</i></b><br/><br/>" +
+                                                            "The settings can be found at <br/><br/><b><i>http://easyrec.sourceforge.net/wiki/index.php/InnoDB_settings</i></b><br/><br/>" +
                                                             "Furthermore, depending on your DB machine and DB size the migration <b>may take a long time</b> (bad case: 30min - 1h)!",
                                                             "easyrec InnoDB migration information");
                                                 </script>

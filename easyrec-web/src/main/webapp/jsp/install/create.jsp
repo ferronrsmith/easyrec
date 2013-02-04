@@ -50,7 +50,7 @@
 <script type="text/javascript">
     jAlert("With version 0.95 easyrec switched to InnoDB as its default database engine. Please <b>make sure that InnoDB is enabled</b> on your MySQL installation.<br/>" +
             "Also make sure to use the <b>appropriate settings</b> to ensure good performance." +
-            "The settings can be found at <br/><br/><b><i>http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=InnoDB_settings</i></b><br/>",
+            "The settings can be found at <br/><br/><b><i>http://easyrec.sourceforge.net/wiki/index.php/InnoDB_settings</i></b><br/>",
             "easyrec InnoDB migration information");
 </script>
 </body>
