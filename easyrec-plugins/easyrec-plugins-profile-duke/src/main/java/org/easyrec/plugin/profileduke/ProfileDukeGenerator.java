@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Research Studios Austria Forschungsgesellschaft mBH
+ * Copyright 2013 Research Studios Austria Forschungsgesellschaft mBH
  *
  * This file is part of easyrec.
  *
@@ -19,34 +19,44 @@
 
 package org.easyrec.plugin.profileduke;
 
+import no.priv.garshol.duke.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.easyrec.model.core.ItemAssocVO;
 import org.easyrec.model.core.ItemVO;
+import org.easyrec.model.core.TenantVO;
 import org.easyrec.plugin.model.Version;
+import org.easyrec.plugin.profileduke.duke.datasource.EasyrecXMLFormatDataSource;
+import org.easyrec.plugin.profileduke.duke.matchers.EasyrecProfileMatcher;
 import org.easyrec.plugin.support.GeneratorPluginSupport;
 import org.easyrec.service.core.ActionService;
 import org.easyrec.service.core.ItemAssocService;
+import org.easyrec.service.core.ProfileService;
 import org.easyrec.service.domain.TypeMappingService;
+import org.easyrec.store.dao.core.ItemAssocDAO;
+import org.xml.sax.SAXException;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
+// TODO: Description
 
 /**
- * Sample generator plugin that demonstrates how to use the easyrec plugin API. <p/> <p><b>Company:&nbsp;</b> SAT,
- * Research Studios Austria</p> <p><b>Copyright:&nbsp;</b> (c) 2007</p> <p><b>last modified:</b><br/> $Author$<br/>
- * $Date$<br/> $Revision$</p>
+ * Generator plugin that generates rules for www.ijoule.com based on the Neighbourhood of an User.
+ * <p/>
+ * Basically it builds a neighbourhood based on the user profiles and then it will look at it for
+ * each user and look at the average completion rate of the rules in that neighbourhood to generate assocs based on
+ * this information.
  *
- * @author Patrick Marschik
+ * @author Soheil Khosravipour
+ * @author Fabian Salcher
  */
 public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeGeneratorConfig, ProfileDukeGeneratorStats> {
     // ------------------------------ FIELDS ------------------------------
 
     // the display name is the name of the generator that will show up in the admin tool when the plugin has been loaded.
-    public static final String DISPLAY_NAME = "Demo Generator";
+    public static final String DISPLAY_NAME = "Profile Based Recommendations (Duke)";
     // version of the generator, should be ascending for each new release
     // you might increment the versioning components (major,minor,misc) like this:
     //   major - complete reworks of your generator, major new features
@@ -59,12 +69,15 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeGene
     // (@see <a href="http://www.dfki.uni-kl.de/~sauermann/2006/11/cooluris/#cooluris">Cool URIs for the
     // Semantic Web</a>) If unsure, use an all-lowercase http URI pointing to a host/path that you control,
     // ending with '#[plugin-name]'.
-    public static final URI ID = URI.create("http://www.easyrec.org/plugins/sample");
+    public static final URI ID = URI.create("http://www.easyrec.org/plugins/profileDuke");
 
-    private static final Log logger = LogFactory.getLog(org.easyrec.plugin.profileduke.ProfileDukeGenerator.class);
+    public static final Log logger = LogFactory.getLog(org.easyrec.plugin.profileduke.ProfileDukeGenerator.class);
 
     // the service will be auto-wired when the plugin is loaded, see {@link #setActionService(ActionService)}.
     private ActionService actionService;
+
+    private ProfileService profileService;
+
 
     // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -79,6 +92,11 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeGene
     // this method will be called when the plugin is being loaded and Spring injects the service, you need to make sure
     // that everything after the "set" part of the method name is named exactly like the Spring-bean.
     // For all beans that can be injected look in the wiki.
+
+    public void setProfileService(ProfileService profileService) {
+        this.profileService = profileService;
+    }
+
     public void setActionService(final ActionService actionService) {
         this.actionService = actionService;
     }
@@ -87,11 +105,12 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeGene
 
     @Override
     public String getPluginDescription() {
-        return "This is a sample generator that crates random recommendations for each item found. It just takes one item and creates a random list of recommendations." +
-                "The number of recommendations can be defined using the easyrec admin tool.";
+        // TODO: complete after finished the plugin
+        return "<p>Generator plugin that generates rules based on the item profiles.<p/>\n" +
+                "<p>The record linkage engine Duke is used to calculate the similarities between the item profiles.</p>";
     }
 
-    // -------------------------- OTHER METHODS --------------------------
+    // -------------------------- MAIN METHODS --------------------------
 
     @Override
     protected void doCleanup() throws Exception {
@@ -102,87 +121,68 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeGene
 
     @Override
     protected void doExecute(ExecutionControl executionControl, ProfileDukeGeneratorStats stats) throws Exception {
+
         // when doExecute() is called, the generator has been initialized with the configuration we should use
         ProfileDukeGeneratorConfig config = getConfiguration();
 
-        //
-        // get some parameters that are required for storing our generated item associations.
-
         TypeMappingService typeMappingService = (TypeMappingService) super.getTypeMappingService();
-
-        // get the id for the type of association between two items
-        Integer assocType = typeMappingService.getIdOfAssocType(config.getTenantId(), config.getAssociationType());
-        // the itemType used for searching items.
         Integer itemType = typeMappingService.getIdOfItemType(config.getTenantId(), config.getItemType());
-        // the sourceType used for storing item associations.
-        Integer sourceType = typeMappingService.getIdOfSourceType(config.getTenantId(), getSourceType());
-        // the viewType used for storing item associations.
-        Integer viewType = typeMappingService.getIdOfViewType(config.getTenantId(), config.getViewType());
-
-        // store the date when this doExecute() run was started.
-        Date execution = new Date();
+        int sourceType = typeMappingService.getIdOfSourceType(config.getTenantId(), this.getId().toString());
+        int tenantId = config.getTenantId();
+        ItemAssocDAO itemAssocDAO = getItemAssocDAO();
 
         // the generator needs to check periodically if abort was requested and stop operation in a clean manner
         if (executionControl.isAbortRequested()) return;
 
-        //
-        // get the items we need to work on
+        List<ItemVO<Integer, Integer>> itemList = actionService.getItemsOfTenant(config.getTenantId(), itemType);
+        stats.setNumberOfItems(itemList.size());
 
-        // use the service to get all items
-        List<ItemVO<Integer, Integer>> items = actionService.getItemsOfTenant(config.getTenantId(), itemType);
+        logger.info("BlockMode: " + config.getBlockCalculationMode());
+        logger.info("BlockModeNumberOfBlocks: " + config.getBlockCalculationNumberOfBlocks());
+        logger.info("ItemListSize: " + itemList.size());
 
-        //
-        // start the "calculation" of the plugin.
+        if ("true".equals(config.getBlockCalculationMode())) {
 
-        stats.setNumberOfItems(items.size());
+            LinkedList<ItemVO<Integer, Integer>> itemPot = new LinkedList<ItemVO<Integer, Integer>>();
+            for (ItemVO<Integer, Integer> item : itemList) {
+                itemPot.add(item);
+            }
 
-        int numberOfRecs = Math.min(config.getNumberOfRecs(), items.size() - 1);
-        final int MAX_PROGRESS = items.size() * numberOfRecs;
-        int currentProgress = 0;
-
-        for (ItemVO<Integer, Integer> item : items) {
-            Set<ItemVO<Integer, Integer>> alreadyUsedOtherItems = new HashSet<ItemVO<Integer, Integer>>();
-            INNER:
-            for (int i = 0; i < config.getNumberOfRecs(); i++) {
-                // update the progress using the execution control. the progress will be displayed in the administration
-                // tool or - when using the commandline interface - on stdout.
-                executionControl.updateProgress(currentProgress, MAX_PROGRESS, "Generating item associations.");
-                currentProgress++;
-
-                // abortion might be requested at anytime from the admin tool.
-                // therefore check again if abort was requested, we don't need to check every operation.
-                // but before and after possibly lengthy operations is a good place to check.
-                if (executionControl.isAbortRequested()) return;
-
-                // some random calculations:
-                // fetch a random item (making sure its not the current item)
-                ItemVO<Integer, Integer> otherItem = null;
-                int maxTries = 3;
-                int tries = 0;
-                while ((otherItem == null || otherItem.equals(item) || alreadyUsedOtherItems.contains(otherItem))) {
-                    otherItem = items.get((int)(Math.random() * items.size()));
-                    if (tries++ > maxTries) break INNER;
+            Random random = new Random();
+            int blockSize = itemList.size() / config.getBlockCalculationNumberOfBlocks();
+            List<ItemVO<Integer, Integer>> itemTempList = new Vector<ItemVO<Integer, Integer>>();
+            while (itemPot.size() > 0) {
+                itemTempList.add(itemPot.remove(random.nextInt(itemPot.size())));
+                if (itemPot.size() == 0 || (itemTempList.size() >= blockSize &&
+                        itemPot.size() > ((float) blockSize * 0.1))) {
+                    executionControl.updateProgress(itemList.size() - itemPot.size(),
+                            itemList.size() * 2,
+                            "calculating item similarity");
+                    if (!prepareAndStartDuke(itemTempList)) {
+                        executionControl.updateProgress(1, 1, "Due to an error execution has been aborted!");
+                        return;
+                    }
+                    itemTempList.clear();
                 }
-                alreadyUsedOtherItems.add(otherItem);
-                // create association between the current item and the random item
-                ItemAssocVO<Integer,Integer> itemAssoc = new ItemAssocVO<Integer,Integer>(
-                        config.getTenantId(), item, assocType, Math.random() * 100.0, otherItem, sourceType,
-                        "Demo Generator", viewType, null, execution);
-
-                // we use the item-assoc service to access a standard easyrec table, some services like this one are
-                // already injected to the superclass so we have ready access to them without the need to code the
-                // injection method (like {@link #setActionService} ourselves.
-                ItemAssocService itemAssocService = getItemAssocService();
-
-                itemAssocService.insertOrUpdateItemAssoc(itemAssoc);
-                //for reporting purposes, we remember how many rules we create
-                stats.incNumberOfRulesCreated();
+            }
+        } else {
+            executionControl.updateProgress(1, 2, "calculating item similarity");
+            if (!prepareAndStartDuke(itemList)) {
+                executionControl.updateProgress(1, 1, "Due to an error execution has been aborted!");
+                return;
             }
         }
-        //another information for reporting: the number of user actions considered in
-        //rule creation. This plugin, however, is so simple that it doesn't need
-        //to consider any actions
-        stats.setNumberOfActionsConsidered(0);
+
+        int associationType = typeMappingService.getIdOfAssocType(tenantId, config.getAssociationType());
+
+        // delete old associations
+        itemAssocDAO.removeItemAssocByTenant(config.getTenantId(),
+                associationType,
+                sourceType,
+                stats.getStartDate());
+
+        //TODO: get correct number of created associations
+        stats.setNumberOfRulesCreated(-1);
     }
 
     @Override
@@ -206,5 +206,86 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeGene
         // You need to remove all resources created by your plugin (including entries in easyrec database tables.)
         logger.info("The plugin is now being uninstalled.");
         // optional - you don't have to implement this method
+    }
+
+
+    /**
+     * This procedure calculates loads the duke configuration,
+     * reads the item profiles, starts duke to calculate the
+     * similarities and writes them as associations in the DB.
+     *
+     * @param items a list of items which should contain all users of your tenant
+     * @return <code>true</code> if the calculation succeeds and <code>false</code> if an
+     *         error occurs
+     * @throws IOException
+     */
+    private boolean prepareAndStartDuke(List<ItemVO<Integer, Integer>> items) throws IOException {
+
+        ProfileDukeGeneratorConfig config = getConfiguration();
+
+        // path to the duke configuration
+        String dukeConfigFilePath = config.getDukeConfig();
+
+        TypeMappingService typeMappingService = (TypeMappingService) super.getTypeMappingService();
+
+        Integer associationType = typeMappingService.getIdOfAssocType(
+                config.getTenantId(),
+                config.getAssociationType());
+        Integer sourceType = typeMappingService.getIdOfSourceType(
+                config.getTenantId(),
+                this.getId().toString());
+        Integer viewType = typeMappingService.getIdOfViewType(
+                config.getTenantId(),
+                config.getViewType());
+
+
+        Configuration dukeConfig = null;
+        try {
+            dukeConfig = ConfigLoader.load(dukeConfigFilePath);
+        } catch (SAXException e) {
+            logger.error("An error occurred while parsing Duke config file: " + e.getMessage());
+            logger.debug(e.getStackTrace());
+            return false;
+        } catch (IOException e) {
+            logger.error("An error occurred while accessing Duke config file: " + e.getMessage());
+            logger.debug(e.getStackTrace());
+            return false;
+        }
+
+        //read properties
+        List<Property> props = dukeConfig.getProperties();
+        EasyrecXMLFormatDataSource dataSource = new EasyrecXMLFormatDataSource();
+        dataSource.setItems(items);
+        dataSource.setProfileService(profileService);
+
+        File file = new File("easyrecXMLFile.tmp");
+        file.createNewFile();
+        dataSource.setInputFile("easyrecXMLFile.tmp");
+        for (Property prop : props) {
+            if (prop.getName().equals("ID")) {
+                dataSource.addColumn(new Column("?uri", "ID", null, null));
+            } else {
+                dataSource.addColumn(new Column(prop.getName(), prop.getName(), null, null));
+            }
+        }
+        dataSource.setProps(props);
+        dukeConfig.addDataSource(0, dataSource);
+
+        Processor proc = new Processor(dukeConfig);
+        EasyrecProfileMatcher easyrecProfileMatcher = new EasyrecProfileMatcher(true, false, true, true);
+        ItemAssocService itemAssocService = getItemAssocService();
+        easyrecProfileMatcher.setItemAssocService(itemAssocService);
+        easyrecProfileMatcher.setAssocType(associationType);
+        easyrecProfileMatcher.setConfTanantId(config.getTenantId());
+
+        easyrecProfileMatcher.setSourceType(sourceType);
+        easyrecProfileMatcher.setViewType(viewType);
+
+        proc.addMatchListener(easyrecProfileMatcher);
+        proc.deduplicate();
+        proc.close();
+
+        return true;
+
     }
 }

@@ -133,6 +133,10 @@
                                     <groupId>org.easyrec</groupId>
                                     <artifactId>easyrec-plugins-arm</artifactId>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.easyrec</groupId>
+                                    <artifactId>easyrec-plugins-profile-duke</artifactId>
+                                </artifactItem>
                             </artifactItems>
                             <!--<excludeTransitive>true</excludeTransitive>-->
                         </configuration>
@@ -211,6 +215,12 @@
         <dependency>
             <groupId>org.easyrec</groupId>
             <artifactId>easyrec-plugins-arm</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easyrec</groupId>
+            <artifactId>easyrec-plugins-profile-duke</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>

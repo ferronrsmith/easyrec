@@ -17,26 +17,23 @@
  * along with easyrec.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.easyrec.plugin.profileduke;
+package org.easyrec.plugin.profileduke.duke.datasource;
 
-import org.easyrec.plugin.stats.GeneratorStatistics;
+import no.priv.garshol.duke.RecordImpl;
+
+import java.util.Collection;
+import java.util.Map;
 
 /**
- * @author fkleedorfer
+ * User: fsalcher
+ * Date: 06.02.13
  */
-public class ProfileDukeGeneratorStats extends GeneratorStatistics {
-    private int numberOfItems = 0;
+public class ProfileDBRecord extends RecordImpl {
 
-    public int getNumberOfItems() {
-        return numberOfItems;
+    public ProfileDBRecord(Map<String, Collection<String>> values) {
+        super(values);
     }
 
-    public void setNumberOfItems(int numberOfItems) {
-        this.numberOfItems = numberOfItems;
-    }
 
-    public void incNumberOfItems() {
-        this.numberOfItems++;
-    }
 
 }

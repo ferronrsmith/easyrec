@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Research Studios Austria Forschungsgesellschaft mBH
+ * Copyright 2013 Research Studios Austria Forschungsgesellschaft mBH
  *
  * This file is part of easyrec.
  *
@@ -27,7 +27,8 @@ import org.easyrec.plugin.generator.GeneratorConfiguration;
  * needed for the plugin to work correctly. <p/> <p><b>Company:&nbsp;</b> SAT, Research Studios Austria</p>
  * <p><b>Copyright:&nbsp;</b> (c) 2007</p> <p><b>last modified:</b><br/> $Author$<br/> $Date$<br/> $Revision$</p>
  *
- * @author Patrick Marschik
+ * @author Soheil Khosravipour
+ * @author Fabian Salcher
  */
 public class ProfileDukeGeneratorConfig extends GeneratorConfiguration {
     // ------------------------------ FIELDS ------------------------------
@@ -40,19 +41,32 @@ public class ProfileDukeGeneratorConfig extends GeneratorConfiguration {
     // each config value should be initialized with a default value. when a new configuration object is created
     // all config values are initialized with the default values and the configuration is named "Default Configuration" in
     // the superclass (GeneratorConfiguration.)
-    @PluginParameter(description = "The number of item associations calculated for each item.",
-            displayName = "numberOfRecs",
-            shortDescription = "Number of recommendations per item")
-    private int numberOfRecs = 10; // DEFAULT VALUE
 
-    //    @PluginParameter(description = "The type of items to generate associations.",
-    //        displayName = "itemType",
-    //        shortDescription = "Type of items.")
+
+    @PluginParameter(description = "Absolute path to your DUKE config file.",
+            displayName = "Duke Config:",
+            shortDescription = "", displayOrder = 1)
+    // TODO: change to a reasonable default value
+    private String dukeConfig = "file:///C:\\DATA\\fsalcher\\_workspace\\dukeConfig.xml"; //"file:///tmp/dukeConfig.xml"
+
+    @PluginParameter(description = "ItemType of the items which are to be matched.",
+            displayName = "ItemType:",
+            shortDescription = "", displayOrder = 2)
     private String itemType = "ITEM";
 
-    //    @PluginParameter(description = "The view type to use for generating item associations.",
-    //        displayName = "viewType",
-    //        shortDescription = "The view type to use.")
+    @PluginParameter(description = "<b> Allowed Values: true / false </b> <br> " +
+            "When this mode is active the items are assigned randomly to N blocks and " +
+            "then the similarity is calculated only within these blocks. You can configure " +
+            "the number of blocks in the \"[Block Calculation] number of blocks\" setting.",
+            displayName = "[Block Calculation] enabled:",
+            shortDescription = "", displayOrder = 10)
+    private String blockCalculationMode = "false";
+
+    @PluginParameter(description = "Defines the number of blocks used in the Block Calculation Mode.",
+            displayName = "[Block Calculation] number of blocks:",
+            shortDescription = "", displayOrder = 11)
+    private Integer blockCalculationNumberOfBlocks = 10;
+
     private String viewType = "SYSTEM";
 
     // --------------------- GETTER / SETTER METHODS ---------------------
@@ -61,16 +75,8 @@ public class ProfileDukeGeneratorConfig extends GeneratorConfiguration {
         return itemType;
     }
 
-    public void setItemType(final String itemType) {
+    public void setItemType(String itemType) {
         this.itemType = itemType;
-    }
-
-    public int getNumberOfRecs() {
-        return numberOfRecs;
-    }
-
-    public void setNumberOfRecs(int numberOfRecs) {
-        this.numberOfRecs = numberOfRecs;
     }
 
     public String getViewType() {
@@ -79,5 +85,29 @@ public class ProfileDukeGeneratorConfig extends GeneratorConfiguration {
 
     public void setViewType(final String viewType) {
         this.viewType = viewType;
+    }
+
+    public String getDukeConfig() {
+        return dukeConfig;
+    }
+
+    public void setDukeConfig(String dukeConfig) {
+        this.dukeConfig = dukeConfig;
+    }
+
+    public String getBlockCalculationMode() {
+        return blockCalculationMode;
+    }
+
+    public void setBlockCalculationMode(String blockCalculationMode) {
+        this.blockCalculationMode = blockCalculationMode;
+    }
+
+    public Integer getBlockCalculationNumberOfBlocks() {
+        return blockCalculationNumberOfBlocks;
+    }
+
+    public void setBlockCalculationNumberOfBlocks(Integer blockCalculationNumberOfBlocks) {
+        this.blockCalculationNumberOfBlocks = blockCalculationNumberOfBlocks;
     }
 }
