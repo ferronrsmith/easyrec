@@ -67,6 +67,12 @@ public class ProfileDukeGeneratorConfig extends GeneratorConfiguration {
             shortDescription = "", displayOrder = 11)
     private Integer blockCalculationNumberOfBlocks = 10;
 
+    @PluginParameter(description = "Duke Configuration",
+            displayName = "Duke Configuration",
+            shortDescription = "", displayOrder = 12,
+            asTextArea = true)
+    private String dukeConfiguration = "";
+
     private String viewType = "SYSTEM";
 
     // --------------------- GETTER / SETTER METHODS ---------------------
@@ -109,5 +115,13 @@ public class ProfileDukeGeneratorConfig extends GeneratorConfiguration {
 
     public void setBlockCalculationNumberOfBlocks(Integer blockCalculationNumberOfBlocks) {
         this.blockCalculationNumberOfBlocks = blockCalculationNumberOfBlocks;
+    }
+
+    public String getDukeConfiguration() {
+        return dukeConfiguration;
+    }
+
+    public void setDukeConfiguration(String dukeConfiguration) {
+        this.dukeConfiguration = dukeConfiguration;
     }
 }

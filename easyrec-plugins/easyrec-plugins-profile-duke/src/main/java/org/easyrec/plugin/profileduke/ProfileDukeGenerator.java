@@ -78,6 +78,8 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeGene
 
     private ProfileService profileService;
 
+    private int numberOfAssociationsCreated = 0;
+
 
     // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -99,6 +101,10 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeGene
 
     public void setActionService(final ActionService actionService) {
         this.actionService = actionService;
+    }
+
+    public void setNumberOfAssociationsCreated(int numberOfAssociationsCreated) {
+        this.numberOfAssociationsCreated = numberOfAssociationsCreated;
     }
 
     // ------------------------ INTERFACE METHODS ------------------------
@@ -140,6 +146,7 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeGene
         logger.info("BlockMode: " + config.getBlockCalculationMode());
         logger.info("BlockModeNumberOfBlocks: " + config.getBlockCalculationNumberOfBlocks());
         logger.info("ItemListSize: " + itemList.size());
+        logger.info("Duke Configuration: \n" + config.getDukeConfiguration());
 
         if ("true".equals(config.getBlockCalculationMode())) {
 
@@ -181,8 +188,7 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeGene
                 sourceType,
                 stats.getStartDate());
 
-        //TODO: get correct number of created associations
-        stats.setNumberOfRulesCreated(-1);
+        stats.setNumberOfRulesCreated(numberOfAssociationsCreated);
     }
 
     @Override
@@ -272,7 +278,7 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeGene
         dukeConfig.addDataSource(0, dataSource);
 
         Processor proc = new Processor(dukeConfig);
-        EasyrecProfileMatcher easyrecProfileMatcher = new EasyrecProfileMatcher(true, false, true, true);
+        EasyrecProfileMatcher easyrecProfileMatcher = new EasyrecProfileMatcher(false, true, this);
         ItemAssocService itemAssocService = getItemAssocService();
         easyrecProfileMatcher.setItemAssocService(itemAssocService);
         easyrecProfileMatcher.setAssocType(associationType);
