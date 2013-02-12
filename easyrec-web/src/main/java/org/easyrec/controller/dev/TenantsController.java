@@ -46,6 +46,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -372,7 +373,7 @@ public class TenantsController extends MultiActionController {
                     tenantService.updateConfigProperty(r.getId(), RemoteTenant.BACKTRACKING, backtracking);
                     r.setBacktracking(backtracking);
                     shopRecommenderService.emptyCache();
-                } 
+                }
                 if (backtrackingURL != null) {
                     tenantService.updateConfigProperty(r.getId(), RemoteTenant.BACKTRACKING_URL, backtrackingURL);
                     r.setBackTrackingURL(backtrackingURL);
@@ -506,7 +507,7 @@ public class TenantsController extends MultiActionController {
             return mav;
         }
         Map<String, List<PluginParamDetails>> params = null;
-        if (pluginIdStr.equals("")) {            
+        if (pluginIdStr.equals("")) {
             namedConfigurationDAO.deactivateByAssocType(remoteTenant.getId(), assocTypeId);
             params = new HashMap<String, List<PluginParamDetails>>();
         } else {
@@ -594,13 +595,19 @@ public class TenantsController extends MultiActionController {
                     for (String param : orderedParameterNames) {
                         if (param.equals("associationType") || param.equals("configurationName")) continue;
 
+                        Object valueObject = configurationHelper.getParameterValue(param);
+                        if (valueObject instanceof String) {
+                            valueObject = HtmlUtils.htmlEscape((String)valueObject);
+                        }
+
                         PluginParamDetails pluginParamDetails = new PluginParamDetails(param,
                             configurationHelper.getParameterDisplayName(param),
                             configurationHelper.getParameterDescription(param),
                             configurationHelper.getParameterShortDescription(param),
-                            configurationHelper.getParameterValue(param),
+                            valueObject,
                             configurationHelper.getParameterStringValue(param),
-                            configurationHelper.getParameterOptional(param));
+                            configurationHelper.getParameterOptional(param),
+                            configurationHelper.getParameterAsTextArea(param));
 
                         parameters.add(pluginParamDetails);
 
@@ -619,10 +626,10 @@ public class TenantsController extends MultiActionController {
 
                     params.put(namedConfiguration.getName(), parameters);
                 }
-            
+
 
                 mav.addObject("activeConfiguration", activeConfiguration);
-                
+
                 mav.addObject("generator", generator);
 
             /*
@@ -635,7 +642,7 @@ public class TenantsController extends MultiActionController {
                 logger.error("An error occurred trying to get the generator parameters", e);
             }
         }
-        
+
         mav.addObject("paramList", params);
         return mav;
     }
@@ -645,6 +652,7 @@ public class TenantsController extends MultiActionController {
         String operatorId = ServletUtils.getSafeParameter(request, "operatorId", "");
         String key = ServletUtils.getSafeParameter(request, "key", "");
         String value = ServletUtils.getSafeParameter(request, "value", "");
+        value = HtmlUtils.htmlUnescape(value);
         String configurationName = ServletUtils.getSafeParameter(request, "configurationName", "");
         int assocTypeId = ServletUtils.getSafeParameter(request, "assocTypeId", -1);
 

@@ -103,6 +103,11 @@ public class ConfigurationHelper {
         return parameterAnnotation.displayOrder();
     }
 
+    public boolean getParameterAsTextArea(String parameterName) {
+        PluginParameter parameterAnnotation = getParameterAnnotation(parameterName);
+        return parameterAnnotation.asTextArea();
+    }
+
     /**
      * Converts the parameter value to a string. If a custom {@link PropertyEditor} is configured for the parameter (via
      * the {@link PluginParameterPropertyEditor} Annotation), it is used for conversion, otherwise the value's

@@ -30,9 +30,10 @@ public class PluginParamDetails {
     private Object value;
     private String stringValue;
     private boolean optional;
+    private boolean asTextArea;
 
     public PluginParamDetails(String name, String displayName, String description, String shortDescription,
-                              Object value, String stringValue, boolean optional) {
+                              Object value, String stringValue, boolean optional, boolean asTextArea) {
         this.name = name;
         this.displayName = displayName;
         this.description = description;
@@ -40,6 +41,8 @@ public class PluginParamDetails {
         this.value = value;
         this.stringValue = stringValue;
         this.optional = optional;
+        this.asTextArea = asTextArea;
+
     }
 
     public String getDescription() {
@@ -70,5 +73,8 @@ public class PluginParamDetails {
         return value;
     }
 
+    public boolean getAsTextArea() {
+        return asTextArea;
+    }
 
 }

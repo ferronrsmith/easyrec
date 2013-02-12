@@ -38,12 +38,12 @@ import java.util.*;
  */
 
 public class EasyrecProfileMatcher extends AbstractMatchListener {
-    private int matches;
-    private int records;
+    private int numberOfCreatedAssociations = 0;
+    private int numberOfMatches = 0;
+    private int numberOfMaybeMatches = 0;
+    private int records = 0;
     private int nonmatches; // only counted in record linkage mode
-    private boolean showmaybe;
-    private boolean showmatches;
-    private boolean progress;
+    private boolean createAssociationsFromMaybeMatches;
     private boolean linkage; // means there's a separate indexing step
 
 
@@ -54,6 +54,8 @@ public class EasyrecProfileMatcher extends AbstractMatchListener {
     private static Integer assocType;
     private ArrayList<ItemAssocVO<Integer, Integer>> itemAssocArrayList;
     private ItemAssocService itemAssocService;
+
+    private ProfileDukeGenerator profileDukeGenerator;
 
     private HashMap<Integer, HashMap<Integer, Double>> userToUsers =
             new HashMap<Integer, HashMap<Integer, Double>>();
@@ -90,38 +92,34 @@ public class EasyrecProfileMatcher extends AbstractMatchListener {
         this.itemAssocArrayList = itemAssocArrayList;
     }
 
-    public EasyrecProfileMatcher(boolean showmatches, boolean showmaybe,
-                                 boolean progress, boolean linkage) {
-        this.matches = 0;
-        this.records = 0;
-        this.showmatches = showmatches;
-        this.showmaybe = showmaybe;
-        this.progress = progress;
+    public EasyrecProfileMatcher(boolean createAssociationsFromMaybeMatches,
+                                 boolean linkage,
+                                 ProfileDukeGenerator profileDukeGenerator) {
+
+        this.createAssociationsFromMaybeMatches = createAssociationsFromMaybeMatches;
         this.linkage = linkage;
+        this.profileDukeGenerator = profileDukeGenerator;
     }
 
     public int getMatchCount() {
-        return matches;
+        return numberOfMatches;
     }
 
     public void batchReady(int size) {
         if (linkage)
             records += size; // no endRecord() call in linkage mode
-        if (progress)
-            ProfileDukeGenerator.logger.info("Records: " + records);
+        ProfileDukeGenerator.logger.info("Records: " + records);
     }
 
     public void matches(Record r1, Record r2, double confidence) {
-        matches++;
-        if (showmatches)
-            show(r1, r2, confidence, "\nMATCH");
-        if (matches % 1000 == 0 && progress)
-            ProfileDukeGenerator.logger.info("" + matches + "  matches");
+        numberOfMatches++;
+        createAssociationBetweenRecords(r1, r2, confidence);
     }
 
     public void matchesPerhaps(Record r1, Record r2, double confidence) {
-        if (showmaybe)
-            show(r1, r2, confidence, "\nMAYBE MATCH");
+        numberOfMaybeMatches++;
+        if (createAssociationsFromMaybeMatches)
+            createAssociationBetweenRecords(r1, r2, confidence);
     }
 
     public void endRecord() {
@@ -129,32 +127,32 @@ public class EasyrecProfileMatcher extends AbstractMatchListener {
     }
 
     public void endProcessing() {
-        if (progress) {
-            ProfileDukeGenerator.logger.info("");
-            ProfileDukeGenerator.logger.info("Total records: " + records);
-            ProfileDukeGenerator.logger.info("Total matches: " + matches);
-            if (nonmatches > 0) // FIXME: this ain't right. we should know the mode
-                ProfileDukeGenerator.logger.info("Total non-matches: " + nonmatches);
-        }
+        ProfileDukeGenerator.logger.info("");
+        ProfileDukeGenerator.logger.info("Total records: " + records);
+        ProfileDukeGenerator.logger.info("Total matches: " + numberOfMatches);
+        ProfileDukeGenerator.logger.info("Maybe matches: " + numberOfMaybeMatches);
+        if (nonmatches > 0) // FIXME: this ain't right. we should know the mode
+            ProfileDukeGenerator.logger.info("Total non-matches: " + nonmatches);
+
+        profileDukeGenerator.setNumberOfAssociationsCreated(numberOfCreatedAssociations);
     }
 
     public void noMatchFor(Record record) {
         nonmatches++;
-        if (showmatches)
-            ProfileDukeGenerator.logger.info("\nNO MATCH FOR:\n" + toString(record));
     }
 
-    // =====
+    /**
+     * Creates an association and saves it in the DB.
+     *
+     * @param r1 first record which represents an item
+     * @param r2 second record which represents an item
+     * @param confidence associationValue
+     */
 
-    public void show(Record r1, Record r2, double confidence,
-                     String heading) {
+    public void createAssociationBetweenRecords(Record r1, Record r2, double confidence) {
 
-//        System.out.println(heading + " " + confidence);
-//        System.out.println(toString(r1));
-//        System.out.println(toString(r2));
         Date execution = new Date();
 
-        // create association  // This lines can be used if you want to produce association between items in future
         ItemAssocVO<Integer, Integer> itemAssoc = new ItemAssocVO<Integer, Integer>(
                 confTanantId,
                 new ItemVO(r1.getValue("profiletenant"), r1.getValue("profileitem"), r1.getValue("profiletype")),
@@ -162,6 +160,7 @@ public class EasyrecProfileMatcher extends AbstractMatchListener {
                 new ItemVO(r2.getValue("profiletenant"), r2.getValue("profileitem"), r2.getValue("profiletype")),
                 sourceType, "ProfileDuke Plugin", viewType, null, execution);
 
+        numberOfCreatedAssociations++;
         itemAssocService.insertOrUpdateItemAssoc(itemAssoc);
     }
 

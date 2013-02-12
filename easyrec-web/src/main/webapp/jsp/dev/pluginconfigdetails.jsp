@@ -76,9 +76,20 @@
                                href="javascript:${configEditCall}">edit</a>
                         </td>
                         <td class="configvalue">
-                            <div id="static-${configId}">${paramDetail.value}</div>
-                            <input id="edit-${configId}" style="display:none;width:100%;" type="text"
-                                   value="${paramDetail.value}" maxlength="50" size="5"/>
+                            <c:choose>
+                                <c:when test="${paramDetail.asTextArea==true}">
+                                    <textarea id="static-${configId}" style="width:98.5%;"
+                                              cols="2" rows="10" disabled>${paramDetail.value}</textarea>
+                                    <textarea id="edit-${configId}" style="display:none;width:98.5%;"
+                                           value="${paramDetail.value}"
+                                           cols="2" rows="10">${paramDetail.value}</textarea>
+                                </c:when>
+                                <c:otherwise>
+                                    <div id="static-${configId}">${paramDetail.value}</div>
+                                    <input id="edit-${configId}" style="display:none;width:98.5%;" type="text"
+                                           value="${paramDetail.value}" maxlength="50" size="5"/>
+                                </c:otherwise>
+                            </c:choose>
                         </td>
                         <td class="confighelpbutton">
                             <img class="clickable" alt="help" src="${webappPath}/img/button_help.png"
@@ -92,8 +103,7 @@
                     </tr>
                     <script type="text/javascript">
                         $('#edit-${configId}').keypress(function(event) {
-                            if ((event.which && event.which == 13) || (event.keyCode && event.keyCode == 13)) {
-                                ${configEditCall}
+                            if (!${paramDetail.asTextArea} && ((event.which && event.which == 13) || (event.keyCode && event.keyCode == 13))) {                                ${configEditCall}
                             }
                         });
                     </script>

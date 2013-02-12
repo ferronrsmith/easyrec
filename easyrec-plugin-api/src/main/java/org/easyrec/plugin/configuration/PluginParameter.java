@@ -34,4 +34,12 @@ public @interface PluginParameter {
      */
     boolean optional() default false;
 
+    /**
+     * If set to <code>true</code> the parameter is displayed as a text area instead
+     * of the input field. Default value is <code>false</code>
+     *
+     * @return boolean value; <code>true</code> if text area should be used
+     */
+    boolean asTextArea() default false;
+
 }

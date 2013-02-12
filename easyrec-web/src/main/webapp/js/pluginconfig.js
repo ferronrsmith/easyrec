@@ -259,7 +259,7 @@ function editPlugin(operatorId, tenantId, assocTypeId, configurationName, key, e
         $.ajax({
             url:webappPath + "dev/storepluginconfig?operatorId=" + operatorId + "&tenantId=" + tenantId + "&pluginId=" +
                     pluginId + "&assocTypeId=" + assocTypeId + "&configurationName=" +
-                    encodeURIComponent(configurationName) + "&key=" + key + "&value=" + $('#edit-' + element).val(),
+                    encodeURIComponent(configurationName) + "&key=" + key + "&value=" + encodeURIComponent($('#edit-' + element).val()),
             cache: false,
             dataType: 'xml',
             success: function(data) {
