@@ -19,13 +19,16 @@
 
 package org.easyrec.plugin.profileduke;
 
-import no.priv.garshol.duke.*;
+import no.priv.garshol.duke.Column;
+import no.priv.garshol.duke.Configuration;
+import no.priv.garshol.duke.Processor;
+import no.priv.garshol.duke.Property;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.easyrec.model.core.ItemVO;
-import org.easyrec.model.core.TenantVO;
 import org.easyrec.plugin.model.Version;
 import org.easyrec.plugin.profileduke.duke.datasource.EasyrecXMLFormatDataSource;
+import org.easyrec.plugin.profileduke.duke.loader.ConfigLoader;
 import org.easyrec.plugin.profileduke.duke.matchers.EasyrecProfileMatcher;
 import org.easyrec.plugin.support.GeneratorPluginSupport;
 import org.easyrec.service.core.ActionService;
@@ -229,8 +232,7 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeGene
 
         ProfileDukeGeneratorConfig config = getConfiguration();
 
-        // path to the duke configuration
-        String dukeConfigFilePath = config.getDukeConfig();
+        String dukeConfigurationString = config.getDukeConfiguration();
 
         TypeMappingService typeMappingService = (TypeMappingService) super.getTypeMappingService();
 
@@ -247,13 +249,13 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeGene
 
         Configuration dukeConfig = null;
         try {
-            dukeConfig = ConfigLoader.load(dukeConfigFilePath);
+            dukeConfig = ConfigLoader.loadFromString(dukeConfigurationString);
         } catch (SAXException e) {
-            logger.error("An error occurred while parsing Duke config file: " + e.getMessage());
+            logger.error("An error occurred while parsing Duke configuration: " + e.getMessage());
             logger.debug(e.getStackTrace());
             return false;
         } catch (IOException e) {
-            logger.error("An error occurred while accessing Duke config file: " + e.getMessage());
+            logger.error("An error occurred while parsing Duke configuration: " + e.getMessage());
             logger.debug(e.getStackTrace());
             return false;
         }
