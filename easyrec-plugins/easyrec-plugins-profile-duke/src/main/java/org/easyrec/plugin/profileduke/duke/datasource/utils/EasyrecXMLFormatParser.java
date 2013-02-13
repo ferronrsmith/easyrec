@@ -119,12 +119,15 @@ public class EasyrecXMLFormatParser {
         for (ItemVO<Integer, Integer> item : profileItems) {
             //  String xmlProfile = profileService.getProfile(item);
 
+            String xmlProfile = profileService.getProfile(item);
+            if (xmlProfile == null)
+                continue;
+
             int profileTenant = item.getTenant();
             int ProfileItem = item.getItem();
             int profileType = item.getType();
             ProfileDukeGenerator.logger.debug("Profile Item: " + ProfileItem + "profileTenant" +
                     profileTenant + "profileType" + profileType);
-            String xmlProfile = profileService.getProfile(item);
 
             ProfileDukeGenerator.logger.debug("XMLPROFILE: " + xmlProfile);
 
@@ -133,28 +136,11 @@ public class EasyrecXMLFormatParser {
     }
 
 
-    private void xmlParser(String xmlString, int proTannent, int profItem, int proType) {
+    private void xmlParser(String xmlString, int proTenant, int profItem, int proType) {
 
-        String idString = Integer.toString(proTannent) + Integer.toString(profItem) + Integer.toString(proType);
-        int idInteger = Integer.parseInt(idString);
-        //File[] profileXMLFiles = getXMLFiles(inFile);
+        String idString = Integer.toString(proTenant) + Integer.toString(profItem) + Integer.toString(proType);
 
         try {
-
-//            Set<ItemVO<Integer, Integer>> alreadyUsedOtherItems = new HashSet<ItemVO<Integer, Integer>>();
-//            INNER:
-//            for (int i = 0; i < config.getNumberOfRecs(); i++) {
-//                // update the progress using the execution control. the progress will be displayed in the administration
-//                // tool or - when using the commandline interface - on stdout.
-//                executionControl.updateProgress(currentProgress, MAX_PROGRESS, "Generating item associations.");
-//                currentProgress++;
-//
-//                // GET PROFILE FROM EASYREC PROFILE SYSTEM
-//                String xmlProfile = profileService.getProfile(item);
-//                int profileTannet = item.getTenant();
-//                int profileType = item.getType();
-//                int ProfileItem = item.getItem();
-
 
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -172,13 +158,9 @@ public class EasyrecXMLFormatParser {
             Boolean literal = true;
             Boolean numeric = false;
             handler.statement(subject, "ID", idString, literal);
-            handler.statement(subject, "profiletenant", Integer.toString(proTannent), literal);
+            handler.statement(subject, "profiletenant", Integer.toString(proTenant), literal);
             handler.statement(subject, "profileitem", Integer.toString(profItem), literal);
             handler.statement(subject, "profiletype", Integer.toString(proType), literal);
-
-//            System.out.println("PROPERTY: " + props.get(0).getName() + " Literal?: " + literal.toString());
-//            System.out.println("PROPERTY: " + props.get(2).getName() + " Literal?: " + literal.toString());
-//            System.out.println("PROPERTY: " + props.get(5).getName() + " Literal?: " + literal.toString());
 
             for (int temp = 0; temp < nList.getLength(); temp++) {
 
@@ -191,10 +173,8 @@ public class EasyrecXMLFormatParser {
                         if (!(props.get(propIndex).getName().equals("ID") || props.get(propIndex).getName().equals("profiletenant") ||
                                 props.get(propIndex).getName().equals("profileitem") || props.get(propIndex).getName().equals("profiletype"))) {
                             if (isNumeric(props.get(propIndex).getName())) {
-//                                System.out.println("PROPERTY: " + props.get(propIndex).getName() + "   Literal?: " + numeric.toString());
                                 handler.statement(subject, props.get(propIndex).getName(), getTagValue(props.get(propIndex).getName(), eElement), numeric);
                             } else {
-//                                System.out.println("PROPERTY: " + props.get(propIndex).getName() + "   Literal?: " + literal.toString());
                                 handler.statement(subject, props.get(propIndex).getName(), getTagValue(props.get(propIndex).getName(), eElement), literal);
                             }
                         }
@@ -211,7 +191,10 @@ public class EasyrecXMLFormatParser {
 
         Node nValue = (Node) nlList.item(0);
 
-        return nValue.getNodeValue();
+        if (nValue != null)
+            return nValue.getNodeValue();
+        else
+            return null;
     }
 
     private static boolean isNumeric(String str) {
