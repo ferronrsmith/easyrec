@@ -24,7 +24,7 @@ import org.easyrec.plugin.stats.GeneratorStatistics;
 /**
  * @author fkleedorfer
  */
-public class ProfileDukeGeneratorStats extends GeneratorStatistics {
+public class ProfileDukeStats extends GeneratorStatistics {
     private int numberOfItems = 0;
 
     public int getNumberOfItems() {

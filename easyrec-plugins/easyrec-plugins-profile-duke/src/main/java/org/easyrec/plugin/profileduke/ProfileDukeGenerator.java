@@ -55,7 +55,7 @@ import java.util.*;
  * @author Soheil Khosravipour
  * @author Fabian Salcher
  */
-public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeGeneratorConfig, ProfileDukeGeneratorStats> {
+public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConfiguration, ProfileDukeStats> {
     // ------------------------------ FIELDS ------------------------------
 
     // the display name is the name of the generator that will show up in the admin tool when the plugin has been loaded.
@@ -89,7 +89,7 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeGene
     public ProfileDukeGenerator() {
         // we need to call the constructor of GeneratorPluginSupport to provide the name, id and version
         //additionally, we have to pass the class objects of config and stats classes.
-        super(DISPLAY_NAME, ID, VERSION, ProfileDukeGeneratorConfig.class, ProfileDukeGeneratorStats.class);
+        super(DISPLAY_NAME, ID, VERSION, ProfileDukeConfiguration.class, ProfileDukeStats.class);
     }
 
     // --------------------- GETTER / SETTER METHODS ---------------------
@@ -129,10 +129,10 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeGene
     }
 
     @Override
-    protected void doExecute(ExecutionControl executionControl, ProfileDukeGeneratorStats stats) throws Exception {
+    protected void doExecute(ExecutionControl executionControl, ProfileDukeStats stats) throws Exception {
 
         // when doExecute() is called, the generator has been initialized with the configuration we should use
-        ProfileDukeGeneratorConfig config = getConfiguration();
+        ProfileDukeConfiguration config = getConfiguration();
 
         TypeMappingService typeMappingService = (TypeMappingService) super.getTypeMappingService();
         Integer itemType = typeMappingService.getIdOfItemType(config.getTenantId(), config.getItemType());
@@ -230,7 +230,7 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeGene
      */
     private boolean prepareAndStartDuke(List<ItemVO<Integer, Integer>> items) throws IOException {
 
-        ProfileDukeGeneratorConfig config = getConfiguration();
+        ProfileDukeConfiguration config = getConfiguration();
 
         String dukeConfigurationString = config.getDukeConfiguration();
 

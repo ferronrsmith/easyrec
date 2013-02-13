@@ -19,8 +19,12 @@
 
 package org.easyrec.plugin.profileduke;
 
+import org.easyrec.plugin.configuration.PluginConfigurationValidator;
 import org.easyrec.plugin.configuration.PluginParameter;
+import org.easyrec.plugin.configuration.PluginParameterPropertyEditor;
 import org.easyrec.plugin.generator.GeneratorConfiguration;
+import org.springframework.beans.propertyeditors.CustomBooleanEditor;
+import org.springframework.beans.propertyeditors.CustomNumberEditor;
 
 /**
  * Configuration object for the demo plugin. <p/> This class contains all parameters that can be configured and are
@@ -30,7 +34,22 @@ import org.easyrec.plugin.generator.GeneratorConfiguration;
  * @author Soheil Khosravipour
  * @author Fabian Salcher
  */
-public class ProfileDukeGeneratorConfig extends GeneratorConfiguration {
+
+@PluginConfigurationValidator(validatorClass = ProfileDukeConfigurationValidator.class)
+public class ProfileDukeConfiguration extends GeneratorConfiguration {
+
+    public static class IntegerPropertyEditor extends CustomNumberEditor {
+        public IntegerPropertyEditor() throws IllegalArgumentException {
+            super(Integer.class, true);
+        }
+    }
+
+    public static class BooleanPropertyEditor extends CustomBooleanEditor {
+        public BooleanPropertyEditor() throws IllegalArgumentException {
+            super(false);
+        }
+    }
+
     // ------------------------------ FIELDS ------------------------------
 
     // each configuration value needs to be annotaed with @PluginParameter.
@@ -42,16 +61,10 @@ public class ProfileDukeGeneratorConfig extends GeneratorConfiguration {
     // all config values are initialized with the default values and the configuration is named "Default Configuration" in
     // the superclass (GeneratorConfiguration.)
 
-
-    @PluginParameter(description = "Absolute path to your DUKE config file.",
-            displayName = "Duke Config:",
-            shortDescription = "", displayOrder = 1)
-    // TODO: change to a reasonable default value
-    private String dukeConfig = "file:///C:\\DATA\\fsalcher\\_workspace\\dukeConfig.xml"; //"file:///tmp/dukeConfig.xml"
-
     @PluginParameter(description = "ItemType of the items which are to be matched.",
-            displayName = "ItemType:",
+            displayName = "Item Type:",
             shortDescription = "", displayOrder = 2)
+    // TODO: check if item type exists
     private String itemType = "ITEM";
 
     @PluginParameter(description = "<b> Allowed Values: true / false </b> <br> " +
@@ -60,11 +73,13 @@ public class ProfileDukeGeneratorConfig extends GeneratorConfiguration {
             "the number of blocks in the \"[Block Calculation] number of blocks\" setting.",
             displayName = "[Block Calculation] enabled:",
             shortDescription = "", displayOrder = 10)
-    private String blockCalculationMode = "false";
+    @PluginParameterPropertyEditor(propertyEditorClass = BooleanPropertyEditor.class)
+    private Boolean blockCalculationMode = false;
 
     @PluginParameter(description = "Defines the number of blocks used in the Block Calculation Mode.",
             displayName = "[Block Calculation] number of blocks:",
             shortDescription = "", displayOrder = 11)
+    @PluginParameterPropertyEditor(propertyEditorClass =  IntegerPropertyEditor.class)
     private Integer blockCalculationNumberOfBlocks = 10;
 
     @PluginParameter(description = "Duke Configuration",
@@ -93,19 +108,11 @@ public class ProfileDukeGeneratorConfig extends GeneratorConfiguration {
         this.viewType = viewType;
     }
 
-    public String getDukeConfig() {
-        return dukeConfig;
-    }
-
-    public void setDukeConfig(String dukeConfig) {
-        this.dukeConfig = dukeConfig;
-    }
-
-    public String getBlockCalculationMode() {
+    public Boolean getBlockCalculationMode() {
         return blockCalculationMode;
     }
 
-    public void setBlockCalculationMode(String blockCalculationMode) {
+    public void setBlockCalculationMode(Boolean blockCalculationMode) {
         this.blockCalculationMode = blockCalculationMode;
     }
 
