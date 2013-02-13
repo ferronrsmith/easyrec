@@ -79,9 +79,9 @@
                             <c:choose>
                                 <c:when test="${paramDetail.asTextArea==true}">
                                     <textarea id="static-${configId}" style="width:98.5%;"
-                                              cols="2" rows="10" disabled>${paramDetail.value}</textarea>
+                                              cols="5" rows="15" disabled>${paramDetail.value}</textarea>
                                     <textarea id="edit-${configId}" style="display:none;width:98.5%;"
-                                           cols="2" rows="10">${paramDetail.value}</textarea>
+                                           cols="5" rows="15">${paramDetail.value}</textarea>
                                 </c:when>
                                 <c:otherwise>
                                     <div id="static-${configId}">${paramDetail.value}</div>

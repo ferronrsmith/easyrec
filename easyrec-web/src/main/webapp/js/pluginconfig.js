@@ -252,8 +252,13 @@ function editPlugin(operatorId, tenantId, assocTypeId, configurationName, key, e
         $('#static-' + element).hide();
         $('#edit-' + element).show();
         $('#edit-' + element).focus();
-        if (!$('#edit-' + element).is("textarea"))
+        if (!$('#edit-' + element).is("textarea")) {
             $('#edit-' + element).select();
+        } else {
+            $('#edit-' + element).css("height", $('#static-' + element).css("height"));
+            $('#edit-' + element).css("width", $('#static-' + element).css("width"));
+        }
+
     } else {
         $('#' + element).html(waitingImage);
 
@@ -277,6 +282,10 @@ function editPlugin(operatorId, tenantId, assocTypeId, configurationName, key, e
                     $('#edit-' + element).hide();
                     $('#edit-' + element)[0].className = "";
                     $('#' + element).html("edit");
+                    if ($('#edit-' + element).is("textarea")) {
+                        $('#static-' + element).css("height", $('#edit-' + element).css("height"));
+                        $('#static-' + element).css("width", $('#edit-' + element).css("width"));
+                    }
                 }
             }
         });
