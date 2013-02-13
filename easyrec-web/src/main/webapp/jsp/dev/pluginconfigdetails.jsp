@@ -81,7 +81,6 @@
                                     <textarea id="static-${configId}" style="width:98.5%;"
                                               cols="2" rows="10" disabled>${paramDetail.value}</textarea>
                                     <textarea id="edit-${configId}" style="display:none;width:98.5%;"
-                                           value="${paramDetail.value}"
                                            cols="2" rows="10">${paramDetail.value}</textarea>
                                 </c:when>
                                 <c:otherwise>

@@ -252,7 +252,8 @@ function editPlugin(operatorId, tenantId, assocTypeId, configurationName, key, e
         $('#static-' + element).hide();
         $('#edit-' + element).show();
         $('#edit-' + element).focus();
-        $('#edit-' + element).select();
+        if (!$('#edit-' + element).is("textarea"))
+            $('#edit-' + element).select();
     } else {
         $('#' + element).html(waitingImage);
 
@@ -271,7 +272,7 @@ function editPlugin(operatorId, tenantId, assocTypeId, configurationName, key, e
                 } else {
                     $('#plugin-error-' + element).hide();
                     $('#plugin-error-' + element).html("");
-                    $('#static-' + element).html($('#edit-' + element).val());
+                    $('#static-' + element).text($('#edit-' + element).val()).html();
                     $('#static-' + element).show();
                     $('#edit-' + element).hide();
                     $('#edit-' + element)[0].className = "";
