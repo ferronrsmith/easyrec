@@ -36,6 +36,6 @@
 
     <!-- create our generator bean so it can be detected by easyrec's plugin loader
          (only loaded spring beans extending the class GeneratorPluginSupport) -->
-    <bean id="randomGenerator" class="org.easyrec.plugin.profileduke.ProfileDukeGenerator"/>
+    <bean id="profileDukeGenerator" class="org.easyrec.plugin.profileduke.ProfileDukeGenerator"/>
 
 </beans>

@@ -33,6 +33,7 @@
                 <value>GOOD_RATED_TOGETHER</value>
                 <value>BOUGHT_TOGETHER</value>
                 <value>IS_RELATED</value>
+                <value>PROFILE_SIMILARITY</value>
             </list>
         </constructor-arg>
         <constructor-arg index="2" name="aggregateTypes">

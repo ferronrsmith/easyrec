@@ -46,11 +46,6 @@ import java.util.*;
 // TODO: Description
 
 /**
- * Generator plugin that generates rules for www.ijoule.com based on the Neighbourhood of an User.
- * <p/>
- * Basically it builds a neighbourhood based on the user profiles and then it will look at it for
- * each user and look at the average completion rate of the rules in that neighbourhood to generate assocs based on
- * this information.
  *
  * @author Soheil Khosravipour
  * @author Fabian Salcher
@@ -294,6 +289,5 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
         proc.close();
 
         return true;
-
     }
 }

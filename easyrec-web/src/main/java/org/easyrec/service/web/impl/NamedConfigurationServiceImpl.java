@@ -139,8 +139,13 @@ public class NamedConfigurationServiceImpl implements NamedConfigurationService 
                 new PluginId("http://www.easyrec.org/plugins/slopeone", easyrecSettings.getVersion());
         sourceTypeDAO.insertOrUpdate(tenantId, slopeOnePluginId.toString());
         int isRelatedAssocTypeId = typeMappingService.getIdOfAssocType(tenantId, "IS_RELATED");
-
         createDefaultConfiguration(slopeOnePluginId, tenantId, isRelatedAssocTypeId);
+
+        PluginId profileDukePluginId =
+                new PluginId("http://www.easyrec.org/plugins/profileDuke", easyrecSettings.getVersion());
+        sourceTypeDAO.insertOrUpdate(tenantId, profileDukePluginId.toString());
+        int profileSimilarityAssocTypeId = typeMappingService.getIdOfAssocType(tenantId, "PROFILE_SIMILARITY");
+        createDefaultConfiguration(profileDukePluginId, tenantId, profileSimilarityAssocTypeId);
 
         generatorContainer.runGeneratorsForTenant(tenantId);
 

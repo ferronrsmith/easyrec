@@ -86,7 +86,76 @@ public class ProfileDukeConfiguration extends GeneratorConfiguration {
             displayName = "Duke Configuration",
             shortDescription = "", displayOrder = 12,
             asTextArea = true)
-    private String dukeConfiguration = "";
+    private String dukeConfiguration = "<!--\n" +
+            "  For more information, see\n" +
+            "    http://code.google.com/p/duke/wiki/Comparator\n" +
+            "-->\n" +
+            "<duke>\n" +
+            "    <param name=\"database-implementation\" value=\"in-memory\"/>\n" +
+            "\n" +
+            "    <object class=\"no.priv.garshol.duke.comparators.NumericComparator\"\n" +
+            "            name=\"YearComparator\">\n" +
+            "        <param name=\"min-ratio\" value=\"0.0\"/>\n" +
+            "    </object>\n" +
+            "\n" +
+            "    <schema>\n" +
+            "        <threshold>0.95</threshold>\n" +
+            "        <maybe-threshold>0.90</maybe-threshold>\n" +
+            "\n" +
+            "        <property type=\"id\">\n" +
+            "            <name>ID</name>\n" +
+            "        </property>\n" +
+            "\n" +
+            "        <property type=\"ignore\">\n" +
+            "            <name>profiletenant</name>\n" +
+            "\n" +
+            "        </property>\n" +
+            "\n" +
+            "        <property type=\"ignore\">\n" +
+            "            <name>profileitem</name>\n" +
+            "        </property>\n" +
+            "\n" +
+            "        <property type=\"ignore\">\n" +
+            "            <name>profiletype</name>\n" +
+            "        </property>\n" +
+            "\n" +
+            "        <property>\n" +
+            "            <name>title</name>\n" +
+            "            <comparator>no.priv.garshol.duke.comparators.DiceCoefficientComparator</comparator>\n" +
+            "            <low>0.01</low>\n" +
+            "            <high>0.7</high>\n" +
+            "        </property>\n" +
+            "\n" +
+            "        <property>\n" +
+            "            <name>year</name>\n" +
+            "            <comparator>YearComparator</comparator>\n" +
+            "            <low>0.3</low>\n" +
+            "            <high>0.7</high>\n" +
+            "        </property>\n" +
+            "\n" +
+            "        <property>\n" +
+            "            <name>director</name>\n" +
+            "            <comparator>no.priv.garshol.duke.comparators.PersonNameComparator</comparator>\n" +
+            "            <low>0.1</low>\n" +
+            "            <high>0.95</high>\n" +
+            "        </property>\n" +
+            "\n" +
+            "        <property>\n" +
+            "            <name>actor</name>\n" +
+            "            <comparator>no.priv.garshol.duke.comparators.PersonNameComparator</comparator>\n" +
+            "            <low>0.1</low>\n" +
+            "            <high>0.9</high>\n" +
+            "        </property>\n" +
+            "\n" +
+            "        <property>\n" +
+            "            <name>category</name>\n" +
+            "            <comparator>no.priv.garshol.duke.comparators.ExactComparator</comparator>\n" +
+            "            <low>0.05</low>\n" +
+            "            <high>0.9</high>\n" +
+            "        </property>\n" +
+            "\n" +
+            "    </schema>\n" +
+            "</duke>";
 
     private String viewType = "SYSTEM";
 

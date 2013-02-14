@@ -19,7 +19,6 @@
 
 package org.easyrec.plugin.profileduke;
 
-import no.priv.garshol.duke.DukeConfigException;
 import org.easyrec.plugin.profileduke.duke.loader.ConfigLoader;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -40,6 +39,10 @@ public class ProfileDukeConfigurationValidator implements Validator {
     public void validate(final Object target, final Errors errors) {
         ProfileDukeConfiguration configuration = (ProfileDukeConfiguration) target;
 
+        /**
+         * validates the duke XML configuration by loading the configuration with
+         * the duke ConfigLoader and checking for exceptions
+         */
         String dukeConfiguration = configuration.getDukeConfiguration();
         try {
             ConfigLoader.loadFromString(dukeConfiguration);
