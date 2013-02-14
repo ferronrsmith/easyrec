@@ -257,6 +257,8 @@ function editPlugin(operatorId, tenantId, assocTypeId, configurationName, key, e
         } else {
             $('#edit-' + element).css("height", $('#static-' + element).css("height"));
             $('#edit-' + element).css("width", $('#static-' + element).css("width"));
+            $('#edit-' + element).parent().css("height", $('#static-' + element).parent().css("height"));
+            $('#edit-' + element).parent().css("width", $('#static-' + element).parent().css("width"));
         }
 
     } else {
@@ -283,6 +285,8 @@ function editPlugin(operatorId, tenantId, assocTypeId, configurationName, key, e
                     $('#edit-' + element)[0].className = "";
                     $('#' + element).html("edit");
                     if ($('#edit-' + element).is("textarea")) {
+                        $('#static-' + element).parent().css("height", $('#edit-' + element).parent().css("height"));
+                        $('#static-' + element).parent().css("width", $('#edit-' + element).parent().css("width"));
                         $('#static-' + element).css("height", $('#edit-' + element).css("height"));
                         $('#static-' + element).css("width", $('#edit-' + element).css("width"));
                     }
