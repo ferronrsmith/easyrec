@@ -175,6 +175,7 @@ public class LoaderDAOMysqlImpl extends JdbcDaoSupport
         final String profileTableName = "profile";
         final String itemTableName = "item";
         final String itemTypeTableName = "itemtype";
+        final String assocTypeTableName = "assoctype";
 
         final String itemColumnTenantID = "tenantId";
         final String itemColumnItemID = "itemid";
@@ -194,18 +195,23 @@ public class LoaderDAOMysqlImpl extends JdbcDaoSupport
         final String itemTypeColumnName = "name";
         final String itemTypeColumnID = "id";
 
+        final String assocTypeTenantID = "tenantId";
+        final String assocTypeName = "name";
+        final String assocTypeID = "id";
+        final String assocTypeVisible = "visible";
+
+
+
         /* Create a hashmap with the itemTypeNames as values and the
          * tenantId and itemTypeId as key.
          */
         final HashMap<String, String> itemTypeList = new HashMap<String, String>();
         getJdbcTemplate().query("SELECT * FROM " + itemTypeTableName, new RowCallbackHandler() {
             public void processRow(ResultSet resultSet) throws SQLException {
-                while (resultSet.next()) {
-                    int tenantId = resultSet.getInt(itemTypeColumnTenantID);
-                    int itemTypeId = resultSet.getInt(itemTypeColumnID);
-                    String itemTypeName = resultSet.getString(itemTypeColumnName);
-                    itemTypeList.put(String.valueOf(tenantId) + "," + String.valueOf(itemTypeId), itemTypeName);
-                }
+                int tenantId = resultSet.getInt(itemTypeColumnTenantID);
+                int itemTypeId = resultSet.getInt(itemTypeColumnID);
+                String itemTypeName = resultSet.getString(itemTypeColumnName);
+                itemTypeList.put(String.valueOf(tenantId) + "," + String.valueOf(itemTypeId), itemTypeName);
             }
         });
 
@@ -281,6 +287,46 @@ public class LoaderDAOMysqlImpl extends JdbcDaoSupport
         });
 
         getJdbcTemplate().execute("DROP TABLE " + profileTableName);
+
+        /**
+         * create association type PROFILE_SIMILARITY for the profileDuke plugin
+         */
+
+        // get list of tenantIDs in the assoctype table
+        logger.info("inserting PROFILE_SIMILARITY assoc Type");
+        String sql = "SELECT DISTINCT " + assocTypeTenantID + " FROM " + assocTypeTableName;
+        logger.info("fireing: " + sql);
+        final List<Integer> tenantIDList = new ArrayList<Integer>();
+        getJdbcTemplate().query(sql,
+                new RowCallbackHandler() {
+                    public void processRow(ResultSet resultSet) throws SQLException {
+                        int tenantIdx = resultSet.getInt(assocTypeTenantID);
+                        logger.info("found tenant " + tenantIdx);
+                        logger.info("found " + resultSet.getFetchSize() + " results");
+                        int tenantId = resultSet.getInt(assocTypeTenantID);
+                        logger.info("found tenant " + tenantId);
+                        tenantIDList.add(tenantId);
+                    }
+                });
+
+        // get the max id of each tenant and add a PROFILE_SIMILARITY association type
+        Integer maxId;
+        for (final Integer tenantId : tenantIDList) {
+
+            maxId = getJdbcTemplate().queryForInt("SELECT MAX(id) FROM " + assocTypeTableName +
+                    " WHERE " + assocTypeTableName + "." + assocTypeTenantID + " = " + tenantId);
+
+            sql = "INSERT INTO " + assocTypeTableName + " (" +
+                    assocTypeTenantID + ", " + assocTypeName + ", " + assocTypeID + ", " + assocTypeVisible +
+                    ") VALUES (" + tenantId + ", \"PROFILE_SIMILARITY\", " + (maxId + 1) + ", 1)";
+
+            getJdbcTemplate().execute(sql);
+        }
+
+        // update the pluginVersion on the plugin_configuration table
+        sql = "UPDATE plugin_configuration SET pluginVersion = '0.98'\n" +
+                "WHERE pluginId = 'http://www.easyrec.org/plugins/ARM' OR pluginId = 'http://www.easyrec.org/plugins/slopeone'";
+        getJdbcTemplate().execute(sql);
     }
 
 
