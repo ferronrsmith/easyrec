@@ -353,7 +353,7 @@ function showPluginSettings(operatorId, tenantId, assocTypeId) {
 }
 
 function showPluginSettingsEx(operatorId, tenantId, assocTypeId, pluginId) {
-    pluginId = $('#plugin-select-' + assocTypeId).val();
+    //pluginId = $('#plugin-select-' + assocTypeId).val();
     $.ajax({
         url: webappPath + 'dev/viewpluginconfigdetails?operatorId=' + operatorId + '&tenantId=' + tenantId +
             '&pluginId=' + encodeURIComponent(pluginId) + "&assocTypeId=" + assocTypeId,
@@ -361,6 +361,7 @@ function showPluginSettingsEx(operatorId, tenantId, assocTypeId, pluginId) {
         dataType: 'html',
         success: function(data) {
             $('#plugin-details-' + assocTypeId).html(data);
+            $('#plugin-select-' + assocTypeId).val(pluginId)
         }
     });
 }

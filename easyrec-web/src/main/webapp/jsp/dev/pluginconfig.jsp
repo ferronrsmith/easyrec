@@ -140,7 +140,8 @@
                 This features moves actions older than the given days into the archive table.
                 Actions in the archive table will not be consulted by the generators.
                 Enable this feature or decrease the number of days, if you notice performance loss which may be weak
-                response times when calling the API (see <a href="${webappPath}/dev/jamonreport">performance</a> section)
+                response times when calling the API (see <a href="${webappPath}/dev/jamonreport">performance</a>
+                section)
                 or long rule miner computions tasks (goto the <a href="${webappPath}/dev/viewpluginlogs">plugin log</a>
                 section and click details. The duration is in [ms].)
                 You can neglect this feature, if your action table will not exceed the number of 10.000.000 entries
@@ -222,8 +223,12 @@
                 </tr>
             </table>
             <div id="plugin-details-${assocType.value}" style="width:100%"></div>
-            <script type="text/javascript">showPluginSettingsEx('${operatorId}', '${tenantId}', '${assocType.value}',
-                    '${activePlugins[assocType.key]}');</script>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    showPluginSettingsEx('${operatorId}', '${tenantId}', '${assocType.value}',
+                            '${activePlugins[assocType.key]}');
+                })
+            </script>
         </c:forEach>
     </c:when>
     <c:otherwise>
@@ -233,17 +238,17 @@
 </c:choose>
 
 <script type="text/javascript">
-    $('#edit-excecutiontime').keypress(function(event) {
+    $('#edit-excecutiontime').keypress(function (event) {
         if ((event.which && event.which == 13) || (event.keyCode && event.keyCode == 13)) {
             changeExecutionTime('${operatorId}', '${tenantId}', 'excecutiontime');
         }
     });
-    $('#edit-archivingtime').keypress(function(event) {
+    $('#edit-archivingtime').keypress(function (event) {
         if ((event.which && event.which == 13) || (event.keyCode && event.keyCode == 13)) {
             changeArchivingTime('${operatorId}', '${tenantId}', 'archivingtime');
         }
     });
-    $('#edit-maxactions').keypress(function(event) {
+    $('#edit-maxactions').keypress(function (event) {
         if ((event.which && event.which == 13) || (event.keyCode && event.keyCode == 13)) {
             changeMaxActions('${operatorId}', '${tenantId}', 'maxactions');
         }
