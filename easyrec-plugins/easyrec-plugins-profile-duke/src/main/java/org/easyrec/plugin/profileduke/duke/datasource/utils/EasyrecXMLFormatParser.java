@@ -24,6 +24,7 @@ import no.priv.garshol.duke.StatementHandler;
 import org.easyrec.model.core.ItemVO;
 import org.easyrec.plugin.profileduke.ProfileDukeGenerator;
 import org.easyrec.service.core.ProfileService;
+import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -37,6 +38,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -76,8 +79,7 @@ public class EasyrecXMLFormatParser {
      * the handler.
      */
     public static void parse(Reader src, StatementHandler handler, ProfileService profileSrv, List<ItemVO<Integer, Integer>> items, List<Property> properties)
-            throws IOException
-    {
+            throws IOException {
         profileItems = items;
         profileService = profileSrv;
         props = properties;
@@ -105,8 +107,7 @@ public class EasyrecXMLFormatParser {
       this.line = line;
       parseLine();
     }*/
-    private void parse() throws IOException
-    {
+    private void parse() throws IOException {
 //        BufferedReader in = new BufferedReader(src);
 //        line = in.readLine();
 
@@ -135,6 +136,15 @@ public class EasyrecXMLFormatParser {
         }
     }
 
+    /**
+     * Takes an XML string with the profile and creates statements out
+     * of the properties for the StatementHandler
+     *
+     * @param xmlString string with the profile XML
+     * @param proTenant tenantId of the actual tenant
+     * @param profItem itemId of the item with the profile
+     * @param proType itemType of the item with the profile
+     */
 
     private void xmlParser(String xmlString, int proTenant, int profItem, int proType) {
 
@@ -147,6 +157,13 @@ public class EasyrecXMLFormatParser {
             InputSource is = new InputSource();
             is.setCharacterStream(new StringReader(xmlString));
 
+
+            String subject = idString;
+            handler.statement(subject, "ID", idString, true);
+            handler.statement(subject, "profiletenant", Integer.toString(proTenant), true);
+            handler.statement(subject, "profileitem", Integer.toString(profItem), true);
+            handler.statement(subject, "profiletype", Integer.toString(proType), true);
+
             Document doc = dBuilder.parse(is);
             doc.getDocumentElement().normalize();
 
@@ -154,29 +171,25 @@ public class EasyrecXMLFormatParser {
                     doc.getDocumentElement().getNodeName());
             NodeList nList = doc.getElementsByTagName("profile");
 
-            String subject = idString;
-            Boolean literal = true;
-            Boolean numeric = false;
-            handler.statement(subject, "ID", idString, literal);
-            handler.statement(subject, "profiletenant", Integer.toString(proTenant), literal);
-            handler.statement(subject, "profileitem", Integer.toString(profItem), literal);
-            handler.statement(subject, "profiletype", Integer.toString(proType), literal);
 
-            for (int temp = 0; temp < nList.getLength(); temp++) {
+            // create a map of props to check later if the properties from the profile are
+            // also in the duke configuration
+            HashSet<String> propertyNames = new HashSet<String>(props.size());
+            for (Property property: props)
+                propertyNames.add(property.getName());
 
-                Node nNode = nList.item(temp);
-                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-                    Element eElement = (Element) nNode;
+            for (int i = 0; i < nList.getLength(); i++) {
 
+                Node node = nList.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) node;
 
-                    for (int propIndex = 0; propIndex < props.size(); propIndex++) {
-                        if (!(props.get(propIndex).getName().equals("ID") || props.get(propIndex).getName().equals("profiletenant") ||
-                                props.get(propIndex).getName().equals("profileitem") || props.get(propIndex).getName().equals("profiletype"))) {
-                            if (isNumeric(props.get(propIndex).getName())) {
-                                handler.statement(subject, props.get(propIndex).getName(), getTagValue(props.get(propIndex).getName(), eElement), numeric);
-                            } else {
-                                handler.statement(subject, props.get(propIndex).getName(), getTagValue(props.get(propIndex).getName(), eElement), literal);
-                            }
+                    NodeList propertyNodes = element.getElementsByTagName("*");
+                    for (int j = 0; j < propertyNodes.getLength(); j++) {
+                        String propertyName = propertyNodes.item(j).getNodeName();
+                        String propertyValue = propertyNodes.item(j).getChildNodes().item(0).getNodeValue();
+                        if (propertyNames.contains(propertyName)) {
+                            handler.statement(subject, propertyName, propertyValue, true);
                         }
                     }
                 }
