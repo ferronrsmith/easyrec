@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.HashSet;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.io.InputStream;
 import java.io.IOException;
 
@@ -33,16 +32,15 @@ import no.priv.garshol.duke.datasources.SparqlDataSource;
  */
 public class ConfigLoader {
 
-
     public static Configuration loadFromString(String configString)
-        throws IOException, SAXException {
-            Configuration cfg = new Configuration();
+            throws IOException, SAXException {
+        Configuration cfg = new Configuration();
 
-            XMLReader parser = XMLReaderFactory.createXMLReader();
-            parser.setContentHandler(new ConfigHandler(cfg));
-            parser.parse(new InputSource(new StringReader(configString)));
+        XMLReader parser = XMLReaderFactory.createXMLReader();
+        parser.setContentHandler(new ConfigHandler(cfg));
+        parser.parse(new InputSource(new StringReader(configString)));
 
-            return cfg;
+        return cfg;
     }
 
     /**
@@ -157,7 +155,7 @@ public class ConfigLoader {
                             "not support it: " + datasource);
             } else if (localName.equals("param"))
                 ObjectUtils.setBeanProperty(currentobj, attributes.getValue("name"),
-                        attributes.getValue("value"));
+                        attributes.getValue("value"), objects);
             else if (localName.equals("group")) {
                 groupno++;
                 // FIXME: now possible to have data sources between the two

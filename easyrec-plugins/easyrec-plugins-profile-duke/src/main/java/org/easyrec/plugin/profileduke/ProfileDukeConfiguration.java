@@ -99,8 +99,7 @@ public class ProfileDukeConfiguration extends GeneratorConfiguration {
             "    </object>\n" +
             "\n" +
             "    <schema>\n" +
-            "        <threshold>0.95</threshold>\n" +
-            "        <maybe-threshold>0.90</maybe-threshold>\n" +
+            "        <threshold>0.90</threshold>\n" +
             "\n" +
             "        <property type=\"id\">\n" +
             "            <name>ID</name>\n" +

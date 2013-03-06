@@ -33,9 +33,6 @@ import java.io.*;
 import java.util.*;
 
 /**
- * iJoule Plugin. <p/> <p><b>Company:&nbsp;</b> SAT,
- * Research Studios Austria</p> <p><b>Copyright:&nbsp;</b> (c) 2012</p> <p><b>last modified:</b><br/> $Author$<br/>
- * $Date$<br/> $Revision$</p>
  *
  * @author Soheil Khosravipour
  */
