@@ -411,7 +411,7 @@ public class ProfileDAOMysqlImpl extends AbstractBaseProfileDAOMysqlImpl<Integer
             int tenant = DaoUtils.getInteger(rs, DEFAULT_TENANT_ID_COLUMN_NAME);
             ItemVO<Integer, Integer> item = new ItemVO<Integer, Integer>(
                     tenant,
-                    DaoUtils.getInteger(rs, DEFAULT_ITEM_ID_COLUMN_NAME),
+                    idMappingDAO.lookup(DaoUtils.getStringIfPresent(rs, DEFAULT_ITEM_ID_COLUMN_NAME)),
                     itemTypeDAO.getIdOfType(tenant, DaoUtils.getStringIfPresent(rs, DEFAULT_ITEM_TYPE_ID_COLUMN_NAME)));
             return item;
         }
