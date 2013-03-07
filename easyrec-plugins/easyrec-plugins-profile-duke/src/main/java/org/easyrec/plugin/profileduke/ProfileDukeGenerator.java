@@ -32,7 +32,6 @@ import org.easyrec.plugin.model.Version;
 import org.easyrec.plugin.profileduke.duke.datasource.EasyrecXMLFormatDataSource;
 import org.easyrec.plugin.profileduke.duke.matchers.EasyrecProfileMatcher;
 import org.easyrec.plugin.support.GeneratorPluginSupport;
-import org.easyrec.service.core.ActionService;
 import org.easyrec.service.core.ItemAssocService;
 import org.easyrec.service.core.ProfileService;
 import org.easyrec.service.domain.TypeMappingService;
@@ -134,7 +133,9 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
         // the generator needs to check periodically if abort was requested and stop operation in a clean manner
         if (executionControl.isAbortRequested()) return;
 
-        List<ItemVO<Integer, Integer>> itemList = actionService.getItemsOfTenant(config.getTenantId(), itemType);
+        List<ItemVO<Integer, Integer>> itemList = profileService.getItemsByItemType(
+                config.getTenantId(), config.getItemType(), 0);
+
         stats.setNumberOfItems(itemList.size());
 
         logger.info("BlockMode: " + config.getBlockCalculationMode());
