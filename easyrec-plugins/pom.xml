@@ -44,6 +44,17 @@
     <!--suppress MavenModelInspection -->
     <url>${website.url.http}/easyrec/easyrec-plugins/</url>
 
+    <repositories>
+        <repository>
+            <id>duke-rep-2</id>
+            <name>repository for modified duke</name>
+            <url>file:./easyrec-plugins-profile-duke/duke-repo</url>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.easyrec</groupId>

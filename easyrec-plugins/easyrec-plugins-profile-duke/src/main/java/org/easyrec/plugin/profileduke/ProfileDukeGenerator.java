@@ -23,12 +23,13 @@ import no.priv.garshol.duke.Column;
 import no.priv.garshol.duke.Configuration;
 import no.priv.garshol.duke.Processor;
 import no.priv.garshol.duke.Property;
+import no.priv.garshol.duke.ConfigLoader;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.easyrec.model.core.ItemVO;
 import org.easyrec.plugin.model.Version;
 import org.easyrec.plugin.profileduke.duke.datasource.EasyrecXMLFormatDataSource;
-import org.easyrec.plugin.profileduke.duke.loader.ConfigLoader;
 import org.easyrec.plugin.profileduke.duke.matchers.EasyrecProfileMatcher;
 import org.easyrec.plugin.support.GeneratorPluginSupport;
 import org.easyrec.service.core.ActionService;
@@ -36,6 +37,7 @@ import org.easyrec.service.core.ItemAssocService;
 import org.easyrec.service.core.ProfileService;
 import org.easyrec.service.domain.TypeMappingService;
 import org.easyrec.store.dao.core.ItemAssocDAO;
+import org.easyrec.store.dao.core.ItemDAO;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -43,10 +45,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.*;
 
+
 // TODO: Description
 
 /**
- *
  * @author Soheil Khosravipour
  * @author Fabian Salcher
  */
@@ -72,8 +74,6 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
     public static final Log logger = LogFactory.getLog(org.easyrec.plugin.profileduke.ProfileDukeGenerator.class);
 
     // the service will be auto-wired when the plugin is loaded, see {@link #setActionService(ActionService)}.
-    private ActionService actionService;
-
     private ProfileService profileService;
 
     private int numberOfAssociationsCreated = 0;
@@ -95,10 +95,6 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
 
     public void setProfileService(ProfileService profileService) {
         this.profileService = profileService;
-    }
-
-    public void setActionService(final ActionService actionService) {
-        this.actionService = actionService;
     }
 
     public void setNumberOfAssociationsCreated(int numberOfAssociationsCreated) {

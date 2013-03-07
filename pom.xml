@@ -598,6 +598,17 @@ to be able to deploy and site-deploy during daily/nightly builds -->
 <!--        <module>easyrec-mahout</module>-->
     </modules>
 
+    <repositories>
+        <repository>
+            <id>duke-rep-1</id>
+            <name>repository for modified duke</name>
+            <url>file:./easyrec-plugins/easyrec-plugins-profile-duke/duke-repo</url>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>commons-logging</groupId>

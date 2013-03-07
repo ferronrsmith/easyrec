@@ -174,9 +174,9 @@ public class EasyrecXMLFormatParser {
 
             // create a map of props to check later if the properties from the profile are
             // also in the duke configuration
-            HashSet<String> propertyNames = new HashSet<String>(props.size());
+            HashMap<String, Property> propertyList = new HashMap<String, Property>(props.size());
             for (Property property: props)
-                propertyNames.add(property.getName());
+                propertyList.put(property.getName(), property);
 
             for (int i = 0; i < nList.getLength(); i++) {
 
@@ -188,7 +188,9 @@ public class EasyrecXMLFormatParser {
                     for (int j = 0; j < propertyNodes.getLength(); j++) {
                         String propertyName = propertyNodes.item(j).getNodeName();
                         String propertyValue = propertyNodes.item(j).getChildNodes().item(0).getNodeValue();
-                        if (propertyNames.contains(propertyName)) {
+                        if (propertyList.containsKey(propertyName)) {
+                            if (propertyList.get(propertyName).isConcatenateMultiValues())
+                                propertyValue = StringUtils.replace(propertyValue, " ", "~");
                             handler.statement(subject, propertyName, propertyValue, true);
                         }
                     }

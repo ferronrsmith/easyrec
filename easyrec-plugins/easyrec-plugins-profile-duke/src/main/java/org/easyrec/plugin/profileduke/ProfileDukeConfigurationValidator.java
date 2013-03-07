@@ -19,7 +19,7 @@
 
 package org.easyrec.plugin.profileduke;
 
-import org.easyrec.plugin.profileduke.duke.loader.ConfigLoader;
+import no.priv.garshol.duke.ConfigLoader;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.xml.sax.SAXException;
