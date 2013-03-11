@@ -76,11 +76,11 @@ public class ProfileDukeConfiguration extends GeneratorConfiguration {
     @PluginParameterPropertyEditor(propertyEditorClass = BooleanPropertyEditor.class)
     private Boolean blockCalculationMode = false;
 
-    @PluginParameter(description = "Defines the number of blocks used in the Block Calculation Mode.",
-            displayName = "[Block Calculation] number of blocks:",
+    @PluginParameter(description = "Defines the size of the blocks used in Block Calculation Mode.",
+            displayName = "[Block Calculation] size of blocks:",
             shortDescription = "", displayOrder = 11)
     @PluginParameterPropertyEditor(propertyEditorClass =  IntegerPropertyEditor.class)
-    private Integer blockCalculationNumberOfBlocks = 10;
+    private Integer blockCalculationBlockSize = 10;
 
     @PluginParameter(description = "Duke Configuration",
             displayName = "Duke Configuration",
@@ -184,12 +184,12 @@ public class ProfileDukeConfiguration extends GeneratorConfiguration {
         this.blockCalculationMode = blockCalculationMode;
     }
 
-    public Integer getBlockCalculationNumberOfBlocks() {
-        return blockCalculationNumberOfBlocks;
+    public Integer getBlockCalculationBlockSize() {
+        return blockCalculationBlockSize;
     }
 
-    public void setBlockCalculationNumberOfBlocks(Integer blockCalculationNumberOfBlocks) {
-        this.blockCalculationNumberOfBlocks = blockCalculationNumberOfBlocks;
+    public void setBlockCalculationBlockSize(Integer blockCalculationBlockSize) {
+        this.blockCalculationBlockSize = blockCalculationBlockSize;
     }
 
     public String getDukeConfiguration() {

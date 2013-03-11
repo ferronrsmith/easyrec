@@ -36,7 +36,6 @@ import org.easyrec.service.core.ItemAssocService;
 import org.easyrec.service.core.ProfileService;
 import org.easyrec.service.domain.TypeMappingService;
 import org.easyrec.store.dao.core.ItemAssocDAO;
-import org.easyrec.store.dao.core.ItemDAO;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -139,7 +138,7 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
         stats.setNumberOfItems(itemList.size());
 
         logger.info("BlockMode: " + config.getBlockCalculationMode());
-        logger.info("BlockModeNumberOfBlocks: " + config.getBlockCalculationNumberOfBlocks());
+        logger.info("BlockModeBlockSize: " + config.getBlockCalculationBlockSize());
         logger.info("ItemListSize: " + itemList.size());
         logger.info("Duke Configuration: \n" + config.getDukeConfiguration());
 
@@ -151,7 +150,7 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
             }
 
             Random random = new Random();
-            int blockSize = itemList.size() / config.getBlockCalculationNumberOfBlocks();
+            int blockSize = config.getBlockCalculationBlockSize();
             List<ItemVO<Integer, Integer>> itemTempList = new Vector<ItemVO<Integer, Integer>>();
             while (itemPot.size() > 0) {
                 itemTempList.add(itemPot.remove(random.nextInt(itemPot.size())));
