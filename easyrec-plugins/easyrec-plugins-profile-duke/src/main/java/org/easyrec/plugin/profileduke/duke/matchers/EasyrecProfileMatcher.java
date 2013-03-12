@@ -155,9 +155,13 @@ public class EasyrecProfileMatcher extends AbstractMatchListener {
 
         ItemAssocVO<Integer, Integer> itemAssoc = new ItemAssocVO<Integer, Integer>(
                 confTanantId,
-                new ItemVO(r1.getValue("profiletenant"), r1.getValue("profileitem"), r1.getValue("profiletype")),
+                new ItemVO(profileDukeGenerator.getTenantId(),
+                        r1.getValue("ItemID"),
+                        profileDukeGenerator.getItemType()),
                 assocType, confidence,
-                new ItemVO(r2.getValue("profiletenant"), r2.getValue("profileitem"), r2.getValue("profiletype")),
+                new ItemVO(profileDukeGenerator.getTenantId(),
+                        r2.getValue("ItemID"),
+                        profileDukeGenerator.getItemType()),
                 sourceType, "ProfileDuke Plugin", viewType, null, execution);
 
         numberOfCreatedAssociations++;

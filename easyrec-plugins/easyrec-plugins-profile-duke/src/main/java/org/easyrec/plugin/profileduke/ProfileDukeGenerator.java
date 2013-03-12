@@ -76,6 +76,9 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
 
     private int numberOfAssociationsCreated = 0;
 
+    private int tenantId;
+    private int itemType;
+
 
     // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -97,6 +100,14 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
 
     public void setNumberOfAssociationsCreated(int numberOfAssociationsCreated) {
         this.numberOfAssociationsCreated = numberOfAssociationsCreated;
+    }
+
+    public int getItemType(){
+        return itemType;
+    }
+
+    public int getTenantId() {
+        return tenantId;
     }
 
     // ------------------------ INTERFACE METHODS ------------------------
@@ -124,9 +135,9 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
         ProfileDukeConfiguration config = getConfiguration();
 
         TypeMappingService typeMappingService = (TypeMappingService) super.getTypeMappingService();
-        Integer itemType = typeMappingService.getIdOfItemType(config.getTenantId(), config.getItemType());
         int sourceType = typeMappingService.getIdOfSourceType(config.getTenantId(), this.getId().toString());
-        int tenantId = config.getTenantId();
+        itemType = typeMappingService.getIdOfItemType(config.getTenantId(), config.getItemType());
+        tenantId = config.getTenantId();
         ItemAssocDAO itemAssocDAO = getItemAssocDAO();
 
         // the generator needs to check periodically if abort was requested and stop operation in a clean manner
@@ -250,6 +261,13 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
             logger.debug(e.getStackTrace());
             return false;
         }
+
+        List<Property> propertyList = dukeConfig.getProperties();
+        propertyList.add(new Property("ID"));
+        Property itemIDProperty = new Property("ItemID");
+        itemIDProperty.setIgnoreProperty(true);
+        propertyList.add(itemIDProperty);
+        dukeConfig.setProperties(propertyList);
 
         //read properties
         List<Property> props = dukeConfig.getProperties();

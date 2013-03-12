@@ -20,11 +20,13 @@
 package org.easyrec.plugin.profileduke;
 
 import no.priv.garshol.duke.ConfigLoader;
+import no.priv.garshol.duke.Property;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Fabian Salcher
@@ -45,16 +47,28 @@ public class ProfileDukeConfigurationValidator implements Validator {
          */
         String dukeConfiguration = configuration.getDukeConfiguration();
         try {
-            ConfigLoader.loadFromString(dukeConfiguration);
+            List<Property> propertyList = ConfigLoader.loadFromString(dukeConfiguration).getProperties();
+            for (Property property : propertyList) {
+                if (property.getName().equals("ID")) {
+                    errors.rejectValue("dukeConfiguration", "error.readError",
+                            "An error occurred while loading the configuration: \"ID\" is not allowed" +
+                                    " as a property name.");
+                }
+                if (property.getName().equals("ItemID")) {
+                    errors.rejectValue("dukeConfiguration", "error.readError",
+                            "An error occurred while loading the configuration: \"ItemID\" is not allowed" +
+                                    " as a property name.");
+                }
+            }
         } catch (IOException e) {
             errors.rejectValue("dukeConfiguration", "error.readError",
-                    "an error occurred while loading the configuration: " + e.getMessage());
+                    "An error occurred while loading the configuration: " + e.getMessage());
         } catch (SAXException e) {
             errors.rejectValue("dukeConfiguration", "error.xmlError",
-                    "configuration is not a valid XML document: " + e.getMessage());
+                    "Configuration is not a valid XML document: " + e.getMessage());
         } catch (RuntimeException e) {
             errors.rejectValue("dukeConfiguration", "error.dukeConfigurationError",
-                    "configuration is not a valid duke XML configuration: " + e.getMessage());
+                    "Configuration is not a valid duke XML configuration: " + e.getMessage());
         }
     }
 }

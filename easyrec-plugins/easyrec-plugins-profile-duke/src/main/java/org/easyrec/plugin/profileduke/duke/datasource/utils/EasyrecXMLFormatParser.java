@@ -39,7 +39,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -141,14 +140,14 @@ public class EasyrecXMLFormatParser {
      * of the properties for the StatementHandler
      *
      * @param xmlString string with the profile XML
-     * @param proTenant tenantId of the actual tenant
-     * @param profItem itemId of the item with the profile
-     * @param proType itemType of the item with the profile
+     * @param tenantId tenantId of the actual tenant
+     * @param itemId itemId of the item with the profile
+     * @param itemType itemType of the item with the profile
      */
 
-    private void xmlParser(String xmlString, int proTenant, int profItem, int proType) {
+    private void xmlParser(String xmlString, int tenantId, int itemId, int itemType) {
 
-        String idString = Integer.toString(proTenant) + Integer.toString(profItem) + Integer.toString(proType);
+        String idString = Integer.toString(tenantId) + Integer.toString(itemId) + Integer.toString(itemType);
 
         try {
 
@@ -160,9 +159,7 @@ public class EasyrecXMLFormatParser {
 
             String subject = idString;
             handler.statement(subject, "ID", idString, true);
-            handler.statement(subject, "profiletenant", Integer.toString(proTenant), true);
-            handler.statement(subject, "profileitem", Integer.toString(profItem), true);
-            handler.statement(subject, "profiletype", Integer.toString(proType), true);
+            handler.statement(subject, "ItemID", Integer.toString(itemId), true);
 
             Document doc = dBuilder.parse(is);
             doc.getDocumentElement().normalize();
