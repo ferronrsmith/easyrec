@@ -187,7 +187,13 @@ public class EasyrecXMLFormatParser {
                     NodeList propertyNodes = element.getElementsByTagName("*");
                     for (int j = 0; j < propertyNodes.getLength(); j++) {
                         String propertyName = propertyNodes.item(j).getNodeName();
-                        String propertyValue = propertyNodes.item(j).getChildNodes().item(0).getNodeValue();
+                        NodeList childNodes = propertyNodes.item(j).getChildNodes();
+                        String propertyValue;
+                        if (childNodes.getLength() > 0) {
+                            propertyValue = childNodes.item(0).getNodeValue();
+                        } else {
+                            continue;
+                        }
                         if (propertyList.containsKey(propertyName)) {
                             if (propertyList.get(propertyName).isConcatenateMultiValues())
                                 propertyValue = StringUtils.replace(propertyValue, " ", "~");
