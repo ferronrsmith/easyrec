@@ -38,7 +38,7 @@
         <repository>
             <id>duke-rep-3</id>
             <name>repository for modified duke</name>
-            <url>file:./duke-repo</url>
+            <url>file:${project.basedir}/duke-repo</url>
             <releases>
                 <updatePolicy>never</updatePolicy>
             </releases>
