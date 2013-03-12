@@ -224,6 +224,19 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- necessary for profile duke plugin -->
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-analyzers-common</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+
         <!-- JAX-WS -->
         <dependency>
             <groupId>com.sun.xml.ws</groupId>

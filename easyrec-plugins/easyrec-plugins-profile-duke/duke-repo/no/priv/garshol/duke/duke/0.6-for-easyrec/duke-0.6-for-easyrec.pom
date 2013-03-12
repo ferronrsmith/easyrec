@@ -47,6 +47,7 @@ TO PUBLISH SNAPSHOTS
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-core</artifactId>
       <version>4.0.0</version>
+      <scope>provided</scope>
     </dependency>
 
     <!-- necessary to get KeywordAnalyzer and StandardAnalyzer -->
@@ -54,6 +55,7 @@ TO PUBLISH SNAPSHOTS
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-analyzers-common</artifactId>
       <version>4.0.0</version>
+      <scope>provided</scope>
     </dependency>
                 
     <dependency>

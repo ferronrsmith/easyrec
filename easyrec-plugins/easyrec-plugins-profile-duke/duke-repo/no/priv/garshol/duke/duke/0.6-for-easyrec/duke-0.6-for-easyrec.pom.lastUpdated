@@ -1,8 +1,0 @@
-#NOTE: This is an internal implementation file, its format can be changed without prior notice.
-#Thu Mar 07 13:52:42 CET 2013
-http\://repo.maven.apache.org/maven2/.lastUpdated=1362660762508
-http\://satsrv03.researchstudio.at\:8081/artifactory/repo/.lastUpdated=1362660762456
-http\://repo.maven.apache.org/maven2/.error=
-http\://satsrv03.researchstudio.at\:8081/artifactory/repo/.error=
-default-file\:./duke-repo/.lastUpdated=1362660762478
-file\:./duke-repo/.error=Could not transfer artifact no.priv.garshol.duke\:duke\:pom\:0.6-for-easyrec from/to duke-rep-parentdir (file\:./duke-repo)\: Checksum validation failed, no checksums available from the repository
