@@ -77,7 +77,7 @@ public class ProfileDukeConfiguration extends GeneratorConfiguration {
     private Boolean blockCalculationMode = false;
 
     @PluginParameter(description = "Defines the size of the blocks used in Block Calculation Mode.",
-            displayName = "[Block Calculation] size of blocks:",
+            displayName = "[Block Calculation] block size:",
             shortDescription = "", displayOrder = 11)
     @PluginParameterPropertyEditor(propertyEditorClass =  IntegerPropertyEditor.class)
     private Integer blockCalculationBlockSize = 10;
