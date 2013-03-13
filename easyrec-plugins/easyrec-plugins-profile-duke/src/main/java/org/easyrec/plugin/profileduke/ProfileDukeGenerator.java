@@ -75,6 +75,7 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
     private ProfileService profileService;
 
     private int numberOfAssociationsCreated = 0;
+    private double lastThreshold = 0;
 
     private int tenantId;
     private int itemType;
@@ -185,6 +186,16 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
         }
 
         stats.setNumberOfRulesCreated(numberOfAssociationsCreated);
+
+        // delete associations below the threshold
+
+        int associationType = typeMappingService.getIdOfAssocType(tenantId, config.getAssociationType());
+        itemAssocDAO.removeItemAssocByTenantAndThreshold(config.getTenantId(),
+                associationType,
+                sourceType,
+                stats.getStartDate(),
+                lastThreshold);
+
     }
 
     @Override
@@ -259,6 +270,8 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
         itemIDProperty.setIgnoreProperty(true);
         propertyList.add(itemIDProperty);
         dukeConfig.setProperties(propertyList);
+
+        lastThreshold = dukeConfig.getThreshold();
 
         //read properties
         List<Property> props = dukeConfig.getProperties();

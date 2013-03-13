@@ -125,6 +125,14 @@ public interface BaseItemAssocDAO<IA, AI, IT, AT, I, C> extends TableCreatingDAO
     public int removeItemAssocByTenant(Integer tenantId, AT assocType, Integer sourceType, Date changeDate);
 
     /**
+     * This Removes all ItemAssocs for a given tenant which have a assoc value below a specified threshold.
+     * In addition the assocType, sourceType and a changeDate can be specified. All ItemAssocs matching
+     * the given criteria and older than the specified changeDate will be removed.
+     */
+    public int removeItemAssocByTenantAndThreshold(Integer tenantId, AT assocType, Integer sourceType,
+                                                   Date changeDate, double Threshold);
+
+    /**
      * returns a list of associated items for a specified <code>itemFromType</code>, <code>assocType</code> and <code>itemTo</code>
      * if the queries resultset is empty, an empty iterator will be returned containing no elements
      */

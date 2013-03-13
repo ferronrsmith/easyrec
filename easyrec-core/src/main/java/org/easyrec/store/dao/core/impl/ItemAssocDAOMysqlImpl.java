@@ -1102,6 +1102,67 @@ public class ItemAssocDAOMysqlImpl extends
         return getJdbcTemplate().update(sqlString.toString(), args.toArray(), Ints.toArray(argt));
     }
 
+    public int removeItemAssocByTenantAndThreshold(Integer tenantId, Integer assocType, Integer sourceType,
+                                                   Date changeDate, double threshold) {
+
+        if (tenantId == null) {
+            throw new IllegalArgumentException("missing 'tenantId'");
+        }
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("removing 'itemAssocs' for tenant " + tenantId);
+        }
+
+        StringBuilder sqlString = new StringBuilder("DELETE FROM ");
+        sqlString.append(DEFAULT_TABLE_NAME);
+        sqlString.append(" WHERE ");
+
+        List<Object> args = Lists.newArrayList();
+        List<Integer> argt = Lists.newArrayList();
+
+        // add constraints to the query
+        sqlString.append(DEFAULT_TENANT_COLUMN_NAME);
+        sqlString.append("=?");
+
+        args.add(tenantId);
+        argt.add(Types.INTEGER);
+
+        if (assocType != null) {
+            sqlString.append(" AND ").append(DEFAULT_ASSOC_TYPE_COLUMN_NAME);
+            sqlString.append("=?");
+
+            args.add(assocType);
+            argt.add(Types.INTEGER);
+        }
+
+        if (sourceType != null) {
+            sqlString.append(" AND ").append(DEFAULT_SOURCE_TYPE_COLUMN_NAME);
+            sqlString.append("=?");
+
+            args.add(sourceType);
+            argt.add(Types.INTEGER);
+        }
+
+        if (changeDate != null) {
+            sqlString.append(" AND ").append(DEFAULT_CHANGE_DATE_COLUMN_NAME);
+            sqlString.append("<?");
+
+            args.add(changeDate);
+            argt.add(Types.TIMESTAMP);
+        }
+
+        sqlString.append(" AND ").append(DEFAULT_ASSOC_VALUE_COLUMN_NAME);
+        sqlString.append("<?");
+
+        args.add(threshold);
+        argt.add(Types.DOUBLE);
+
+        // remove trailing " AND "
+        sqlString.delete(sqlString.length(), sqlString.length());
+
+        return getJdbcTemplate().update(sqlString.toString(), args.toArray(), Ints.toArray(argt));
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // private methods
     private void validateUniqueKey(ItemAssocVO<Integer,Integer> itemAssoc) {

@@ -230,6 +230,13 @@ public class TypedItemAssocDAOMysqlImpl extends
                         changeDate);
     }
 
+    public int removeItemAssocByTenantAndThreshold(Integer tenantId, String assocType, Integer sourceType,
+                                                   Date changeDate, double threshold) {
+        return itemAssocDAO
+                .removeItemAssocByTenantAndThreshold(tenantId, typeMappingService.getIdOfAssocType(tenantId, assocType), sourceType,
+                        changeDate, threshold);
+    }
+
     //////////////////////////////////////////////////////////////////////////////
     // private inner classes
     private class TypedItemAssocVORowMapper
