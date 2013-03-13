@@ -114,7 +114,6 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
 
     @Override
     public String getPluginDescription() {
-        // TODO: complete after finished the plugin
         return "<p>Generator plugin that generates rules based on the item profiles.<p/>\n" +
                 "<p>The record linkage engine Duke is used to calculate the similarities between the item profiles.</p>";
     }
@@ -184,14 +183,6 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
                 return;
             }
         }
-
-        int associationType = typeMappingService.getIdOfAssocType(tenantId, config.getAssociationType());
-
-        // delete old associations
-        itemAssocDAO.removeItemAssocByTenant(config.getTenantId(),
-                associationType,
-                sourceType,
-                stats.getStartDate());
 
         stats.setNumberOfRulesCreated(numberOfAssociationsCreated);
     }
