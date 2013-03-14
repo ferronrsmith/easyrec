@@ -20,14 +20,14 @@
 
     <h3>Blog</h3>
 
-    <a target="_blank" href="http://apps.sourceforge.net/wordpress/easyrec">
-        http://apps.sourceforge.net/wordpress/easyrec
+    <a target="_blank" href="http://easyrec.sourceforge.net/blog/">
+        http://easyrec.sourceforge.net/blog/
     </a>
 
 
     <h3>Wiki</h3>
-    <a target="_blank" href="http://sourceforge.net/apps/mediawiki/easyrec">
-        http://sourceforge.net/apps/mediawiki/easyrec
+    <a target="_blank" href="http://easyrec.sourceforge.net/wiki/">
+        http://easyrec.sourceforge.net/wiki/
     </a>
 
 

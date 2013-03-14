@@ -45,11 +45,11 @@
             view
         </td>
         <td style="width:200px;height:40px;">
-            <a target="_blank" href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=REST_API_v0.97#view">
+            <a target="_blank" href="http://easyrec.sourceforge.net/wiki/index.php?title=REST_API_v0.97#view">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-rest.png"/>
             </a>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=JavaScript_API_v0.97#Sending_Actions">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=JavaScript_API_v0.97#Sending_Actions">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-js.png"/>
             </a>
         </td>
@@ -59,11 +59,11 @@
             buy
         </td>
         <td>
-            <a target="_blank" href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=REST_API_v0.97#buy">
+            <a target="_blank" href="http://easyrec.sourceforge.net/wiki/index.php?title=REST_API_v0.97#buy">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-rest.png"/>
             </a>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=JavaScript_API_v0.97#Sending_Actions">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=JavaScript_API_v0.97#Sending_Actions">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-js.png"/>
             </a>
         </td>
@@ -73,11 +73,11 @@
             rate
         </td>
         <td>
-            <a target="_blank" href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=REST_API_v0.97#rate">
+            <a target="_blank" href="http://easyrec.sourceforge.net/wiki/index.php?title=REST_API_v0.97#rate">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-rest.png"/>
             </a>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=JavaScript_API_v0.97#Sending_Actions">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=JavaScript_API_v0.97#Sending_Actions">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-js.png"/>
             </a>
         </td>
@@ -87,11 +87,11 @@
             sendaction
         </td>
         <td>
-            <a target="_blank" href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=REST_API_v0.97#sendaction">
+            <a target="_blank" href="http://easyrec.sourceforge.net/wiki/index.php?title=REST_API_v0.97#sendaction">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-rest.png"/>
             </a>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=JavaScript_API_v0.97#Sending_Actions">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=JavaScript_API_v0.97#Sending_Actions">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-js.png"/>
             </a>
         </td>
@@ -112,11 +112,11 @@
         </td>
         <td style="width:200px;">
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=REST_API_v0.97#other_users_also_viewed">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=REST_API_v0.97#other_users_also_viewed">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-rest.png"/>
             </a>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=JavaScript_API_v0.97#Receiving_Recommendations">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=JavaScript_API_v0.97#Receiving_Recommendations">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-js.png"/>
             </a>
         </td>
@@ -127,11 +127,11 @@
         </td>
         <td>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=REST_API_v0.97#other_users_also_bought">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=REST_API_v0.97#other_users_also_bought">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-rest.png"/>
             </a>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=JavaScript_API_v0.97#Receiving_Recommendations">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=JavaScript_API_v0.97#Receiving_Recommendations">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-js.png"/>
             </a>
         </td>
@@ -142,11 +142,11 @@
         </td>
         <td>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=REST_API_v0.97#items_rated_good_by_other_users">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=REST_API_v0.97#items_rated_good_by_other_users">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-rest.png"/>
             </a>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=JavaScript_API_v0.97#Receiving_Recommendations">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=JavaScript_API_v0.97#Receiving_Recommendations">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-js.png"/>
             </a>
         </td>
@@ -157,11 +157,11 @@
         </td>
         <td>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=REST_API_v0.97#recommendations_for_user">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=REST_API_v0.97#recommendations_for_user">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-rest.png"/>
             </a>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=JavaScript_API_v0.97#Receiving_Recommendations">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=JavaScript_API_v0.97#Receiving_Recommendations">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-js.png"/>
             </a>
         </td>
@@ -172,11 +172,11 @@
         </td>
         <td>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=REST_API_v0.97#related_items">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=REST_API_v0.97#related_items">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-rest.png"/>
             </a>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=JavaScript_API_v0.97#Receiving_Recommendations">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=JavaScript_API_v0.97#Receiving_Recommendations">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-js.png"/>
             </a>
         </td>
@@ -187,11 +187,11 @@
         </td>
         <td>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=REST_API_v0.97#action_history_for_user">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=REST_API_v0.97#action_history_for_user">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-rest.png"/>
             </a>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=JavaScript_API_v0.97#Receiving_Recommendations">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=JavaScript_API_v0.97#Receiving_Recommendations">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-js.png"/>
             </a>
         </td>
@@ -212,11 +212,11 @@
         </td>
         <td style="width:200px;">
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=REST_API_v0.97#item_types">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=REST_API_v0.97#item_types">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-rest.png"/>
             </a>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=JavaScript_API_v0.97#Receiving_Itemtypes">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=JavaScript_API_v0.97#Receiving_Itemtypes">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-js.png"/>
             </a>
         </td>
@@ -237,11 +237,11 @@
         </td>
         <td style="width:200px;">
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=REST_API_v0.97#clusters">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=REST_API_v0.97#clusters">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-rest.png"/>
             </a>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=JavaScript_API_v0.97#Receiving_Cluster_Related_Information">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=JavaScript_API_v0.97#Receiving_Cluster_Related_Information">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-js.png"/>
             </a>
         </td>
@@ -253,11 +253,11 @@
         </td>
         <td style="width:200px;">
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=REST_API_v0.97#items_of_cluster">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=REST_API_v0.97#items_of_cluster">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-rest.png"/>
             </a>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=JavaScript_API_v0.97#Receiving_Cluster_Related_Information">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=JavaScript_API_v0.97#Receiving_Cluster_Related_Information">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-js.png"/>
             </a>
         </td>
@@ -278,11 +278,11 @@
         </td>
         <td style="width:200px;">
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=REST_API_v0.97#most_viewed_items">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=REST_API_v0.97#most_viewed_items">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-rest.png"/>
             </a>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=JavaScript_API_v0.97#Receiving_Rankings">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=JavaScript_API_v0.97#Receiving_Rankings">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-js.png"/>
             </a>
         </td>
@@ -293,11 +293,11 @@
         </td>
         <td>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=REST_API_v0.97#most_bought_items">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=REST_API_v0.97#most_bought_items">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-rest.png"/>
             </a>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=JavaScript_API_v0.97#Receiving_Rankings">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=JavaScript_API_v0.97#Receiving_Rankings">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-js.png"/>
             </a>
         </td>
@@ -308,11 +308,11 @@
         </td>
         <td>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=REST_API_v0.97#most_rated_items">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=REST_API_v0.97#most_rated_items">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-rest.png"/>
             </a>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=JavaScript_API_v0.97#Receiving_Rankings">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=JavaScript_API_v0.97#Receiving_Rankings">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-js.png"/>
             </a>
         </td>
@@ -323,11 +323,11 @@
         </td>
         <td>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=REST_API_v0.97#best_rated_items">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=REST_API_v0.97#best_rated_items">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-rest.png"/>
             </a>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=JavaScript_API_v0.97#Receiving_Rankings">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=JavaScript_API_v0.97#Receiving_Rankings">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-js.png"/>
             </a>
         </td>
@@ -338,11 +338,11 @@
         </td>
         <td>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=REST_API_v0.97#worst_rated_items">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=REST_API_v0.97#worst_rated_items">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-rest.png"/>
             </a>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=JavaScript_API_v0.97#Receiving_Rankings">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=JavaScript_API_v0.97#Receiving_Rankings">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-js.png"/>
             </a>
         </td>
@@ -362,7 +362,7 @@
         </td>
         <td style="width:200px;">
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=REST_API_v0.97#Import_rule">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=REST_API_v0.97#Import_rule">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-rest.png"/>
             </a>
         </td>
@@ -373,7 +373,7 @@
         </td>
         <td>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=REST_API_v0.97#Import.2Fupdate_item">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=REST_API_v0.97#Import.2Fupdate_item">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-rest.png"/>
             </a>
         </td>
@@ -384,7 +384,7 @@
         </td>
         <td>
             <a target="_blank"
-               href="http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=REST_API_v0.97#set_item_active">
+               href="http://easyrec.sourceforge.net/wiki/index.php?title=REST_API_v0.97#set_item_active">
                 <img style="" alt="wiki link" src="${webappPath}/img/button_wiki-rest.png"/>
             </a>
         </td>

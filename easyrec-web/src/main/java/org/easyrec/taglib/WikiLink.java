@@ -39,7 +39,7 @@ import javax.servlet.jsp.tagext.Tag;
  * @author David Mann
  */
 public class WikiLink implements Tag {
-    private String WIKI_URL = "http://sourceforge.net/apps/mediawiki/easyrec/index.php?title=";
+    private String WIKI_URL = "http://easyrec.sourceforge.net/wiki/index.php?title=";
 
     private PageContext pageContext;
     private Tag parent;
