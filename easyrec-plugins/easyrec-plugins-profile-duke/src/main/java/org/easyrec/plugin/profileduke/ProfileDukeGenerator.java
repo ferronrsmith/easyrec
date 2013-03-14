@@ -54,7 +54,7 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
     // ------------------------------ FIELDS ------------------------------
 
     // the display name is the name of the generator that will show up in the admin tool when the plugin has been loaded.
-    public static final String DISPLAY_NAME = "Profile Based Recommendations (Duke)";
+    public static final String DISPLAY_NAME = "Profile Similarity Calculator (Duke)";
     // version of the generator, should be ascending for each new release
     // you might increment the versioning components (major,minor,misc) like this:
     //   major - complete reworks of your generator, major new features
@@ -67,7 +67,7 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
     // (@see <a href="http://www.dfki.uni-kl.de/~sauermann/2006/11/cooluris/#cooluris">Cool URIs for the
     // Semantic Web</a>) If unsure, use an all-lowercase http URI pointing to a host/path that you control,
     // ending with '#[plugin-name]'.
-    public static final URI ID = URI.create("http://www.easyrec.org/plugins/profileDuke");
+    public static final URI ID = URI.create("http://www.easyrec.org/plugins/profileSimilarity");
 
     public static final Log logger = LogFactory.getLog(org.easyrec.plugin.profileduke.ProfileDukeGenerator.class);
 
