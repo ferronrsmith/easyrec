@@ -82,7 +82,13 @@ public class GeneratorContainer {
         try {
             if (!writeLogLast) logEntryDAO.startEntry(logEntry);
 
+            //switch classloader to the generator's own classloader so its exclusive classes are visible
+            ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
+            ClassLoader generatorClassLoader = generator.getClass().getClassLoader();
+            Thread.currentThread().setContextClassLoader(generatorClassLoader);
             statistics = generator.execute();
+            Thread.currentThread().setContextClassLoader(currentClassLoader);
+
         } catch (Throwable e) {
             logger.error(
                     String.format("Running plugin %s with configuration \"%s\" for tenant %d with assocType %d failed",

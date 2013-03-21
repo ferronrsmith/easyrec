@@ -73,7 +73,12 @@ public abstract class PluginSupport implements Plugin {
         }
         try {
             changeLifecyclePhaseTo(LifecyclePhase.CLEANING_UP);
+            //switch classloader to the generator's own classloader so its exclusive classes are visible
+            ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
+            ClassLoader generatorClassLoader = this.getClass().getClassLoader();
+            Thread.currentThread().setContextClassLoader(generatorClassLoader);
             doCleanup();
+            Thread.currentThread().setContextClassLoader(currentClassLoader);
             changeLifecyclePhaseTo(LifecyclePhase.INSTALLED);
         } catch (Throwable t) {
             changeLifecyclePhaseTo(LifecyclePhase.CLEANUP_FAILED);
@@ -88,7 +93,14 @@ public abstract class PluginSupport implements Plugin {
         }
         try {
             changeLifecyclePhaseTo(LifecyclePhase.INITIALIZING);
+
+            //switch classloader to the generator's own classloader so its exclusive classes are visible
+            ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
+            ClassLoader generatorClassLoader = this.getClass().getClassLoader();
+            Thread.currentThread().setContextClassLoader(generatorClassLoader);
             doInitialize();
+            Thread.currentThread().setContextClassLoader(currentClassLoader);
+
             this.lifecyclePhase = LifecyclePhase.INITIALIZED;
         } catch (Throwable t) {
             changeLifecyclePhaseTo(LifecyclePhase.INIT_FAILED);
@@ -103,7 +115,14 @@ public abstract class PluginSupport implements Plugin {
         }
         try {
             changeLifecyclePhaseTo(LifecyclePhase.INSTALLING);
-            if (executeInstall) doInstall();
+            if (executeInstall) {
+                //switch classloader to the generator's own classloader so its exclusive classes are visible
+                ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
+                ClassLoader generatorClassLoader = this.getClass().getClassLoader();
+                Thread.currentThread().setContextClassLoader(generatorClassLoader);
+                doInstall();
+                Thread.currentThread().setContextClassLoader(currentClassLoader);
+            }
             this.lifecyclePhase = LifecyclePhase.INSTALLED;
         } catch (Throwable t) {
             changeLifecyclePhaseTo(LifecyclePhase.INSTALL_FAILED);
@@ -118,7 +137,12 @@ public abstract class PluginSupport implements Plugin {
         }
         try {
             changeLifecyclePhaseTo(LifecyclePhase.UNINSTALLING);
+            //switch classloader to the generator's own classloader so its exclusive classes are visible
+            ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
+            ClassLoader generatorClassLoader = this.getClass().getClassLoader();
+            Thread.currentThread().setContextClassLoader(generatorClassLoader);
             doUninstall();
+            Thread.currentThread().setContextClassLoader(currentClassLoader);
             this.lifecyclePhase = LifecyclePhase.NOT_INSTALLED;
         } catch (Throwable t) {
             changeLifecyclePhaseTo(LifecyclePhase.UNINSTALL_FAILED);
