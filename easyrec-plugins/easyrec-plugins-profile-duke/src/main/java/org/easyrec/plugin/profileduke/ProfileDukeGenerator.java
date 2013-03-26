@@ -279,9 +279,6 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
         dataSource.setItems(items);
         dataSource.setProfileService(profileService);
 
-        File file = new File("easyrecXMLFile.tmp");
-        file.createNewFile();
-        dataSource.setInputFile("easyrecXMLFile.tmp");
         for (Property prop : props) {
             if (prop.getName().equals("ID")) {
                 dataSource.addColumn(new Column("?uri", "ID", null, null));

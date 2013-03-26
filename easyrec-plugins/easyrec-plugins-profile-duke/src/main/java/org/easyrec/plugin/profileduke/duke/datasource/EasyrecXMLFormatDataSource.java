@@ -35,12 +35,11 @@ import java.util.*;
 /**
  *
  * @author Soheil Khosravipour
+ * @author Fabian Salcher
  */
 public class EasyrecXMLFormatDataSource extends ColumnarDataSource {
-    private String file;
-    //  private boolean incremental = false; // The data is not sorted and we will not use incremental
+
     private Collection<String> types;
-    private Reader directreader;
 
     private List<ItemVO<Integer, Integer>> profileItems;
     private ProfileService profileService;
@@ -65,46 +64,15 @@ public class EasyrecXMLFormatDataSource extends ColumnarDataSource {
         this.types = new HashSet();
     }
 
-    public void setInputFile(String file) {
-        this.file = file;
-    }
-
-    //TODO: Not needed in this step
-    public void setAcceptTypes(String types) {
-        // FIXME: accept more than one
-        this.types.add(types);
-    }
-
-    // this is used only for testing
-    public void setReader(Reader reader) {
-        this.directreader = reader;
-    }
 
     public RecordIterator getRecords() {
-        if (directreader == null)
-            verifyProperty(file, "input-file");
 
-        try {
-            Reader reader = directreader;
-            if (reader == null)
-                reader = new InputStreamReader(new FileInputStream(file), "utf-8");
-
-//    TODO: Cad be deleted!
-//      if (!incremental) {
-            // non-incremental mode: everything gets built in memory
             RecordBuilder builder = new RecordBuilder(types);
-            EasyrecXMLFormatParser.parse(reader, builder, profileService, profileItems, props);
+            EasyrecXMLFormatParser.parse(builder, profileService, profileItems, props);
             builder.filterByTypes();
             Iterator it = builder.getRecords().values().iterator();
             return new DefaultRecordIterator(it);
-//      } else
-            // incremental mode: we load records one at a time, as we iterate
-            // over them.
-//        return new IncrementalRecordIterator(reader);
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     protected String getSourceName() {
