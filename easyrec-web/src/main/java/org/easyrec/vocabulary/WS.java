@@ -33,6 +33,7 @@ public class WS implements InitializingBean {
     public static final String ACTION_WORST_RATED = "worstrateditems";
     public static final String ACTION_IMPORT_RULE = "importrule";
     public static final String ACTION_IMPORT_ITEM = "importitem";
+    public static final String ACTION_CREATE_CLUSTER = "createcluster";
     public static final String ACTION_RELATED_ITEMS = "relateditems";
     public static final String ACTION_ITEMS_OF_CLUSTER = "itemsofcluster";
     public static final String ACTION_SET_ITEM_ACTIVE = "setitemactive:";
@@ -48,6 +49,7 @@ public class WS implements InitializingBean {
     public static final String PROFILE_FIELD_LOAD = "profile/field/load";
 
     public final static String JSON_PATH = "1.0/json";
+    public final static String XML_PATH = "1.0";
     public final static String RESPONSE_TYPE_XML = "application/xml";
     public final static String RESPONSE_TYPE_JSON = "application/json";
     public final static String RESPONSE_TYPE_JSCRIPT = "application/javascript";

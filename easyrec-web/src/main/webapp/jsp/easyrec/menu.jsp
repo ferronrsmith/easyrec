@@ -118,7 +118,7 @@
         <div style="padding-bottom: 10px;"></div>
         <ul class="subMenu">
             <li><easyrec:wikiLink name="FAQ"/></li>
-            <li><easyrec:wikiLink name="Documentation" pageName="Documentation_v0.96"/></li>
+            <li><easyrec:wikiLink name="Documentation" pageName="Documentation_v0.98"/></li>
         </ul>
 
         <c:if test="${heapsize<640}">
