@@ -147,6 +147,9 @@ public class NamedConfigurationServiceImpl implements NamedConfigurationService 
         int profileSimilarityAssocTypeId = typeMappingService.getIdOfAssocType(tenantId, "PROFILE_SIMILARITY");
         createDefaultConfiguration(profileDukePluginId, tenantId, profileSimilarityAssocTypeId);
 
+        // deactivate the profileSimilarity plugin by default
+        namedConfigurationDAO.deactivateByPlugin(profileDukePluginId);
+
         generatorContainer.runGeneratorsForTenant(tenantId);
 
         remoteTenantService.updateTenantStatistics(tenantId);
