@@ -25,12 +25,12 @@
     <parent>
         <artifactId>easyrec-plugins</artifactId>
         <groupId>org.easyrec</groupId>
-        <version>0.98-SNAPSHOT</version>
+        <version>0.98</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>easyrec-plugins-profile-duke</artifactId>
-    <version>0.98-SNAPSHOT</version>
+    <version>0.98</version>
     <name>easyrec - Plugins - Profile Based Duke Matching</name>
     <description>Calculates similar items based on their profile with Duke.</description>
 

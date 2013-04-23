@@ -27,13 +27,13 @@
     <parent>
         <groupId>org.easyrec</groupId>
         <artifactId>easyrec</artifactId>
-        <version>0.98-SNAPSHOT</version>
+        <version>0.98</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.easyrec</groupId>
     <artifactId>easyrec-core</artifactId>
     <name>easyrec - Core</name>
-    <version>0.98-SNAPSHOT</version>
+    <version>0.98</version>
     <description>This module is the core package of easyrec. It contains model objects, classes for database access and
         basic services like the 'ActionService', the 'ItemAssocService', the 'RecommenderService' and the
         'RecommendationHistoryService'.
