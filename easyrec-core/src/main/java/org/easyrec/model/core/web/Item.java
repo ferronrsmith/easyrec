@@ -305,7 +305,7 @@ public class Item implements Serializable {
                 return tenant.getBacktrackingURL() + "/t?" + "r=" + userId + "&t=" + tenant.getId() + "&f=" +
                     itemFrom + "&i=" + itemTo + "&a=" + assocType + "&u=" + URLEncoder.encode(url, "UTF-8");                
             } else {
-                return Web.getExtendedWebappPath(session.getRequest()) + "/t?" + "r=" + userId + "&t=" + tenant.getId() + "&f=" +
+                return Web.getExtendedWebAppPathFromRequestURI(session.getRequest()) + "/t?" + "r=" + userId + "&t=" + tenant.getId() + "&f=" +
                     itemFrom + "&i=" + itemTo + "&a=" + assocType + "&u=" + URLEncoder.encode(url, "UTF-8");
             }
         } catch (Exception e) {
