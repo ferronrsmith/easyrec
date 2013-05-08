@@ -201,6 +201,7 @@ public class LoaderController extends AbstractController {
             try {
                 mav.addObject("action", "login");
                 loaderDAO.migrateDB();
+                logger.info("*** finished migrating database ***");
             } catch (Exception e) {
                 logger.warn("Error during migration.", e);
                 mav.setViewName("migrate");

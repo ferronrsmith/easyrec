@@ -172,10 +172,13 @@ public class LoaderDAOMysqlImpl extends JdbcDaoSupport
      */
     private void update_0_98() {
 
+        logger.info("executing 'update_0_98()'...");
+
         final String profileTableName = "profile";
         final String itemTableName = "item";
         final String itemTypeTableName = "itemtype";
         final String assocTypeTableName = "assoctype";
+        final String sourceTypeTableName = "sourcetype";
 
         final String itemColumnTenantID = "tenantId";
         final String itemColumnItemID = "itemid";
@@ -200,11 +203,16 @@ public class LoaderDAOMysqlImpl extends JdbcDaoSupport
         final String assocTypeID = "id";
         final String assocTypeVisible = "visible";
 
+        final String sourceTypeColumnId = "id";
+        final String sourceTypeColumnTenantId = "tenantId";
+        final String sourceTypeColumnName = "name";
+
 
 
         /* Create a hashmap with the itemTypeNames as values and the
          * tenantId and itemTypeId as key.
          */
+        logger.info("creating a hashmap with itemTypeNames...");
         final HashMap<String, String> itemTypeList = new HashMap<String, String>();
         getJdbcTemplate().query("SELECT * FROM " + itemTypeTableName, new RowCallbackHandler() {
             public void processRow(ResultSet resultSet) throws SQLException {
@@ -220,6 +228,7 @@ public class LoaderDAOMysqlImpl extends JdbcDaoSupport
          * item table. If the item table has no entry, create it else update the entry with
          * the values from the profile table.
          */
+        logger.info("executing 'update_0_98()'...");
         getJdbcTemplate().query("SELECT * FROM " + profileTableName, new RowCallbackHandler() {
             public void processRow(ResultSet resultSet) throws SQLException {
 
@@ -309,17 +318,34 @@ public class LoaderDAOMysqlImpl extends JdbcDaoSupport
                     }
                 });
 
-        // get the max id of each tenant and add a PROFILE_SIMILARITY association type
-        Integer maxId;
+        // get the max id of each tenant and add a PROFILE_SIMILARITY association type and
+        // a sourceType for the plugins with the new versions.
+        Integer maxAssocTypeId;
+        Integer maxSourceTypeId;
         for (final Integer tenantId : tenantIDList) {
 
-            maxId = getJdbcTemplate().queryForInt("SELECT MAX(id) FROM " + assocTypeTableName +
+            // association type
+            maxAssocTypeId = getJdbcTemplate().queryForInt("SELECT MAX(id) FROM " + assocTypeTableName +
                     " WHERE " + assocTypeTableName + "." + assocTypeTenantID + " = " + tenantId);
 
             sql = "INSERT INTO " + assocTypeTableName + " (" +
                     assocTypeTenantID + ", " + assocTypeName + ", " + assocTypeID + ", " + assocTypeVisible +
-                    ") VALUES (" + tenantId + ", \"PROFILE_SIMILARITY\", " + (maxId + 1) + ", 1)";
+                    ") VALUES (" + tenantId + ", \"PROFILE_SIMILARITY\", " + (maxAssocTypeId + 1) + ", 1)";
 
+            getJdbcTemplate().execute(sql);
+
+            // sourceType
+            maxSourceTypeId = getJdbcTemplate().queryForInt("SELECT MAX(" + sourceTypeColumnId + ") FROM " +
+                    sourceTypeTableName +
+                    " WHERE " + sourceTypeTableName + "." + sourceTypeColumnTenantId + " = " + tenantId);
+
+            sql = "INSERT INTO " + sourceTypeTableName + " (" +
+                    sourceTypeColumnTenantId + ", " + sourceTypeColumnName + ", " + sourceTypeColumnId +
+                    ") VALUES (" + tenantId + ", \"http://www.easyrec.org/plugins/slopeone/0.98\", " + (maxSourceTypeId + 1) + ")";
+            getJdbcTemplate().execute(sql);
+            sql = "INSERT INTO " + sourceTypeTableName + " (" +
+                    sourceTypeColumnTenantId + ", " + sourceTypeColumnName + ", " + sourceTypeColumnId +
+                    ") VALUES (" + tenantId + ", \"http://www.easyrec.org/plugins/ARM/0.98\", " + (maxSourceTypeId + 2) + ")";
             getJdbcTemplate().execute(sql);
         }
 
