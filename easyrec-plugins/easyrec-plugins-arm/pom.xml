@@ -4,11 +4,11 @@
     <parent>
         <artifactId>easyrec-plugins</artifactId>
         <groupId>org.easyrec</groupId>
-        <version>0.99-SNAPSHOT</version>
+        <version>0.98</version>
     </parent>
     <groupId>org.easyrec</groupId>
     <artifactId>easyrec-plugins-arm</artifactId>
-    <version>0.99-SNAPSHOT</version>
+    <version>0.98</version>
     <name>easyrec - Plugins - ARM</name>
     <description>The assoc rule miner plugin for shopping basket analysis.</description>
     <dependencies>

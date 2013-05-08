@@ -21,13 +21,13 @@
     <parent>
         <groupId>org.easyrec</groupId>
         <artifactId>easyrec</artifactId>
-        <version>0.99-SNAPSHOT</version>
+        <version>0.98</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.easyrec</groupId>
     <artifactId>easyrec-plugins</artifactId>
     <packaging>pom</packaging>
-    <version>0.99-SNAPSHOT</version>
+    <version>0.98</version>
     <modules>
         <module>easyrec-plugins-arm</module>
         <module>easyrec-plugins-slopeone</module>
