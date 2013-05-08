@@ -27,12 +27,12 @@
     <parent>
         <groupId>org.easyrec</groupId>
         <artifactId>easyrec</artifactId>
-        <version>0.98</version>
+        <version>0.99-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.easyrec</groupId>
     <artifactId>easyrec-utils</artifactId>
-    <version>0.98</version>
+    <version>0.99-SNAPSHOT</version>
     <name>easyrec - Utils</name>
     <description>This module provides utility classes used within all other modules of the easyrec.</description>
     <!--suppress MavenModelInspection -->

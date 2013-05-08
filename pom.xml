@@ -28,7 +28,7 @@
     <artifactId>easyrec</artifactId>
     <packaging>pom</packaging>
     <name>easyrec</name>
-    <version>0.98</version>
+    <version>0.99-SNAPSHOT</version>
     <description>
         The easyrec open source recommender system from the Smart Agent Technologies (SAT) Studio
         of the Researchstudios Austria Forschungsgesellschaft mbH.
