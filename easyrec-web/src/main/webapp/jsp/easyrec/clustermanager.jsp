@@ -354,7 +354,7 @@ function rewriteClusterItemSorting(containerDiv) {
     </p>
 
     <p>
-        Use the <easyrec:wikiLink name="cluster API" pageName="REST_API_v0.96#Cluster"/> to get recommendations based on the clusters here.
+        Use the <easyrec:wikiLink name="cluster API" pageName="REST_API_v0.98#Cluster"/> to get recommendations based on the clusters here.
     </p>
 
     <p>

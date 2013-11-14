@@ -47,71 +47,31 @@ import java.util.List;
  * $Date$<br/> $Revision$</p>
  *
  * @author Soheil Khosravipour
+ * @author Fabian Salcher
+ *
  */
 public class EasyrecXMLFormatParser {
-    private Reader src;
     private StatementHandler handler;
-    private int lineno;
-    private int pos;
-    private String line;
     private static List<Property> props;
     private static List<ItemVO<Integer, Integer>> profileItems;
     private static ProfileService profileService;
-
-//    private    Integer confTanantId;
-//    private    Integer sourceType;
-//    private    Integer viewType;
-//    private Integer assocType;
-//    private    Integer itemType;
-
-    public void setItems(List<ItemVO<Integer, Integer>> items) {
-        this.profileItems = items;
-    }
-
-    public void setProfileService(ProfileService profileService) {
-        this.profileService = profileService;
-    }
-
 
     /**
      * Reads the NTriples file from the reader, pushing statements into
      * the handler.
      */
-    public static void parse(Reader src, StatementHandler handler, ProfileService profileSrv, List<ItemVO<Integer, Integer>> items, List<Property> properties)
-            throws IOException {
+    public static void parse(StatementHandler handler, ProfileService profileSrv, List<ItemVO<Integer, Integer>> items, List<Property> properties) {
         profileItems = items;
         profileService = profileSrv;
         props = properties;
-        new EasyrecXMLFormatParser(src, handler, profileSrv, items).parse();
+        new EasyrecXMLFormatParser(handler).parse();
     }
 
-    private EasyrecXMLFormatParser(Reader src, StatementHandler handler, ProfileService profileSrv, List<ItemVO<Integer, Integer>> items) {
-        this.src = src;
+    private EasyrecXMLFormatParser(StatementHandler handler) {
         this.handler = handler;
     }
 
-    /**
-     * Alternate entry point to the parser for when the driving loop is
-     * outside the parser. Statements get passed to the handler.
-     */
-    public EasyrecXMLFormatParser(StatementHandler handler) {
-        this(null, handler, profileService, profileItems);
-    }
-
-    /**
-     * Push a line into the parser. If it contains a statement, that
-     * statement will be passed to the handler.
-     */
-/*    public void parseLine(String line) {
-      this.line = line;
-      parseLine();
-    }*/
-    private void parse() throws IOException {
-//        BufferedReader in = new BufferedReader(src);
-//        line = in.readLine();
-
-        //TODO: get XML Files  one by one
-
+    private void parse() {
 
         //    Parse The XML Fileand add the records to handler    \\This is a directory to test
         ProfileDukeGenerator.logger.info("ProfileDuke Plugin. Profile Items Number: " + profileItems.size());
@@ -204,40 +164,4 @@ public class EasyrecXMLFormatParser {
         }
     }
 
-    private static String getTagValue(String sTag, Element eElement) {
-        NodeList nlList = eElement.getElementsByTagName(sTag).item(0).getChildNodes();
-
-        Node nValue = (Node) nlList.item(0);
-
-        if (nValue != null)
-            return nValue.getNodeValue();
-        else
-            return null;
-    }
-
-    private static boolean isNumeric(String str) {
-        return str.matches("-?\\d+(.\\d+)?");
-    }
-
-
-    public static File[] getXMLFiles(File folder) {
-        List<File> aList = new ArrayList<File>();
-
-        File[] files = folder.listFiles();
-        for (File pf : files) {
-
-            if (pf.isFile() && getFileExtensionName(pf).indexOf("xml") != -1) {
-                aList.add(pf);
-            }
-        }
-        return aList.toArray(new File[aList.size()]);
-    }
-
-    public static String getFileExtensionName(File f) {
-        if (f.getName().indexOf(".") == -1) {
-            return "";
-        } else {
-            return f.getName().substring(f.getName().length() - 3, f.getName().length());
-        }
-    }
 }

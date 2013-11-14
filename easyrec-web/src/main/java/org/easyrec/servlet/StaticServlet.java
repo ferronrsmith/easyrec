@@ -17,6 +17,8 @@
  */
 package org.easyrec.servlet;
 
+import org.easyrec.util.core.Web;
+
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
@@ -88,15 +90,17 @@ public class StaticServlet extends HttpServlet {
             File tempFile = File.createTempFile("easyrec-api", "js");
             writer = new FileWriter(tempFile, false);
 
-            String localName = request.getLocalName();
-            localName = localName.equals("0.0.0.0") ? "localhost" : localName;
-            String webappPath = getServletContext().getContextPath();
-            String extendedWebAppPath =
-                    request.getScheme() + "://" + localName + ":" + request.getLocalPort() + webappPath;
+//            String localName = request.getLocalName();
+//            localName = localName.equals("0.0.0.0") ? "localhost" : localName;
+//            String webappPath = getServletContext().getContextPath();
+//            String extendedWebAppPath =
+//                    request.getScheme() + "://" + localName + ":" + request.getLocalPort() + webappPath;
+
+            String extendedWebAppPath = Web.getExtendedWebAppPathFromRequestURI(request);
 
             writer.write("var easyrecApiUrl=\"");
             writer.write(extendedWebAppPath);
-            writer.write("/api/1.0/json/\";\n");
+            writer.write("/api/1.0/json/\";\n\n");
 
             String line = null;
 

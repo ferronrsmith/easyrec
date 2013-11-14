@@ -27,14 +27,14 @@
     <parent>
         <groupId>org.easyrec</groupId>
         <artifactId>easyrec</artifactId>
-        <version>0.98-SNAPSHOT</version>
+        <version>0.99-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.easyrec</groupId>
     <artifactId>easyrec-web</artifactId>
     <packaging>war</packaging>
     <name>easyrec - Web</name>
-    <version>0.98-SNAPSHOT</version>
+    <version>0.99-SNAPSHOT</version>
     <description>This module is concerned with the propagation of various Web service methods of the recommender system,
         hence providing model objects, data access classes and services for various domains.
         Additionally an 'IDMappingService' allows for the mapping of external 'String' ids to internal 'Integer' ids.

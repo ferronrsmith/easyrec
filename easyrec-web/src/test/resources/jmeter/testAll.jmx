@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="2.2">
+<jmeterTestPlan version="1.2" properties="2.4" jmeter="2.9 r1437961">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="UserActionDev" enabled="true">
       <stringProp name="TestPlan.comments">All REST API calls are tested</stringProp>
@@ -50,12 +50,12 @@
           </elementProp>
           <elementProp name="apiKeyValue" elementType="Argument">
             <stringProp name="Argument.name">apiKeyValue</stringProp>
-            <stringProp name="Argument.value">8ab9dc3ffcdac576d0f298043a60517a</stringProp>
+            <stringProp name="Argument.value">e8a95f9ff5ba08cc3065945c7c96f263</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="tenantIdValue" elementType="Argument">
             <stringProp name="Argument.name">tenantIdValue</stringProp>
-            <stringProp name="Argument.value">BUG5</stringProp>
+            <stringProp name="Argument.value">EASYREC_DEMO</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="resultSize" elementType="Argument">
@@ -75,7 +75,7 @@
           </elementProp>
           <elementProp name="path" elementType="Argument">
             <stringProp name="Argument.name">path</stringProp>
-            <stringProp name="Argument.value">/</stringProp>
+            <stringProp name="Argument.value">/easyrec-web-0.98-SNAPSHOT/</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="nrIterationsActionLoop" elementType="Argument">
@@ -1369,7 +1369,7 @@
                 </elementProp>
                 <elementProp name="field" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">/profile/width/</stringProp>
+                  <stringProp name="Argument.value">/profile/width</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                   <stringProp name="Argument.name">field</stringProp>
@@ -1525,6 +1525,38 @@
               <fieldNames>false</fieldNames>
               <responseHeaders>false</responseHeaders>
               <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">true</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>true</responseData>
+              <samplerData>true</samplerData>
+              <xml>false</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>true</responseHeaders>
+              <requestHeaders>true</requestHeaders>
               <responseDataOnError>false</responseDataOnError>
               <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
               <assertionsResultsToSave>0</assertionsResultsToSave>

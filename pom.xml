@@ -28,7 +28,7 @@
     <artifactId>easyrec</artifactId>
     <packaging>pom</packaging>
     <name>easyrec</name>
-    <version>0.98-SNAPSHOT</version>
+    <version>0.99-SNAPSHOT</version>
     <description>
         The easyrec open source recommender system from the Smart Agent Technologies (SAT) Studio
         of the Researchstudios Austria Forschungsgesellschaft mbH.
@@ -582,9 +582,8 @@ to be able to deploy and site-deploy during daily/nightly builds -->
     </issueManagement>
 
     <scm>
-        <connection>scm:svn:http://svn.researchstudio.at/svn/sat/easyrec/trunk</connection>
-        <developerConnection>scm:svn:http://svn.researchstudio.at/svn/sat/easyrec/trunk</developerConnection>
-        <url>http://svn.researchstudio.at/satsvn/wsvn/SAT/easyrec/trunk</url>
+        <connection>scm:git:ssh://easyrec.git.sourceforge.net/gitroot/easyrec/easyrec</connection>
+        <developerConnection>scm:git:ssh://easyrec.git.sourceforge.net/gitroot/easyrec/easyrec</developerConnection>
     </scm>
 
     <modules>

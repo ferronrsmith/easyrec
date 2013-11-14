@@ -27,12 +27,12 @@
     <parent>
         <groupId>org.easyrec</groupId>
         <artifactId>easyrec</artifactId>
-        <version>0.98-SNAPSHOT</version>
+        <version>0.99-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.easyrec</groupId>
     <artifactId>easyrec-testutils</artifactId>
-    <version>0.98-SNAPSHOT</version>
+    <version>0.99-SNAPSHOT</version>
     <name>easyrec - Test Utils</name>
     <description>This module provides utility classes for use in testing used within all other modules of the easyrec.</description>
 

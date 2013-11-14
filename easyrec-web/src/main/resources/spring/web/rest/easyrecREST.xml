@@ -13,6 +13,7 @@
         <constructor-arg ref="remoteAssocService"/>
         <constructor-arg ref="idMappingDAO"/>
         <constructor-arg ref="profileService" />
+        <constructor-arg ref="clusterService" />
         <constructor-arg value="$easyrec{easyrec.dateFormat}"/>
     </bean>
 </beans>

@@ -196,10 +196,15 @@ public class MSG {
             603, "Plugins disabled!");
 
     // cluster messages
+    // error messages
     public static final Message CLUSTER_NO_ID = new ErrorMessage(
             700, "Cluster id required!");
     public static final Message CLUSTER_NOT_EXISTS = new ErrorMessage(
             701, "The provided cluster does not exist!");
+
+    // success messages
+    public static final Message CLUSTER_SUCCESSFULLY_CREATED = new SuccessMessage(
+            750, "Cluster successfully created!");
 
     // miscellaneous messages
     public static final Message XSL_NOT_EXISTS = new ErrorMessage(

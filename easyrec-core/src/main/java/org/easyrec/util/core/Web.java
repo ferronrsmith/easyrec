@@ -62,6 +62,7 @@ public class Web {
     public static final String HTML = "HTML";
 
     private static String path;
+    private static String pathFromRequest;
 
 
     /**
@@ -336,6 +337,29 @@ public class Web {
         }
         return path;
     }
+
+    /**
+     * Same as getExtendedWebappPath but not from the local interface instead from
+     * the HTTP request.
+     *
+     * @param request HttpServletRequest
+     * @return String
+     */
+    public static String getExtendedWebAppPathFromRequestURI(HttpServletRequest request) {
+
+        if (pathFromRequest == null) {
+            try {
+            URL u = new URL(request.getRequestURL().toString());
+                pathFromRequest = u.getProtocol() + "://" + u.getHost() + ":" + u.getPort();
+            } catch (MalformedURLException e) {
+                pathFromRequest = "http://localhost";
+            }
+            pathFromRequest = pathFromRequest + request.getContextPath();
+
+        }
+        return pathFromRequest;
+    }
+
 
     /**
      * If mav contain already error messages return false

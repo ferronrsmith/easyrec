@@ -23,18 +23,17 @@
  $Revision: 18781 $
  $Date: 2012-03-19 14:22:17 +0100 (Mo, 19 Mär 2012) $
  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <groupId>org.easyrec</groupId>
         <artifactId>easyrec</artifactId>
-        <version>0.98-SNAPSHOT</version>
+        <version>0.99-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.easyrec</groupId>
     <artifactId>easyrec-core</artifactId>
     <name>easyrec - Core</name>
-    <version>0.98-SNAPSHOT</version>
+    <version>0.99-SNAPSHOT</version>
     <description>This module is the core package of easyrec. It contains model objects, classes for database access and
         basic services like the 'ActionService', the 'ItemAssocService', the 'RecommenderService' and the
         'RecommendationHistoryService'.

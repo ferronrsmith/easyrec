@@ -70,13 +70,13 @@ public class ProfileDukeConfiguration extends GeneratorConfiguration {
     @PluginParameter(description = "<b> Allowed Values: true / false </b> <br> " +
             "When this mode is active the items are assigned randomly to N blocks and " +
             "then the similarity is calculated only within these blocks. You can configure " +
-            "the number of blocks in the \"[Block Calculation] number of blocks\" setting.",
+            "the size of the blocks in the \"[Block Calculation] block size\" setting.",
             displayName = "[Block Calculation] enabled:",
             shortDescription = "", displayOrder = 10)
     @PluginParameterPropertyEditor(propertyEditorClass = BooleanPropertyEditor.class)
     private Boolean blockCalculationMode = false;
 
-    @PluginParameter(description = "Defines the size of the blocks used in Block Calculation Mode.",
+    @PluginParameter(description = "Defines the size (in # of items) of the blocks used in Block Calculation Mode.",
             displayName = "[Block Calculation] block size:",
             shortDescription = "", displayOrder = 11)
     @PluginParameterPropertyEditor(propertyEditorClass =  IntegerPropertyEditor.class)

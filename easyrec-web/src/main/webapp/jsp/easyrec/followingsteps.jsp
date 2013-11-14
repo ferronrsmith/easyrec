@@ -53,7 +53,7 @@
 
     <div id="jsApi">
         <p>
-            The <easyrec:wikiLink pageName="JavaScript_API_v0.96" name="JavaScript API"/> is a very easy to
+            The <easyrec:wikiLink pageName="JavaScript_API_v0.98" name="JavaScript API"/> is a very easy to
             use way to integrate easyrec into your website. This solution uses a thin javascript layer on top of the
             REST API.
             You will need the following code on your website to start sending actions and receiving recommendations:
@@ -72,7 +72,7 @@
 
     <div id="restApi">
         <p>
-            The <easyrec:wikiLink pageName="REST_API_v0.96" name="REST API"/> can be used in client-side code (as is
+            The <easyrec:wikiLink pageName="REST_API_v0.98" name="REST API"/> can be used in client-side code (as is
             the case with the javascript API) or in server side code.
             The following data is required for accessing the API:
         </p>

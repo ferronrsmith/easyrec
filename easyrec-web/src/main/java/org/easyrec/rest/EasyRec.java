@@ -24,11 +24,13 @@ import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 import com.sun.jersey.api.json.JSONWithPadding;
 import com.sun.jersey.spi.resource.Singleton;
+import org.easyrec.exception.core.ClusterException;
 import org.easyrec.model.core.ClusterVO;
 import org.easyrec.model.core.transfer.TimeConstraintVO;
 import org.easyrec.model.core.web.*;
 import org.easyrec.model.web.Recommendation;
 import org.easyrec.rest.nodomain.exception.EasyRecRestException;
+import org.easyrec.service.core.ClusterService;
 import org.easyrec.service.core.ProfileService;
 import org.easyrec.service.core.TenantService;
 import org.easyrec.service.domain.TypeMappingService;
@@ -76,7 +78,7 @@ public class EasyRec {
     private IDMappingDAO idMappingDAO;
     //added by FK on 2012-12-18 to enable adding profile data to recommendations
     private ProfileService profileService;
-
+    private ClusterService clusterService;
 
 
     // Jamon Loggers
@@ -95,10 +97,12 @@ public class EasyRec {
     private final static String JAMON_REST_WORST_RATED = "rest.worstrated";
     private final static String JAMON_REST_IMPORT_RULE = "rest.import.rule";
     private final static String JAMON_REST_IMPORT_ITEM = "rest.import.item";
+    private final static String JAMON_REST_CREATE_CLUSTER = "rest.create.cluster";
     private final static String JAMON_REST_ITEM_ACTIVE = "rest.item.active.rule";
     private final static String JAMON_REST_RELATED_ITEMS = "rest.related.items";
     private final static String JAMON_REST_ITEMTYPES = "rest.itemtypes";
     private final static String JAMON_REST_CLUSTERS = "rest.clusters";
+    private final static String JAMON_REST_ITEMS_OF_CLUSTERS = "rest.items.from.clusters";
     private final static String JAMON_REST_ACTIONHISTORY = "rest.history";
 
     public EasyRec(OperatorDAO operatorDAO, RemoteTenantDAO remoteTenantDAO,
@@ -107,6 +111,7 @@ public class EasyRec {
                    IDMappingDAO idMappingDAO,
                    //added by FK on 2012-12-18 for enabling profile data in recommendations
                    ProfileService profileService,
+                   ClusterService clusterService,
                    String dateFormatString) {
         this.operatorDAO = operatorDAO;
         this.remoteTenantDAO = remoteTenantDAO;
@@ -118,6 +123,7 @@ public class EasyRec {
         this.dateFormat = dateFormatString;
         this.profileService = profileService;
         this.idMappingDAO = idMappingDAO;
+        this.clusterService = clusterService;
     }
 
     @GET
@@ -313,12 +319,12 @@ public class EasyRec {
     @GET
     @Path("/sendaction")
     public Response sendAction(@PathParam("type") String type, @QueryParam("apikey") String apiKey,
-                         @QueryParam("tenantid") String tenantId, @QueryParam("userid") String userId,
-                         @QueryParam("sessionid") String sessionId, @QueryParam("itemid") String itemId,
-                         @QueryParam("actiontype") String actionType, @QueryParam("actionvalue") String actionValue,
-                         @QueryParam("itemdescription") String itemDescription, @QueryParam("itemurl") String itemUrl,
-                         @QueryParam("itemimageurl") String itemImageUrl, @QueryParam("actiontime") String actionTime,
-                         @QueryParam("itemtype") String itemType, @QueryParam("callback") String callback)
+                               @QueryParam("tenantid") String tenantId, @QueryParam("userid") String userId,
+                               @QueryParam("sessionid") String sessionId, @QueryParam("itemid") String itemId,
+                               @QueryParam("actiontype") String actionType, @QueryParam("actionvalue") String actionValue,
+                               @QueryParam("itemdescription") String itemDescription, @QueryParam("itemurl") String itemUrl,
+                               @QueryParam("itemimageurl") String itemImageUrl, @QueryParam("actiontime") String actionTime,
+                               @QueryParam("itemtype") String itemType, @QueryParam("callback") String callback)
             throws EasyRecException {
 
         Monitor mon = MonitorFactory.start(JAMON_REST_ACTION);
@@ -393,7 +399,7 @@ public class EasyRec {
         }
     }
 
-    
+
     @GET
     @Path("/otherusersalsoviewed")
     public Response otherUsersAlsoViewed(@PathParam("type") String type, @QueryParam("apikey") String apiKey,
@@ -507,15 +513,15 @@ public class EasyRec {
         } else
             return Response.ok(rec, WS.RESPONSE_TYPE_XML).build();
     }
-    
+
     @GET
     @Path("/actionhistoryforuser")
     public Response actionHistoryForUser(@PathParam("type") String type, @QueryParam("apikey") String apiKey,
-                                           @QueryParam("tenantid") String tenantId, @QueryParam("userid") String userId,
-                                           @QueryParam("numberOfResults") Integer numberOfResults,
-                                           @QueryParam("requesteditemtype") String requestedItemType,
-                                           @QueryParam("callback") String callback,
-                                           @QueryParam("actiontype") @DefaultValue(TypeMappingService.ACTION_TYPE_VIEW) String actiontype)
+                                         @QueryParam("tenantid") String tenantId, @QueryParam("userid") String userId,
+                                         @QueryParam("numberOfResults") Integer numberOfResults,
+                                         @QueryParam("requesteditemtype") String requestedItemType,
+                                         @QueryParam("callback") String callback,
+                                         @QueryParam("actiontype") @DefaultValue(TypeMappingService.ACTION_TYPE_VIEW) String actiontype)
             throws EasyRecException {
         Monitor mon = MonitorFactory.start(JAMON_REST_ACTIONHISTORY);
 
@@ -563,7 +569,7 @@ public class EasyRec {
                 return Response.ok(rec, WS.RESPONSE_TYPE_JSON).build();
         } else
             return Response.ok(rec, WS.RESPONSE_TYPE_XML).build();
-    } 
+    }
 
     @GET
     @Path("/otherusersalsobought")
@@ -861,7 +867,7 @@ public class EasyRec {
                                       @QueryParam("requesteditemtype") String requestedItemType,
                                       @QueryParam("callback") String callback,
                                       @QueryParam("withProfile") @DefaultValue("false") boolean withProfile) {
-        Monitor monitor = MonitorFactory.start(JAMON_REST_MOST_RATED);
+        Monitor monitor = MonitorFactory.start(JAMON_REST_ITEMS_OF_CLUSTERS);
         Recommendation recommendation = null;
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
 
@@ -1019,7 +1025,7 @@ public class EasyRec {
     @GET
     @Path("/relateditems")
     public Response relatedItems(@PathParam("type") String type, @QueryParam("apikey") String apiKey,
-                                 @QueryParam("tenantid") String tenantId, 
+                                 @QueryParam("tenantid") String tenantId,
                                  @QueryParam("assoctype") String assocType, @QueryParam("userid") String userId,
                                  @QueryParam("sessionid") String sessionId, @QueryParam("itemid") String itemId,
                                  @QueryParam("numberOfResults") Integer numberOfResults,
@@ -1044,10 +1050,11 @@ public class EasyRec {
 
         if (itemId == null)
             exceptionResponse(WS.ACTION_RELATED_ITEMS, MSG.ITEM_NO_ID, type, callback);
-        
+
         if (assocType != null) {
             assocTypeId = typeMappingService.getIdOfAssocType(coreTenantId, assocType, Boolean.TRUE); // only visible assocTypes can be queried
-            if (assocTypeId == null) exceptionResponse(WS.ACTION_RELATED_ITEMS, MSG.ASSOC_TYPE_DOES_NOT_EXIST, type, callback);
+            if (assocTypeId == null)
+                exceptionResponse(WS.ACTION_RELATED_ITEMS, MSG.ASSOC_TYPE_DOES_NOT_EXIST, type, callback);
         } else {
             assocType = AssocTypeDAO.ASSOCTYPE_IS_RELATED;
         }
@@ -1342,10 +1349,73 @@ public class EasyRec {
             return Response.ok(respItem, WS.RESPONSE_TYPE_XML).build();
     }
 
+    /**
+     * With this call you can create a new cluster.
+     *
+     * @param type               "1.0" for XML response, "1.0/json" for JSON
+     * @param token
+     * @param tenantId
+     * @param clusterId
+     * @param clusterDescription
+     * @param clusterParent
+     * @param callback
+     * @return
+     * @throws EasyRecException
+     */
+    @GET
+    @Path("/createcluster")
+    public Response createcluster(@PathParam("type") String type,
+                                  @QueryParam("token") String token,
+                                  @QueryParam("tenantid") String tenantId,
+                                  @QueryParam("clusterid") String clusterId,
+                                  @QueryParam("clusterdescription") String clusterDescription,
+                                  @DefaultValue("CLUSTERS") @QueryParam("clusterparent") String clusterParent,
+                                  @QueryParam("callback") String callback)
+            throws EasyRecException {
+
+        Monitor mon = MonitorFactory.start(JAMON_REST_CREATE_CLUSTER);
+
+        // Collect a List of messages for the user to understand,
+        // what went wrong (e.g. Wrong API key).
+        List<Message> errorMessages = new ArrayList<Message>();
+        List<Message> successMessages = new ArrayList<Message>();
+        Integer coreTenantId = null;
+
+        Operator o = operatorDAO.getOperatorFromToken(token);
+        if (o != null) {
+            coreTenantId = operatorDAO.getTenantId(o.getApiKey(), tenantId);
+            checkParameters(coreTenantId, clusterId, errorMessages);
+        } else
+            errorMessages.add(MSG.WRONG_TOKEN);
+
+        if (errorMessages.size() > 0) {
+            if ((WS.JSON_PATH.equals(type)))
+                throw new EasyRecException(errorMessages, WS.ACTION_CREATE_CLUSTER, WS.RESPONSE_TYPE_JSON, callback);
+            else
+                throw new EasyRecException(errorMessages, WS.ACTION_CREATE_CLUSTER);
+        }
+
+        try {
+            clusterService.addCluster(coreTenantId, clusterId, clusterDescription, clusterParent);
+        } catch (ClusterException e) {
+            // ToDo: more fine-grained Exceptions and consequently more specific error numbers
+            errorMessages.add(new ErrorMessage(799, e.getMessage()));
+        }
+
+        successMessages.add(MSG.CLUSTER_SUCCESSFULLY_CREATED);
+
+        Response response = formatResponse(successMessages, errorMessages,
+                WS.ACTION_CREATE_CLUSTER, type, callback);
+
+        mon.stop();
+
+        return response;
+    }
+
     // private methods
 
-    private void addProfileDataToItems(Recommendation recommendation){
-        for(Item item: recommendation.getRecommendedItems()){
+    private void addProfileDataToItems(Recommendation recommendation) {
+        for (Item item : recommendation.getRecommendedItems()) {
             item.setProfileData(profileService.getProfile(item));
         }
     }
@@ -1363,12 +1433,11 @@ public class EasyRec {
 
     private void checkParameters(Integer coreTenantId, String itemId, String itemDescription, String itemUrl,
                                  List<Message> messages) throws EasyRecException {
+
         if (coreTenantId == null)
             messages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
-
         if (Strings.isNullOrEmpty(itemId))
             messages.add(MSG.ITEM_NO_ID);
-
         if (Strings.isNullOrEmpty(itemDescription)) {
             messages.add(MSG.ITEM_NO_DESCRIPTION);
         } else {
@@ -1379,6 +1448,14 @@ public class EasyRec {
 
         if (itemUrl == null)
             messages.add(MSG.ITEM_NO_URL);
+    }
+
+    private void checkParameters(Integer coreTenantId, String clusterID,
+                                 List<Message> messages) throws EasyRecException {
+        if (coreTenantId == null)
+            messages.add(MSG.TENANT_WRONG_TENANT_APIKEY);
+        if (clusterID == null)
+            messages.add(MSG.CLUSTER_NO_ID);
     }
 
     private void checkParams(Integer coreTenantId, String itemId, String itemDescription, String itemUrl,
@@ -1437,4 +1514,56 @@ public class EasyRec {
 
         return new TimeConstraintVO(startDate, endDate);
     }
+
+    /**
+     * This method takes an object and creates a <code>Response</code> object
+     * out of it which will be returned. If <code>messages</code> contains error
+     * messages they will be send back instead.
+     * The format of the <code>Response</code>
+     * depends on the <code>responseType</code>.
+     * Supported types are <code>application/xml</code> and <code>application/json</code>
+     *
+     * @param respondData  an object which will be returned as a
+     *                     <code>Response</code> object
+     * @param messages     a list of <code>Message</code> objects which contain
+     *                     error messages of the API request
+     * @param responseType defines the format of the <code>Response</code> object
+     * @param callback     if set and responseType is jason the result will be returned
+     *                     via this javascript callback function (optional)
+     * @return a <code>Response</code> object containing the <code>responseData</code>
+     *         in the format defined with <code>responseType</code>
+     */
+    private Response formatResponse(Object respondData,
+                                    List<Message> messages,
+                                    String serviceName,
+                                    String responseType,
+                                    String callback) {
+
+        //handle error messages if existing
+        if (messages.size() > 0) {
+            if ((WS.JSON_PATH.equals(responseType)))
+                throw new EasyRecException(messages, serviceName, WS.RESPONSE_TYPE_JSON, callback);
+            else
+                throw new EasyRecException(messages, serviceName);
+        }
+
+        if (respondData instanceof List) {
+            respondData = new ResponseSuccessMessage(serviceName, (List<SuccessMessage>) respondData);
+        }
+
+        //convert respondData to Respond object
+        if (WS.JSON_PATH.equals(responseType)) {
+            if (callback != null) {
+                return Response.ok(new JSONWithPadding(respondData, callback),
+                        WS.RESPONSE_TYPE_JSCRIPT).build();
+            } else {
+                return Response.ok(respondData, WS.RESPONSE_TYPE_JSON).build();
+            }
+        } else if (WS.XML_PATH.equals(responseType)) {
+            return Response.ok(respondData, WS.RESPONSE_TYPE_XML).build();
+        } else {
+            return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
+        }
+    }
 }
+
