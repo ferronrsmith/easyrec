@@ -460,6 +460,7 @@ public class EasyRec {
                                            @QueryParam("requesteditemtype") String requestedItemType,
                                            @QueryParam("callback") String callback,
                                            @QueryParam("actiontype") @DefaultValue(TypeMappingService.ACTION_TYPE_VIEW) String actiontype,
+                                           @QueryParam("assoctype") String associationType,
                                            @QueryParam("withProfile") @DefaultValue("false") boolean withProfile)
             throws EasyRecException {
         Monitor mon = MonitorFactory.start(JAMON_REST_RECS_FOR_USER);
@@ -480,19 +481,30 @@ public class EasyRec {
         if (Strings.isNullOrEmpty(userId))
             exceptionResponse(WS.ACTION_RECOMMENDATIONS_FOR_USER, MSG.USER_NO_ID, type, callback);
 
-        requestedItemType = checkItemType(requestedItemType, type, coreTenantId, tenantId, WS.ACTION_RECOMMENDATIONS_FOR_USER, callback, null);
+        requestedItemType = checkItemType(requestedItemType, type, coreTenantId, tenantId, WS.ACTION_RECOMMENDATIONS_FOR_USER, callback, Item.DEFAULT_STRING_ITEM_TYPE);
 
 
         if (typeMappingService.getIdOfActionType(coreTenantId, actiontype) == null) {
             exceptionResponse(WS.ACTION_RECOMMENDATIONS_FOR_USER, MSG.OPERATION_FAILED.append(String.format(" actionType %s not found for tenant %s", actiontype, tenantId)), type, callback);
         }
 
+        if (associationType != null)
+            try {
+                typeMappingService.getIdOfAssocType(coreTenantId, associationType);
+            } catch (IllegalArgumentException e) {
+                exceptionResponse(
+                        WS.ACTION_RECOMMENDATIONS_FOR_USER,
+                        MSG.OPERATION_FAILED.append(String.format(" associationType %s not found for tenant %s", associationType, tenantId)),
+                        type,
+                        callback);
+            }
+
         if ((numberOfResults == null) || (numberOfResults > WS.DEFAULT_NUMBER_OF_RESULTS))
             numberOfResults = WS.DEFAULT_NUMBER_OF_RESULTS;
 
         if (rec == null || rec.getRecommendedItems().isEmpty()) {
             try {
-                rec = shopRecommenderService.itemsBasedOnActionHistory(coreTenantId, userId, session, actiontype, null, WS.ACTION_HISTORY_DEPTH, null,
+                rec = shopRecommenderService.itemsBasedOnActionHistory(coreTenantId, userId, session, actiontype, null, WS.ACTION_HISTORY_DEPTH, associationType,
                         requestedItemType, numberOfResults);
                 //added by FK on 2012-12-18 for adding profile data to recommendations.
                 if (withProfile) {
