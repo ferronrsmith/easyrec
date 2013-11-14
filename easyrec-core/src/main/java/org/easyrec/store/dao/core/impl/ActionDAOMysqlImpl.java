@@ -632,6 +632,8 @@ public class ActionDAOMysqlImpl extends
 
         query.append(" GROUP BY " + DEFAULT_ITEM_COLUMN_NAME);
 
+        query.append(" ORDER BY " + DEFAULT_ACTION_TIME_COLUMN_NAME + " DESC");
+
         // Note: for a non-mysql implementation this needs to be changed
         if (numberOfLastActionsConsidered != null && numberOfLastActionsConsidered > 0) {
             query.append(" LIMIT ?");
