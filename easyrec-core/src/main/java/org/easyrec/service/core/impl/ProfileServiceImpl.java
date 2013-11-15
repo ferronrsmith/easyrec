@@ -175,7 +175,7 @@ public class ProfileServiceImpl implements ProfileService {
             }
 
         } catch (Exception e) {
-            logger.error("Error loading profile field: " + e.getMessage());
+            logger.debug("Error loading profile field: " + e.getMessage());
             e.printStackTrace();
 
             if (e instanceof SAXException)
@@ -257,7 +257,7 @@ public class ProfileServiceImpl implements ProfileService {
             storeProfile(tenantId, itemId, itemType, xml);
 
         } catch (Exception e) {
-            logger.error("Error inserting Multi Dimension: " + e.getMessage());
+            logger.debug("Error inserting Multi Dimension: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -307,7 +307,7 @@ public class ProfileServiceImpl implements ProfileService {
             storeProfile(tenantId, itemId, itemTypeId, xml);
 
         } catch (Exception e) {
-            logger.error("Error inserting Simple Dimension: " + e.getMessage());
+            logger.debug("Error inserting Simple Dimension: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -362,7 +362,7 @@ public class ProfileServiceImpl implements ProfileService {
             logger.debug(xml);
             storeProfile(tenantId, itemId, itemTypeId, xml);
         } catch (Exception e) {
-            logger.error("Error inserting Simple Dimension: " + e.getMessage());
+            logger.debug("Error inserting Simple Dimension: " + e.getMessage());
             e.printStackTrace();
 
             if (e instanceof SAXException)
@@ -416,7 +416,7 @@ public class ProfileServiceImpl implements ProfileService {
             return true;
 
         } catch (Exception e) {
-            logger.error("Error deleting field: " + e.getMessage());
+            logger.debug("Error deleting field: " + e.getMessage());
             e.printStackTrace();
 
             if (e instanceof SAXException)
