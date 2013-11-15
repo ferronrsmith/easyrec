@@ -17,6 +17,8 @@
  */
 package org.easyrec.store.dao;
 
+import org.easyrec.service.core.exception.ItemNotFoundException;
+
 /**
  * This interface provides methods to map a String IDs to Integers.
  * For an example of a spring bean definition config file see tests.
@@ -50,6 +52,16 @@ public interface IDMappingDAO {
      * @return the Integer mapped to the given String
      */
     public Integer lookup(String id);
+
+    /**
+     * Returns the Integer ID mapped to the given String ID. In case no mapping exists,
+     * it returns <code>null</code>.
+     *
+     * @param id the String to be looked up in the mapping
+     * @return the Integer mapped to the given String
+     */
+    public Integer lookupOnly(String id)
+            throws ItemNotFoundException;
 
     /**
      * Returns the String ID mapped to the given Integer ID. In case the no mapping exists, null is returned.

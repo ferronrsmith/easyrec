@@ -20,6 +20,7 @@ package org.easyrec.store.dao.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.easyrec.service.core.exception.ItemNotFoundException;
 import org.easyrec.utils.spring.cache.annotation.LongCacheable;
 import org.easyrec.utils.spring.store.dao.DaoUtils;
 import org.easyrec.store.dao.IDMappingDAO;
@@ -158,6 +159,29 @@ public class IDMappingDAOMysqlImpl extends AbstractTableCreatingDAOImpl implemen
             }
         }
         return (!retList.isEmpty()) ? retList.get(0) : null;
+    }
+
+    @LongCacheable
+    public Integer lookupOnly(String id)
+            throws ItemNotFoundException {
+        List<Integer> retList;
+        if (id == null) {
+            return null;
+        }
+        if (id.length() == 0) {
+            throw new IllegalArgumentException("id must not be an empty String!");
+        }
+        if (logger.isDebugEnabled()) {
+            logger.debug("lookingOnly up mapping for String: " + id);
+        }
+
+        Object[] args = new Object[]{id};
+        retList = getJdbcTemplate().query(PS_LOOKUP_BY_STRING.newPreparedStatementCreator(args), intRowMapper);
+
+        if (retList.isEmpty())
+            throw new ItemNotFoundException("not existing itemId \"" + id + "\"");
+        else
+            return retList.get(0);
     }
 
     @LongCacheable

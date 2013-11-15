@@ -22,6 +22,7 @@ import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 import com.sun.jersey.api.json.JSONWithPadding;
 import com.sun.jersey.spi.resource.Singleton;
+import org.easyrec.service.core.exception.ItemNotFoundException;
 import org.easyrec.model.core.web.Message;
 import org.easyrec.model.core.web.SuccessMessage;
 import org.easyrec.service.core.ProfileService;
@@ -183,6 +184,8 @@ public class ProfileWebservice {
                         String.format(" itemType %s not found for tenant %s", itemType, tenantID)));
             } else
                 errorMessages.add(MSG.PROFILE_NOT_DELETED);
+        } catch (ItemNotFoundException itemNotFoundException) {
+            errorMessages.add(MSG.ITEM_NOT_EXISTS);
         } catch (RuntimeException runtimeException) {
             errorMessages.add(MSG.PROFILE_NOT_DELETED);
         }
@@ -239,6 +242,8 @@ public class ProfileWebservice {
                         String.format(" itemType %s not found for tenant %s", itemType, tenantID)));
             } else
                 errorMessages.add(MSG.PROFILE_NOT_LOADED);
+        } catch (ItemNotFoundException itemNotFoundException) {
+            errorMessages.add(MSG.ITEM_NOT_EXISTS);
         } catch (RuntimeException runtimeException) {
             errorMessages.add(MSG.PROFILE_NOT_LOADED);
         }
@@ -387,6 +392,9 @@ public class ProfileWebservice {
         } catch (FieldNotFoundException e) {
             errorMessages.add(MSG.OPERATION_FAILED.append(
                     " FieldNotFoundException: " + e.getMessage()));
+        } catch (ItemNotFoundException e) {
+            errorMessages.add(MSG.ITEM_NOT_EXISTS.append(
+                    " ItemNotFoundException: " + e.getMessage()));
         } catch (IllegalArgumentException illegalArgumentException) {
             if (illegalArgumentException.getMessage().contains("unknown item type")) {
                 errorMessages.add(MSG.OPERATION_FAILED.append(
@@ -462,6 +470,9 @@ public class ProfileWebservice {
         } catch (DOMException e) {
             errorMessages.add(MSG.OPERATION_FAILED.append(
                     " DOMException: " + e.getMessage()));
+        } catch (ItemNotFoundException e) {
+            errorMessages.add(MSG.ITEM_NOT_EXISTS.append(
+                    " ItemNotFoundException: " + e.getMessage()));
         } catch (IllegalArgumentException illegalArgumentException) {
             if (illegalArgumentException.getMessage().contains("unknown item type")) {
                 errorMessages.add(MSG.OPERATION_FAILED.append(
