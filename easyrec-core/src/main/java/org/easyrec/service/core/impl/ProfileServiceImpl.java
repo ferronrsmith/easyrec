@@ -111,7 +111,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     public boolean deleteProfile(Integer tenantId, String itemId, String itemType) {
-        return profileDAO.deleteProfile(tenantId, idMappingDAO.lookup(itemId),
+        return profileDAO.deleteProfile(tenantId, idMappingDAO.lookupOnly(itemId),
                 typeMappingService.getIdOfItemType(tenantId, itemType));
     }
 
@@ -137,7 +137,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     public String getProfile(Integer tenantId, String itemId, String itemTypeId) {
-        Integer mappedItemId = idMappingDAO.lookup(itemId);
+        Integer mappedItemId = idMappingDAO.lookupOnly(itemId);
         return getProfile(tenantId, mappedItemId, itemTypeId);
     }
 
@@ -160,7 +160,7 @@ public class ProfileServiceImpl implements ProfileService {
         Set<String> result = new HashSet<String>();
 
         try {
-            int itemIntID = idMappingDAO.lookup(itemId);
+            int itemIntID = idMappingDAO.lookupOnly(itemId);
 
             XPathFactory xpf = XPathFactory.newInstance();
 
@@ -321,7 +321,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     public synchronized boolean storeProfileField(Integer tenantId, String itemId, String itemTypeId,
-                                     String dimensionXPath, String value)
+                                                  String dimensionXPath, String value)
             throws XPathExpressionException, TransformerException, SAXException,
             DOMException, MultipleProfileFieldsFoundException {
 
