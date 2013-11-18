@@ -127,7 +127,10 @@ public class ProfileRenderer implements Tag {
 
         StringBuilder profileHTML = new StringBuilder();
         NodeList childNodes = getNodeListFromProfileXML(profileXML);
-        convertNodeListToHTML(childNodes, profileHTML);
+        if (childNodes != null)
+            convertNodeListToHTML(childNodes, profileHTML);
+        else
+            return "<p>The profile contains no valid XML.<br />Click \"View Profile Source\" to display the content of the profile.</p>";
         return profileHTML.toString();
     }
 
@@ -190,9 +193,13 @@ public class ProfileRenderer implements Tag {
      * @return the converted NodeList
      */
     private NodeList getNodeListFromProfileXML(String profileXML) {
-        Document doc = generateXmlDocument(profileXML);
-        doc.getDocumentElement().normalize();
-        return doc.getDocumentElement().getChildNodes();
+        try {
+            Document doc = generateXmlDocument(profileXML);
+            doc.getDocumentElement().normalize();
+            return doc.getDocumentElement().getChildNodes();
+        } catch (SAXException e) {
+            return null;
+        }
     }
 
     /**
@@ -201,7 +208,8 @@ public class ProfileRenderer implements Tag {
      * @param profileXML
      * @return The XmlDocument of the given XML string
      */
-    private Document generateXmlDocument(String profileXML) {
+    private Document generateXmlDocument(String profileXML)
+            throws SAXException {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = null;
@@ -210,8 +218,6 @@ public class ProfileRenderer implements Tag {
             is.setCharacterStream(new StringReader(profileXML));
             return db.parse(is);
         } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -242,6 +248,8 @@ public class ProfileRenderer implements Tag {
             return out.toString();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (SAXException e) {
+            return xmlToFormat;
         }
     }
 
