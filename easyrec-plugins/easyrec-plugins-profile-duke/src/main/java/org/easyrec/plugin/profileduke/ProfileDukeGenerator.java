@@ -31,6 +31,7 @@ import org.easyrec.model.core.ItemVO;
 import org.easyrec.plugin.model.Version;
 import org.easyrec.plugin.profileduke.duke.datasource.EasyrecXMLFormatDataSource;
 import org.easyrec.plugin.profileduke.duke.matchers.EasyrecProfileMatcher;
+import org.easyrec.plugin.profileduke.store.dao.ProfileSimilarityItemAssocDAO;
 import org.easyrec.plugin.support.GeneratorPluginSupport;
 import org.easyrec.service.core.ItemAssocService;
 import org.easyrec.service.core.ProfileService;
@@ -38,7 +39,6 @@ import org.easyrec.service.domain.TypeMappingService;
 import org.easyrec.store.dao.core.ItemAssocDAO;
 import org.xml.sax.SAXException;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
@@ -73,6 +73,8 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
 
     // the service will be auto-wired when the plugin is loaded, see {@link #setActionService(ActionService)}.
     private ProfileService profileService;
+
+    private ProfileSimilarityItemAssocDAO profileSimilarityItemAssocDAO;
 
     private int numberOfAssociationsCreated = 0;
     private double lastThreshold = 0;
@@ -190,11 +192,9 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
         // delete associations below the threshold
 
         int associationType = typeMappingService.getIdOfAssocType(tenantId, config.getAssociationType());
-        itemAssocDAO.removeItemAssocByTenantAndThreshold(config.getTenantId(),
-                associationType,
+        itemAssocDAO.removeItemAssocByTenant(config.getTenantId(), associationType,
                 sourceType,
-                stats.getStartDate(),
-                lastThreshold);
+                stats.getStartDate());
 
     }
 
@@ -291,8 +291,7 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
 
         Processor proc = new Processor(dukeConfig);
         EasyrecProfileMatcher easyrecProfileMatcher = new EasyrecProfileMatcher(false, true, this);
-        ItemAssocService itemAssocService = getItemAssocService();
-        easyrecProfileMatcher.setItemAssocService(itemAssocService);
+        easyrecProfileMatcher.setItemAssocDAO(profileSimilarityItemAssocDAO);
         easyrecProfileMatcher.setAssocType(associationType);
         easyrecProfileMatcher.setConfTanantId(config.getTenantId());
 
@@ -304,5 +303,9 @@ public class ProfileDukeGenerator extends GeneratorPluginSupport<ProfileDukeConf
         proc.close();
 
         return true;
+    }
+
+    public void setProfileSimilarityItemAssocDAO(ProfileSimilarityItemAssocDAO profileSimilarityItemAssocDAO) {
+        this.profileSimilarityItemAssocDAO = profileSimilarityItemAssocDAO;
     }
 }

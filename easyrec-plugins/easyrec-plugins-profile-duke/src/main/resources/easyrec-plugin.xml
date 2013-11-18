@@ -33,9 +33,11 @@
     <!-- The spring config named "easyrec-plugin.xml" placed in the root package will be automatically loaded when
          the plugin is installed in easyrec. -->
     <!-- You can include all spring dependencies you have at this place -->
+    <import resource="classpath:spring/profilesimilarity/ProfileSimilarityItemAssocDAO.xml"/>
 
     <!-- create our generator bean so it can be detected by easyrec's plugin loader
          (only loaded spring beans extending the class GeneratorPluginSupport) -->
-    <bean id="profileDukeGenerator" class="org.easyrec.plugin.profileduke.ProfileDukeGenerator"/>
-
+    <bean id="profileDukeGenerator" class="org.easyrec.plugin.profileduke.ProfileDukeGenerator">
+        <property name="profileSimilarityItemAssocDAO" ref="profileSimilarityItemAssocDAO"/>
+    </bean>
 </beans>

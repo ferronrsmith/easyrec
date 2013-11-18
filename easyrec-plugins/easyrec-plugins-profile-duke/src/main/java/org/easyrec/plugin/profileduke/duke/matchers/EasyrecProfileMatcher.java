@@ -24,7 +24,7 @@ import no.priv.garshol.duke.matchers.AbstractMatchListener;
 import org.easyrec.model.core.ItemAssocVO;
 import org.easyrec.model.core.ItemVO;
 import org.easyrec.plugin.profileduke.ProfileDukeGenerator;
-import org.easyrec.service.core.ItemAssocService;
+import org.easyrec.plugin.profileduke.store.dao.ProfileSimilarityItemAssocDAO;
 
 import java.util.*;
 
@@ -53,7 +53,7 @@ public class EasyrecProfileMatcher extends AbstractMatchListener {
     private Integer viewType;
     private static Integer assocType;
     private ArrayList<ItemAssocVO<Integer, Integer>> itemAssocArrayList;
-    private ItemAssocService itemAssocService;
+    private ProfileSimilarityItemAssocDAO itemAssocDAO;
 
     private ProfileDukeGenerator profileDukeGenerator;
 
@@ -68,8 +68,8 @@ public class EasyrecProfileMatcher extends AbstractMatchListener {
         return userToUsers;
     }
 
-    public void setItemAssocService(ItemAssocService itemAssocService) {
-        this.itemAssocService = itemAssocService;
+    public void setItemAssocDAO(ProfileSimilarityItemAssocDAO itemAssocDAO) {
+        this.itemAssocDAO = itemAssocDAO;
     }
 
     public void setConfTanantId(Integer confTanantId) {
@@ -165,7 +165,7 @@ public class EasyrecProfileMatcher extends AbstractMatchListener {
                 sourceType, "ProfileDuke Plugin", viewType, null, execution);
 
         numberOfCreatedAssociations++;
-        itemAssocService.insertOrUpdateItemAssoc(itemAssoc);
+        itemAssocDAO.insertOrUpdateItemAssoc(itemAssoc);
     }
 
     public static String toString(Record r) {
