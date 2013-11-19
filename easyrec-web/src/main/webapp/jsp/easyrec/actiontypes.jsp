@@ -47,7 +47,7 @@
     <h2>Action Type Manager</h2>
 
     <p>
-        Use the item type manager to create <easyrec:wikiLink name="Action types" pageName="action type"/>.
+        Use the action type manager to create <easyrec:wikiLink name="Action types" pageName="action type"/>.
         Action types are the types of your actions you send to easyrec.
         After creating an actions type you are ready to use it in API calls.
     </p>
@@ -63,14 +63,14 @@
 
         <br>
 
-        <h3>Item Types for ${tenantId}</h3>
+        <h3>Action Types for ${tenantId}</h3>
         <a href="javascript:void(0)" onclick="showCreateNewItemTypeForm()">
             <img src="${webappPath}/img/cluster_manager_plus.png"/>
-            add new Item Type
+            add new Action Type
         </a>
 
         <display:table name="itemTypes" class="tableData" id="row" pagesize="0">
-            <display:column title="Item Type Name" sortable="false">
+            <display:column title="Action Type Name" sortable="false">
                 ${row}
             </display:column>
             <display:column title="Has Value" sortable="false">

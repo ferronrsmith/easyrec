@@ -39,7 +39,7 @@
     <h2>Type Manager</h2>
 
     <p>
-        Use the <easyrec:wikiLink name="type manager" pageName="type_manager"/> to create different types used within
+        Use the type manager to create different types used within
         your easyrec instance.
     </p>
 
