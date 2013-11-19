@@ -18,13 +18,13 @@
 
 $(function() {
     // view input fields for changing time for scheduler and archiver only when enabled.
-    if ($('#edit-scheduler').html() == "false") {
+    if ($('#edit-scheduler div').html() == "false") {
         $('#layer-executiontime').hide();
     } else {
         $('#layer-executiontime').show();
     }
 
-    if ($('#edit-archiving').html() == "false") {
+    if ($('#edit-archiving div').html() == "false") {
         $('#layer-archivingtime').hide();
     } else {
         $('#layer-archivingtime').show();
@@ -41,11 +41,11 @@ $(function() {
  * Enables or Disables the auto rule mining
  */
 function scheduler(operatorId, tenantId) {
-    if ($('#edit-scheduler').html() == "false") {
-        $('#edit-scheduler').html("true");
+    if ($('#edit-scheduler div').html() == "false") {
+        $('#edit-scheduler div').html("true");
         $('#layer-executiontime').show();
     } else {
-        $('#edit-scheduler').html("false");
+        $('#edit-scheduler div').html("false");
         $('#layer-executiontime').hide();
     }
 
@@ -53,7 +53,7 @@ function scheduler(operatorId, tenantId) {
 
     $.ajax({
         url:webappPath + "dev/scheduler?operatorId=" + operatorId + "&tenantId=" + tenantId + "&enabled=" +
-                $('#edit-scheduler').html() + "&executiontime=" + $('#edit-excecutiontime').val(),
+                $('#edit-scheduler div').html() + "&executiontime=" + $('#edit-excecutiontime').val(),
         cache: false
     });
 
@@ -64,17 +64,17 @@ function scheduler(operatorId, tenantId) {
  * Enables or Disables the backtracking
  */
 function backtracking(operatorId, tenantId) {
-    if ($('#edit-backtracking').html() == "false") {
-        $('#edit-backtracking').html("true");
+    if ($('#edit-backtracking div').html() == "false") {
+        $('#edit-backtracking div').html("true");
     } else {
-        $('#edit-backtracking').html("false");
+        $('#edit-backtracking div').html("false");
     }
 
     $('#backtracking').html(waitingImage);
 
     $.ajax({
         url:webappPath + "dev/storebacktracking?operatorId=" + operatorId + "&tenantId=" + tenantId + "&backtracking=" +
-                $('#edit-backtracking').html(),
+                $('#edit-backtracking div').html(),
         cache: false
     });
 
@@ -85,11 +85,11 @@ function backtracking(operatorId, tenantId) {
  * Enables or Disables the  Archiving Function
  */
 function archiving(operatorId, tenantId) {
-    if ($('#edit-archiving').html() == "false") {
-        $('#edit-archiving').html("true");
+    if ($('#edit-archiving div').html() == "false") {
+        $('#edit-archiving div').html("true");
         $('#layer-archivingtime').show();
     } else {
-        $('#edit-archiving').html("false");
+        $('#edit-archiving div').html("false");
         $('#layer-archivingtime').hide();
     }
 
@@ -97,7 +97,7 @@ function archiving(operatorId, tenantId) {
 
     $.ajax({
         url:webappPath + "dev/storearchive?operatorId=" + operatorId + "&tenantId=" + tenantId + "&archiving=" +
-                $('#edit-archiving').html(),
+                $('#edit-archiving div').html(),
         cache: false
     });
 
@@ -122,7 +122,7 @@ function changeExecutionTime(operatorId, tenantId) {
 
         $.ajax({
             url:webappPath + "dev/scheduler?operatorId=" + operatorId + "&tenantId=" + tenantId + "&enabled=" +
-                    $('#edit-scheduler').html() + "&executiontime=" + $('#edit-excecutiontime').val(),
+                    $('#edit-scheduler div').html() + "&executiontime=" + $('#edit-excecutiontime').val(),
             cache: false
         });
 
