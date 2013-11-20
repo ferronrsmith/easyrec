@@ -1542,45 +1542,14 @@ public class EasyRec {
 
         mon.stop();
 
-        try {
-            StringBuilder sb = new StringBuilder();
-            Set<Class<?>> classes = Sets.newHashSet(GeneratorsResponse.class, GeneratorResponse.class,
-                    ErrorMessage.class, SuccessMessage.class);
-
-            for (GeneratorResponse generatorResponse : generatorsResponse.getGeneratorResponses()) {
-                Object content = generatorResponse.getMessage().getContent();
-
-                if (content != null)
-                    classes.add(content.getClass());
-            }
-
-            Class[] classesArray = classes.toArray(new Class[classes.size()]);
-
-            JAXBContext jaxbContext = JAXBContext.newInstance(classesArray);
-            Marshaller marshaller = jaxbContext.createMarshaller();
-
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-            marshaller.marshal(generatorsResponse, System.out);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-
-
-
         if (WS.JSON_PATH.equals(type)) {
             if (callback != null)
                 return Response.ok(new JSONWithPadding(generatorsResponse, callback), WS.RESPONSE_TYPE_JSCRIPT).build();
             else
                 return Response.ok(generatorsResponse, WS.RESPONSE_TYPE_JSON).build();
         } else {
-            Response.ResponseBuilder rb = Response.ok(generatorsResponse, WS.RESPONSE_TYPE_XML);
-            Response r = rb.build();
-            return r;
+            return Response.ok(generatorsResponse, WS.RESPONSE_TYPE_XML).build();
         }
-
-
     }
 
     // ============ helper classes for generator start =============
