@@ -18,8 +18,11 @@
 package org.easyrec.rest;
 
 import com.google.common.base.CharMatcher;
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 import com.sun.jersey.api.json.JSONWithPadding;
@@ -28,7 +31,18 @@ import org.easyrec.exception.core.ClusterException;
 import org.easyrec.model.core.ClusterVO;
 import org.easyrec.model.core.transfer.TimeConstraintVO;
 import org.easyrec.model.core.web.*;
+import org.easyrec.model.plugin.LogEntry;
+import org.easyrec.model.plugin.NamedConfiguration;
+import org.easyrec.model.plugin.archive.ArchivePseudoConfiguration;
+import org.easyrec.model.plugin.archive.ArchivePseudoGenerator;
+import org.easyrec.model.plugin.archive.ArchivePseudoStatistics;
+import org.easyrec.model.web.EasyRecSettings;
 import org.easyrec.model.web.Recommendation;
+import org.easyrec.plugin.configuration.GeneratorContainer;
+import org.easyrec.plugin.container.PluginRegistry;
+import org.easyrec.plugin.model.PluginId;
+import org.easyrec.plugin.stats.GeneratorStatistics;
+import org.easyrec.plugin.stats.StatisticsConstants;
 import org.easyrec.rest.nodomain.exception.EasyRecRestException;
 import org.easyrec.service.core.ClusterService;
 import org.easyrec.service.core.ProfileService;
@@ -50,11 +64,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author szavrel
@@ -79,6 +94,9 @@ public class EasyRec {
     //added by FK on 2012-12-18 to enable adding profile data to recommendations
     private ProfileService profileService;
     private ClusterService clusterService;
+    private EasyRecSettings easyrecSettings;
+    private PluginRegistry pluginRegistry;
+    private GeneratorContainer generatorContainer;
 
 
     // Jamon Loggers
@@ -104,6 +122,7 @@ public class EasyRec {
     private final static String JAMON_REST_CLUSTERS = "rest.clusters";
     private final static String JAMON_REST_ITEMS_OF_CLUSTERS = "rest.items.from.clusters";
     private final static String JAMON_REST_ACTIONHISTORY = "rest.history";
+    private final static String JAMON_REST_START_PLUGINS = "rest.start.plugins";
 
     public EasyRec(OperatorDAO operatorDAO, RemoteTenantDAO remoteTenantDAO,
                    ShopRecommenderService shopRecommenderService, TenantService tenantService,
@@ -112,6 +131,9 @@ public class EasyRec {
                    //added by FK on 2012-12-18 for enabling profile data in recommendations
                    ProfileService profileService,
                    ClusterService clusterService,
+                   EasyRecSettings easyrecSettings,
+                   PluginRegistry pluginRegistry,
+                   GeneratorContainer generatorContainer,
                    String dateFormatString) {
         this.operatorDAO = operatorDAO;
         this.remoteTenantDAO = remoteTenantDAO;
@@ -124,6 +146,9 @@ public class EasyRec {
         this.profileService = profileService;
         this.idMappingDAO = idMappingDAO;
         this.clusterService = clusterService;
+        this.easyrecSettings = easyrecSettings;
+        this.pluginRegistry = pluginRegistry;
+        this.generatorContainer = generatorContainer;
     }
 
     @GET
@@ -1424,7 +1449,210 @@ public class EasyRec {
         return response;
     }
 
-    // private methods
+    // ========= operator API methods =========
+
+    /**
+     * This call starts the plugins of the tenant and the operator
+     * with the provided token.
+     *
+     * @param type     "1.0" for XML response, "1.0/json" for JSON
+     * @param token    security toke you get from the user interface or via login API call
+     * @param tenantId id of the tenant whose plugins should be started
+     * @param callback
+     * @throws EasyRecException
+     */
+
+    @GET
+    @Path("/startplugins")
+    public Response startplugins(@PathParam("type") String type,
+                                 @QueryParam("token") String token,
+                                 @QueryParam("tenantid") String tenantId,
+                                 @QueryParam("callback") String callback)
+            throws EasyRecException {
+
+        Monitor mon = MonitorFactory.start(JAMON_REST_START_PLUGINS);
+
+        // Collect a List of messages for the user to understand,
+        // what went wrong (e.g. Wrong API key).
+        List<Message> errorMessages = new ArrayList<Message>();
+        List<Message> successMessages = new ArrayList<Message>();
+        Integer coreTenantId = null;
+
+        Operator o = operatorDAO.getOperatorFromToken(token);
+        if (o == null) {
+            errorMessages.add(MSG.WRONG_TOKEN);
+            throwEasyrecException(errorMessages, type, callback);
+        }
+
+        coreTenantId = operatorDAO.getTenantId(o.getApiKey(), tenantId);
+        if (coreTenantId == null) {
+            errorMessages.add(MSG.TENANT_NOT_EXISTS);
+            throwEasyrecException(errorMessages, type, callback);
+        }
+
+        if (!easyrecSettings.isGenerator()) {
+            errorMessages.add(MSG.PLUGIN_START_IN_FRONTEND_MODE);
+            throwEasyrecException(errorMessages, type, callback);
+        }
+
+        if (!pluginRegistry.isAllExecutablesStopped()) {
+            errorMessages.add(MSG.PLUGIN_START_ALREADY_RUNNING);
+            throwEasyrecException(errorMessages, type, callback);
+        }
+
+        final Properties tenantConfig = tenantService.getTenantConfig(coreTenantId);
+        if (tenantConfig == null) {
+            errorMessages.add(MSG.PLUGIN_START_NO_TENANT_CONFIG);
+            throwEasyrecException(errorMessages, type, callback);
+        }
+        if ("true".equals(tenantConfig.getProperty(RemoteTenant.AUTO_ARCHIVER_ENABLED))) {
+            String daysString = tenantConfig.getProperty(RemoteTenant.AUTO_ARCHIVER_TIME_RANGE);
+            final int days = Integer.parseInt(daysString);
+            ArchivePseudoConfiguration configuration = new ArchivePseudoConfiguration(days);
+            configuration.setAssociationType("ARCHIVE");
+            NamedConfiguration namedConfiguration = new NamedConfiguration(coreTenantId, 0,
+                    ArchivePseudoGenerator.ID, "Archive", configuration, true);
+
+            generatorContainer.runGenerator(namedConfiguration,
+                    // create a log entry only for archiver runs where actions were actually archived
+                    // --> remove log entries where the number of archived actions is 0
+                    new Predicate<GeneratorStatistics>() {
+                        public boolean apply(GeneratorStatistics input) {
+                            ArchivePseudoStatistics archivePseudoStatistics = (ArchivePseudoStatistics) input;
+
+                            return archivePseudoStatistics.getNumberOfArchivedActions() > 0;
+                        }
+                    }, true);
+        }
+
+        List<LogEntry> generatorRuns = generatorContainer.runGeneratorsForTenant(coreTenantId);
+
+        List<GeneratorResponse> responses = Lists.transform(generatorRuns, new Function<LogEntry, GeneratorResponse>() {
+            public GeneratorResponse apply(LogEntry input) {
+                Message message =
+                        input.getStatistics().getClass().equals(StatisticsConstants.ExecutionFailedStatistics.class)
+                                ? MSG.GENERATOR_FINISHED_FAIL : MSG.GENERATOR_FINISHED_SUCCESS;
+                message = message.content(input.getStatistics());
+
+                return new GeneratorResponse(message, "startPlugin", input.getPluginId());
+            }
+        });
+
+        GeneratorsResponse generatorsResponse = new GeneratorsResponse(responses);
+
+        mon.stop();
+
+        try {
+            StringBuilder sb = new StringBuilder();
+            Set<Class<?>> classes = Sets.newHashSet(GeneratorsResponse.class, GeneratorResponse.class,
+                    ErrorMessage.class, SuccessMessage.class);
+
+            for (GeneratorResponse generatorResponse : generatorsResponse.getGeneratorResponses()) {
+                Object content = generatorResponse.getMessage().getContent();
+
+                if (content != null)
+                    classes.add(content.getClass());
+            }
+
+            Class[] classesArray = classes.toArray(new Class[classes.size()]);
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(classesArray);
+            Marshaller marshaller = jaxbContext.createMarshaller();
+
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+            marshaller.marshal(generatorsResponse, System.out);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+
+
+
+        if (WS.JSON_PATH.equals(type)) {
+            if (callback != null)
+                return Response.ok(new JSONWithPadding(generatorsResponse, callback), WS.RESPONSE_TYPE_JSCRIPT).build();
+            else
+                return Response.ok(generatorsResponse, WS.RESPONSE_TYPE_JSON).build();
+        } else {
+            Response.ResponseBuilder rb = Response.ok(generatorsResponse, WS.RESPONSE_TYPE_XML);
+            Response r = rb.build();
+            return r;
+        }
+
+
+    }
+
+    // ============ helper classes for generator start =============
+
+    @SuppressWarnings({"UnusedDeclaration"})
+    @XmlRootElement(name = "generators")
+    @XmlSeeAlso(GeneratorStatistics.class)
+    private static class GeneratorsResponse {
+        @XmlElement(name = "generator")
+        private List<GeneratorResponse> generatorResponses;
+
+        private GeneratorsResponse() {
+        }
+
+        public GeneratorsResponse(List<GeneratorResponse> generatorResponses) {
+            this.generatorResponses = generatorResponses;
+        }
+
+        public List<GeneratorResponse> getGeneratorResponses() {
+            return generatorResponses;
+        }
+    }
+
+    @SuppressWarnings({"UnusedDeclaration"})
+    @XmlRootElement(name = "generator")
+    private static class GeneratorResponse {
+        @XmlElement(name = "success", required = false)
+        private SuccessMessage successMessage;
+        @XmlElement(name = "error", required = false)
+        private ErrorMessage errorMessage;
+        @XmlElement(name = "action")
+        private String action;
+        @XmlAttribute(name = "id")
+        @XmlJavaTypeAdapter(PluginId.URIAdapter.class)
+        private PluginId pluginId;
+
+        private GeneratorResponse() {
+        }
+
+        public GeneratorResponse(Message message, String action, PluginId pluginId) {
+            if (message.getClass().equals(ErrorMessage.class))
+                errorMessage = (ErrorMessage) message;
+            else
+                successMessage = (SuccessMessage) message;
+            this.action = action;
+            this.pluginId = pluginId;
+        }
+
+        public Message getMessage() {
+            return errorMessage != null ? errorMessage : successMessage;
+        }
+
+        public String getAction() {
+            return action;
+        }
+
+        public PluginId getPluginId() {
+            return pluginId;
+        }
+    }
+
+
+    // ================ private methods =================
+
+    private void throwEasyrecException(List<Message> errorMessages, String type, String callback) {
+        if (errorMessages.size() > 0) {
+            if ((WS.JSON_PATH.equals(type)))
+                throw new EasyRecException(errorMessages, WS.ACTION_START_PLUGINS, WS.RESPONSE_TYPE_JSON, callback);
+            else
+                throw new EasyRecException(errorMessages, WS.ACTION_START_PLUGINS);
+        }
+    }
 
     private void addProfileDataToItems(Recommendation recommendation) {
         for (Item item : recommendation.getRecommendedItems()) {

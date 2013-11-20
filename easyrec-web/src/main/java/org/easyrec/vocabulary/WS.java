@@ -40,6 +40,7 @@ public class WS implements InitializingBean {
     public static final String ACTION_ITEMTYPES = "itemtypes";
     public static final String ACTION_CLUSTERS = "clusters";
     public static final String ACTION_HISTORY = "actionhistory";
+    public static final String ACTION_START_PLUGINS = "startplugins";
 
     public static final String PROFILE_STORE = "profile/store";
     public static final String PROFILE_DELETE = "profile/delete";
