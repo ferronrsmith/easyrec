@@ -18,11 +18,9 @@
 package org.easyrec.rest;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 import com.sun.jersey.api.json.JSONWithPadding;
@@ -31,7 +29,6 @@ import org.easyrec.exception.core.ClusterException;
 import org.easyrec.model.core.ClusterVO;
 import org.easyrec.model.core.transfer.TimeConstraintVO;
 import org.easyrec.model.core.web.*;
-import org.easyrec.model.plugin.LogEntry;
 import org.easyrec.model.plugin.NamedConfiguration;
 import org.easyrec.model.plugin.archive.ArchivePseudoConfiguration;
 import org.easyrec.model.plugin.archive.ArchivePseudoGenerator;
@@ -40,9 +37,7 @@ import org.easyrec.model.web.EasyRecSettings;
 import org.easyrec.model.web.Recommendation;
 import org.easyrec.plugin.configuration.GeneratorContainer;
 import org.easyrec.plugin.container.PluginRegistry;
-import org.easyrec.plugin.model.PluginId;
 import org.easyrec.plugin.stats.GeneratorStatistics;
-import org.easyrec.plugin.stats.StatisticsConstants;
 import org.easyrec.rest.nodomain.exception.EasyRecRestException;
 import org.easyrec.service.core.ClusterService;
 import org.easyrec.service.core.ProfileService;
@@ -64,10 +59,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.annotation.*;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -158,9 +149,19 @@ public class EasyRec {
                          @QueryParam("sessionid") String sessionId, @QueryParam("itemid") String itemId,
                          @QueryParam("itemdescription") String itemDescription, @QueryParam("itemurl") String itemUrl,
                          @QueryParam("itemimageurl") String itemImageUrl, @QueryParam("actiontime") String actionTime,
-                         @QueryParam("itemtype") String itemType, @QueryParam("callback") String callback)
+                         @QueryParam("itemtype") String itemType, @QueryParam("callback") String callback,
+                         @QueryParam("token") String token)
             throws EasyRecException {
+
         Monitor mon = MonitorFactory.start(JAMON_REST_VIEW);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("view")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_VIEW, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
 
         // Collect a List of messages for the user to understand,
         // what went wrong (e.g. Wrong API key).
@@ -217,10 +218,19 @@ public class EasyRec {
                          @QueryParam("ratingvalue") String ratingValue,
                          @QueryParam("itemdescription") String itemDescription, @QueryParam("itemurl") String itemUrl,
                          @QueryParam("itemimageurl") String itemImageUrl, @QueryParam("actiontime") String actionTime,
-                         @QueryParam("itemtype") String itemType, @QueryParam("callback") String callback)
+                         @QueryParam("itemtype") String itemType, @QueryParam("callback") String callback,
+                         @QueryParam("token") String token)
             throws EasyRecException {
 
         Monitor mon = MonitorFactory.start(JAMON_REST_RATE);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("rate")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_RATE, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
 
         // Collect a List of messages for the user to understand,
         // what went wrong (e.g. Wrong API key).
@@ -289,9 +299,19 @@ public class EasyRec {
                         @QueryParam("sessionid") String sessionId, @QueryParam("itemid") String itemId,
                         @QueryParam("itemdescription") String itemDescription, @QueryParam("itemurl") String itemUrl,
                         @QueryParam("itemimageurl") String itemImageUrl, @QueryParam("actiontime") String actionTime,
-                        @QueryParam("itemtype") String itemType, @QueryParam("callback") String callback)
+                        @QueryParam("itemtype") String itemType, @QueryParam("callback") String callback,
+                        @QueryParam("token") String token)
             throws EasyRecException {
+
         Monitor mon = MonitorFactory.start(JAMON_REST_BUY);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("buy")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_BUY, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
 
         // Collect a List of messages for the user to understand,
         // what went wrong (e.g. Wrong API key).
@@ -349,10 +369,19 @@ public class EasyRec {
                                @QueryParam("actiontype") String actionType, @QueryParam("actionvalue") String actionValue,
                                @QueryParam("itemdescription") String itemDescription, @QueryParam("itemurl") String itemUrl,
                                @QueryParam("itemimageurl") String itemImageUrl, @QueryParam("actiontime") String actionTime,
-                               @QueryParam("itemtype") String itemType, @QueryParam("callback") String callback)
+                               @QueryParam("itemtype") String itemType, @QueryParam("callback") String callback,
+                               @QueryParam("token") String token)
             throws EasyRecException {
 
         Monitor mon = MonitorFactory.start(JAMON_REST_ACTION);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("sendaction")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_SENDACTION, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
 
         // Collect a List of messages for the user to understand,
         // what went wrong (e.g. Wrong API key).
@@ -434,8 +463,19 @@ public class EasyRec {
                                          @QueryParam("itemtype") String itemType,
                                          @QueryParam("requesteditemtype") String requestedItemType,
                                          @QueryParam("callback") String callback,
-                                         @QueryParam("withProfile") @DefaultValue("false") boolean withProfile) throws EasyRecException {
+                                         @QueryParam("withProfile") @DefaultValue("false") boolean withProfile,
+                                         @QueryParam("token") String token) throws EasyRecException {
+
         Monitor mon = MonitorFactory.start(JAMON_REST_ALSO_VIEWED);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("otherusersalsoviewed")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_OTHER_USERS_ALSO_VIEWED, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
+
         Recommendation rec = null;
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
 
@@ -486,9 +526,19 @@ public class EasyRec {
                                            @QueryParam("callback") String callback,
                                            @QueryParam("actiontype") @DefaultValue(TypeMappingService.ACTION_TYPE_VIEW) String actiontype,
                                            @QueryParam("assoctype") String associationType,
-                                           @QueryParam("withProfile") @DefaultValue("false") boolean withProfile)
+                                           @QueryParam("withProfile") @DefaultValue("false") boolean withProfile,
+                                           @QueryParam("token") String token)
             throws EasyRecException {
+
         Monitor mon = MonitorFactory.start(JAMON_REST_RECS_FOR_USER);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("recommendationsforuser")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_RECOMMENDATIONS_FOR_USER, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
 
         Recommendation rec = null;
         Session session = new Session(null, request);
@@ -558,9 +608,19 @@ public class EasyRec {
                                          @QueryParam("numberOfResults") Integer numberOfResults,
                                          @QueryParam("requesteditemtype") String requestedItemType,
                                          @QueryParam("callback") String callback,
-                                         @QueryParam("actiontype") @DefaultValue(TypeMappingService.ACTION_TYPE_VIEW) String actiontype)
+                                         @QueryParam("actiontype") @DefaultValue(TypeMappingService.ACTION_TYPE_VIEW) String actiontype,
+                                         @QueryParam("token") String token)
             throws EasyRecException {
+
         Monitor mon = MonitorFactory.start(JAMON_REST_ACTIONHISTORY);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("actionhistoryforuser")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_HISTORY, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
 
         Recommendation rec = null;
         Session session = new Session(null, request);
@@ -617,9 +677,20 @@ public class EasyRec {
                                          @QueryParam("itemtype") String itemType,
                                          @QueryParam("requesteditemtype") String requestedItemType,
                                          @QueryParam("callback") String callback,
-                                         @QueryParam("withProfile") @DefaultValue("false") boolean withProfile)
+                                         @QueryParam("withProfile") @DefaultValue("false") boolean withProfile,
+                                         @QueryParam("token") String token)
             throws EasyRecException {
+
         Monitor mon = MonitorFactory.start(JAMON_REST_ALSO_BOUGHT);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("otherusersalsobought")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_OTHER_USERS_ALSO_BOUGHT, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
+
         Recommendation rec = null;
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
 
@@ -671,9 +742,19 @@ public class EasyRec {
                                                @QueryParam("itemtype") String itemType,
                                                @QueryParam("requesteditemtype") String requestedItemType,
                                                @QueryParam("callback") String callback,
-                                               @QueryParam("withProfile") @DefaultValue("false") boolean withProfile) throws EasyRecException {
+                                               @QueryParam("withProfile") @DefaultValue("false") boolean withProfile,
+                                               @QueryParam("token") String token) throws EasyRecException {
 
         Monitor mon = MonitorFactory.start(JAMON_REST_ALSO_RATED);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("itemsratedgoodbyotherusers")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_ITEMS_RATED_GOOD_BY_OTHER_USERS, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
+
         Recommendation rec = null;
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
 
@@ -726,8 +807,19 @@ public class EasyRec {
                                     @QueryParam("requesteditemtype") String requesteditemtype,
                                     @QueryParam("clusterid") String clusterId,
                                     @QueryParam("callback") String callback,
-                                    @QueryParam("withProfile") @DefaultValue("false") boolean withProfile) throws EasyRecException {
+                                    @QueryParam("withProfile") @DefaultValue("false") boolean withProfile,
+                                    @QueryParam("token") String token) throws EasyRecException {
+
         Monitor mon = MonitorFactory.start(JAMON_REST_MOST_BOUGHT);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("mostboughtitems")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_MOST_BOUGHT, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
+
         Recommendation rr = null;
         Integer cluster = null;
         if (clusterId != null) {
@@ -784,9 +876,20 @@ public class EasyRec {
                                     @QueryParam("requesteditemtype") String requestedItemType,
                                     @QueryParam("clusterid") String clusterId,
                                     @QueryParam("callback") String callback,
-                                    @QueryParam("withProfile") @DefaultValue("false") boolean withProfile)
+                                    @QueryParam("withProfile") @DefaultValue("false") boolean withProfile,
+                                    @QueryParam("token") String token)
             throws EasyRecException {
+
         Monitor mon = MonitorFactory.start(JAMON_REST_MOST_VIEWED);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("mostvieweditems")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_MOST_VIEWED, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
+
         Recommendation rr = null;
         Integer cluster = null;
         if (clusterId != null) {
@@ -844,8 +947,19 @@ public class EasyRec {
                                    @QueryParam("requesteditemtype") String requestedItemType,
                                    @QueryParam("clusterid") String clusterId,
                                    @QueryParam("callback") String callback,
-                                   @QueryParam("withProfile") @DefaultValue("false") boolean withProfile) throws EasyRecException {
+                                   @QueryParam("withProfile") @DefaultValue("false") boolean withProfile,
+                                   @QueryParam("token") String token) throws EasyRecException {
+
         Monitor mon = MonitorFactory.start(JAMON_REST_MOST_RATED);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("mostrateditems")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_MOST_RATED, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
+
         Recommendation rr = null;
         Integer cluster = null;
         if (clusterId != null) {
@@ -903,8 +1017,19 @@ public class EasyRec {
                                       @QueryParam("usefallback") @DefaultValue("false") Boolean useFallback,
                                       @QueryParam("requesteditemtype") String requestedItemType,
                                       @QueryParam("callback") String callback,
-                                      @QueryParam("withProfile") @DefaultValue("false") boolean withProfile) {
+                                      @QueryParam("withProfile") @DefaultValue("false") boolean withProfile,
+                                      @QueryParam("token") String token) {
+
         Monitor monitor = MonitorFactory.start(JAMON_REST_ITEMS_OF_CLUSTERS);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("itemsofcluster")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_ITEMS_OF_CLUSTER, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
+
         Recommendation recommendation = null;
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
 
@@ -960,9 +1085,20 @@ public class EasyRec {
                                    @QueryParam("endDate") String endDate,
                                    @QueryParam("requesteditemtype") String requestedItemType,
                                    @QueryParam("callback") String callback,
-                                   @QueryParam("withProfile") @DefaultValue("false") boolean withProfile)
+                                   @QueryParam("withProfile") @DefaultValue("false") boolean withProfile,
+                                   @QueryParam("token") String token)
             throws EasyRecException {
+
         Monitor mon = MonitorFactory.start(JAMON_REST_BEST_RATED);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("bestrateditems")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_BEST_RATED, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
+
         Recommendation rr = null;
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
 
@@ -1014,9 +1150,20 @@ public class EasyRec {
                                     @QueryParam("startDate") String startDate, @QueryParam("endDate") String endDate,
                                     @QueryParam("requesteditemtype") String requestedItemType,
                                     @QueryParam("callback") String callback,
-                                    @QueryParam("withProfile") @DefaultValue("false") boolean withProfile)
+                                    @QueryParam("withProfile") @DefaultValue("false") boolean withProfile,
+                                    @QueryParam("token") String token)
             throws EasyRecException {
+
         Monitor mon = MonitorFactory.start(JAMON_REST_WORST_RATED);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("worstrateditems")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_WORST_RATED, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
+
         Recommendation rr = null;
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
 
@@ -1069,10 +1216,20 @@ public class EasyRec {
                                  @QueryParam("itemtype") String itemType,
                                  @QueryParam("requesteditemtype") String requestedItemType,
                                  @QueryParam("callback") String callback,
-                                 @QueryParam("withProfile") @DefaultValue("false") boolean withProfile)
+                                 @QueryParam("withProfile") @DefaultValue("false") boolean withProfile,
+                                 @QueryParam("token") String token)
             throws EasyRecException {
 
         Monitor mon = MonitorFactory.start(JAMON_REST_RELATED_ITEMS);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("relateditems")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_RELATED_ITEMS, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
+
         Recommendation rec = null;
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
         Integer assocTypeId = null;
@@ -1131,8 +1288,20 @@ public class EasyRec {
     public Response setItemActive(@PathParam("type") String type, @QueryParam("apikey") String apiKey,
                                   @QueryParam("tenantid") String tenantId, @QueryParam("itemid") String itemId,
                                   @QueryParam("active") Boolean active, @QueryParam("itemtype") String itemType,
-                                  @QueryParam("callback") String callback) throws EasyRecException {
+                                  @QueryParam("callback") String callback,
+                                  @QueryParam("token") String token)
+            throws EasyRecException {
+
         Monitor mon = MonitorFactory.start(JAMON_REST_ITEM_ACTIVE);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("setitemactive")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_SET_ITEM_ACTIVE, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
+
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
 
         if (coreTenantId == null)
@@ -1173,11 +1342,22 @@ public class EasyRec {
 
     @GET
     @Path("/itemtypes")
-    public Response itemTypes(@PathParam("type") String type, @QueryParam("apikey") String apiKey,
-                              @QueryParam("tenantid") String tenantId, @QueryParam("callback") String callback)
+    public Response itemTypes(@PathParam("type") String type,
+                              @QueryParam("apikey") String apiKey,
+                              @QueryParam("tenantid") String tenantId,
+                              @QueryParam("callback") String callback,
+                              @QueryParam("token") String token)
             throws EasyRecException {
 
         Monitor mon = MonitorFactory.start(JAMON_REST_ITEMTYPES);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("itemtypes")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_ITEMTYPES, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
 
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
 
@@ -1209,11 +1389,22 @@ public class EasyRec {
 
     @GET
     @Path("/clusters")
-    public Response clusters(@PathParam("type") String type, @QueryParam("apikey") String apiKey,
-                             @QueryParam("tenantid") String tenantId, @QueryParam("callback") String callback)
+    public Response clusters(@PathParam("type") String type,
+                             @QueryParam("apikey") String apiKey,
+                             @QueryParam("tenantid") String tenantId,
+                             @QueryParam("callback") String callback,
+                             @QueryParam("token") String token)
             throws EasyRecException {
 
         Monitor mon = MonitorFactory.start(JAMON_REST_CLUSTERS);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("clusters")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_CLUSTERS, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
 
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
 
@@ -1252,9 +1443,20 @@ public class EasyRec {
                                @QueryParam("tenantid") String tenantId, @QueryParam("itemfromid") String itemFromId,
                                @QueryParam("itemfromtype") String itemFromType, @QueryParam("itemtoid") String itemToId,
                                @QueryParam("itemtotype") String itemToType, @QueryParam("assocvalue") String assocvalue,
-                               @QueryParam("assoctype") String assocType, @QueryParam("callback") String callback)
+                               @QueryParam("assoctype") String assocType, @QueryParam("callback") String callback,
+                               @QueryParam("apikey") String apiKey)
             throws EasyRecException {
+
         Monitor mon = MonitorFactory.start(JAMON_REST_IMPORT_RULE);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("importrule")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_IMPORT_RULE, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
+
         Item itemFrom = null;
         Item itemTo = null;
         Float assocValue = null;
@@ -1264,7 +1466,6 @@ public class EasyRec {
         // Collect a List of messages for the user to understand,
         // what went wrong (e.g. Wrong API key).
         List<Message> messages = Lists.newArrayList();
-        Operator o = operatorDAO.getOperatorFromToken(token);
 
         if (itemFromType != null) itemFromType = CharMatcher.WHITESPACE.trimFrom(itemFromType);
         if (itemToType != null) itemToType = CharMatcher.WHITESPACE.trimFrom(itemToType);
@@ -1274,45 +1475,44 @@ public class EasyRec {
 
         // TODO create itemtypes if they don't exist?
 
-        if (o != null) {
-            coreTenantId = operatorDAO.getTenantId(o.getApiKey(), tenantId);
+        coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
+        if (coreTenantId == null)
+            exceptionResponse(WS.ACTION_IMPORT_RULE, MSG.TENANT_WRONG_TENANT_APIKEY, type, callback);
 
-            if (itemFromId != null && itemFromId.equals(itemToId))
-                messages.add(MSG.ITEMFROM_EQUAL_ITEMTO);
+        if (itemFromId != null && itemFromId.equals(itemToId))
+            messages.add(MSG.ITEMFROM_EQUAL_ITEMTO);
 
-            RemoteTenant r = remoteTenantDAO.get(coreTenantId);
+        RemoteTenant r = remoteTenantDAO.get(coreTenantId);
 
-            if (r != null) {
-                itemFrom = itemDAO.get(r, itemFromId, itemFromType);
+        if (r != null) {
+            itemFrom = itemDAO.get(r, itemFromId, itemFromType);
 
-                if (itemFrom == null)
-                    messages.add(MSG.ITEM_FROM_ID_DOES_NOT_EXIST);
+            if (itemFrom == null)
+                messages.add(MSG.ITEM_FROM_ID_DOES_NOT_EXIST);
 
-                itemTo = itemDAO.get(r, itemToId, itemToType);
+            itemTo = itemDAO.get(r, itemToId, itemToType);
 
-                if (itemTo == null)
-                    messages.add(MSG.ITEM_TO_ID_DOES_NOT_EXIST);
-
-                try {
-                    assocTypeId = typeMappingService.getIdOfAssocType(coreTenantId, assocType);
-                } catch (Exception e) {
-                    messages.add(MSG.ASSOC_TYPE_DOES_NOT_EXIST);
-                }
-
-            } else
-                messages.add(MSG.TENANT_WRONG_TENANT);
+            if (itemTo == null)
+                messages.add(MSG.ITEM_TO_ID_DOES_NOT_EXIST);
 
             try {
-                assocValue = Float.parseFloat(assocvalue);
-
-                if (assocValue < 0 || assocValue > 100)
-                    messages.add(MSG.INVALID_ASSOC_VALUE);
+                assocTypeId = typeMappingService.getIdOfAssocType(coreTenantId, assocType);
             } catch (Exception e) {
-                messages.add(MSG.INVALID_ASSOC_VALUE);
+                messages.add(MSG.ASSOC_TYPE_DOES_NOT_EXIST);
             }
 
         } else
-            messages.add(MSG.WRONG_TOKEN);
+            messages.add(MSG.TENANT_WRONG_TENANT);
+
+        try {
+            assocValue = Float.parseFloat(assocvalue);
+
+            if (assocValue < 0 || assocValue > 100)
+                messages.add(MSG.INVALID_ASSOC_VALUE);
+        } catch (Exception e) {
+            messages.add(MSG.INVALID_ASSOC_VALUE);
+        }
+
 
         if (messages.size() > 0) {
             if ((WS.JSON_PATH.equals(type)))
@@ -1340,25 +1540,35 @@ public class EasyRec {
 
     @GET
     @Path("/importitem")
-    public Response importitem(@PathParam("type") String type, @QueryParam("token") String token,
-                               @QueryParam("tenantid") String tenantId, @QueryParam("itemid") String itemId,
+    public Response importitem(@PathParam("type") String type,
+                               @QueryParam("token") String token,
+                               @QueryParam("tenantid") String tenantId,
+                               @QueryParam("itemid") String itemId,
                                @QueryParam("itemdescription") String itemDescription,
-                               @QueryParam("itemurl") String itemUrl, @QueryParam("itemimageurl") String itemImageUrl,
+                               @QueryParam("itemurl") String itemUrl,
+                               @QueryParam("itemimageurl") String itemImageUrl,
                                @QueryParam("itemtype") String itemType,
-                               @QueryParam("callback") String callback) throws EasyRecException {
+                               @QueryParam("callback") String callback,
+                               @QueryParam("apikey") String apiKey)
+            throws EasyRecException {
+
         Monitor mon = MonitorFactory.start(JAMON_REST_IMPORT_ITEM);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("importitem")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_IMPORT_ITEM, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
 
         // Collect a List of messages for the user to understand,
         // what went wrong (e.g. Wrong API key).
         List<Message> messages = new ArrayList<Message>();
         Integer coreTenantId = null;
 
-        Operator o = operatorDAO.getOperatorFromToken(token);
-        if (o != null) {
-            coreTenantId = operatorDAO.getTenantId(o.getApiKey(), tenantId);
-            checkParameters(coreTenantId, itemId, itemDescription, itemUrl, messages);
-        } else
-            messages.add(MSG.WRONG_TOKEN);
+        coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
+        checkParameters(coreTenantId, itemId, itemDescription, itemUrl, messages);
 
         if (messages.size() > 0) {
             if ((WS.JSON_PATH.equals(type)))
@@ -1406,11 +1616,21 @@ public class EasyRec {
                                   @QueryParam("tenantid") String tenantId,
                                   @QueryParam("clusterid") String clusterId,
                                   @QueryParam("clusterdescription") String clusterDescription,
-                                  @DefaultValue("CLUSTERS") @QueryParam("clusterparent") String clusterParent,
-                                  @QueryParam("callback") String callback)
+                                  @DefaultValue("CLUSTERS")
+                                  @QueryParam("clusterparent") String clusterParent,
+                                  @QueryParam("callback") String callback,
+                                  @QueryParam("apikey") String apiKey)
             throws EasyRecException {
 
         Monitor mon = MonitorFactory.start(JAMON_REST_CREATE_CLUSTER);
+
+        if (easyrecSettings.getSecuredAPIMethods().contains("createcluster")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_CREATE_CLUSTER, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
+        }
 
         // Collect a List of messages for the user to understand,
         // what went wrong (e.g. Wrong API key).
@@ -1418,12 +1638,8 @@ public class EasyRec {
         List<Message> successMessages = new ArrayList<Message>();
         Integer coreTenantId = null;
 
-        Operator o = operatorDAO.getOperatorFromToken(token);
-        if (o != null) {
-            coreTenantId = operatorDAO.getTenantId(o.getApiKey(), tenantId);
-            checkParameters(coreTenantId, clusterId, errorMessages);
-        } else
-            errorMessages.add(MSG.WRONG_TOKEN);
+        coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
+        checkParameters(coreTenantId, clusterId, errorMessages);
 
         if (errorMessages.size() > 0) {
             if ((WS.JSON_PATH.equals(type)))
@@ -1467,7 +1683,8 @@ public class EasyRec {
     public Response startplugins(@PathParam("type") String type,
                                  @QueryParam("token") String token,
                                  @QueryParam("tenantid") String tenantId,
-                                 @QueryParam("callback") String callback)
+                                 @QueryParam("callback") String callback,
+                                 @QueryParam("apikey") String apiKey)
             throws EasyRecException {
 
         Monitor mon = MonitorFactory.start(JAMON_REST_START_PLUGINS);
@@ -1477,32 +1694,30 @@ public class EasyRec {
         List<Message> errorMessages = new ArrayList<Message>();
         List<Message> successMessages = new ArrayList<Message>();
 
-        Operator o = operatorDAO.getOperatorFromToken(token);
-        if (o == null) {
-            errorMessages.add(MSG.WRONG_TOKEN);
-            throwEasyrecException(errorMessages, type, callback);
+        if (easyrecSettings.getSecuredAPIMethods().contains("startplugins")) {
+            Operator o = operatorDAO.getOperatorFromToken(token);
+            if (o == null)
+                exceptionResponse(WS.ACTION_START_PLUGINS, MSG.WRONG_TOKEN, type, callback);
+            else
+                apiKey = o.getApiKey();
         }
 
-        final Integer coreTenantId = operatorDAO.getTenantId(o.getApiKey(), tenantId);
+        final Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
         if (coreTenantId == null) {
-            errorMessages.add(MSG.TENANT_NOT_EXISTS);
-            throwEasyrecException(errorMessages, type, callback);
+
         }
 
         if (!easyrecSettings.isGenerator()) {
-            errorMessages.add(MSG.PLUGIN_START_IN_FRONTEND_MODE);
-            throwEasyrecException(errorMessages, type, callback);
+            exceptionResponse(WS.ACTION_START_PLUGINS, MSG.PLUGIN_START_IN_FRONTEND_MODE, type, callback);
         }
 
         if (!pluginRegistry.isAllExecutablesStopped()) {
-            errorMessages.add(MSG.PLUGIN_START_ALREADY_RUNNING);
-            throwEasyrecException(errorMessages, type, callback);
+            exceptionResponse(WS.ACTION_START_PLUGINS, MSG.PLUGIN_START_ALREADY_RUNNING, type, callback);
         }
 
         final Properties tenantConfig = tenantService.getTenantConfig(coreTenantId);
         if (tenantConfig == null) {
-            errorMessages.add(MSG.PLUGIN_START_NO_TENANT_CONFIG);
-            throwEasyrecException(errorMessages, type, callback);
+            exceptionResponse(WS.ACTION_START_PLUGINS, MSG.PLUGIN_START_NO_TENANT_CONFIG, type, callback);
         }
 
         Runnable r = new Runnable() {
@@ -1544,15 +1759,6 @@ public class EasyRec {
     }
 
     // ================ private methods =================
-
-    private void throwEasyrecException(List<Message> errorMessages, String type, String callback) {
-        if (errorMessages.size() > 0) {
-            if ((WS.JSON_PATH.equals(type)))
-                throw new EasyRecException(errorMessages, WS.ACTION_START_PLUGINS, WS.RESPONSE_TYPE_JSON, callback);
-            else
-                throw new EasyRecException(errorMessages, WS.ACTION_START_PLUGINS);
-        }
-    }
 
     private void addProfileDataToItems(Recommendation recommendation) {
         for (Item item : recommendation.getRecommendedItems()) {
