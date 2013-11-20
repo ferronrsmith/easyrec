@@ -18,7 +18,7 @@
         <property name="placeholderPrefix" value="$easyrec{"/>
         <property name="properties">
             <props>
-                <prop key="easyrec.securedAPIMethods">startplugins:actionhistoryforuser:default</prop>
+                <prop key="easyrec.securedAPIMethods">startplugins,importrule,importitem,createcluster</prop>
             </props>
         </property>
 
