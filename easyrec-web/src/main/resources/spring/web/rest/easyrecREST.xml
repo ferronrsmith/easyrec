@@ -14,6 +14,9 @@
         <constructor-arg ref="idMappingDAO"/>
         <constructor-arg ref="profileService" />
         <constructor-arg ref="clusterService" />
+        <constructor-arg ref="easyrecSettings" />
+        <constructor-arg ref="pluginRegistry" />
+        <constructor-arg ref="generatorContainer" />
         <constructor-arg value="$easyrec{easyrec.dateFormat}"/>
     </bean>
 </beans>

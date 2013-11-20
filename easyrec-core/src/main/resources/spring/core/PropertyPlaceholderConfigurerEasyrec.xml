@@ -21,5 +21,10 @@
         </property>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="placeholderPrefix" value="$easyrec{"/>
+        <property name="properties">
+            <props>
+                <prop key="easyrec.securedAPIMethods">startplugins,importrule,importitem,createcluster</prop>
+            </props>
+        </property>
     </bean>
 </beans>

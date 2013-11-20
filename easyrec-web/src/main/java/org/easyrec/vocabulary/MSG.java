@@ -184,6 +184,8 @@ public class MSG {
             503, "Invalid Assoc Value (use a decimal value between 0-100)!");
     public static final Message ITEMFROM_EQUAL_ITEMTO = new ErrorMessage(
             504, "ItemFrom Id must differ from ItemTo Id!");
+    public static final Message ASSOC_TYPE_NEEDED = new ErrorMessage(
+            505, "Association Type (assoctype) needed!");
 
     // plugin messages
     public static final Message PLUGIN_INSTALLED = new SuccessMessage(
@@ -194,6 +196,8 @@ public class MSG {
             602, "Plugin parameter invalid!");
     public static final Message PLUGIN_NOT_ACTIVE = new ErrorMessage(
             603, "Plugins disabled!");
+    public static final Message PLUGIN_STARTED = new SuccessMessage(
+            604, "Plugins successfully started!");
 
     // cluster messages
     // error messages
@@ -237,6 +241,12 @@ public class MSG {
             914, "actionype not valid for this tenant!");
     public static final Message MISSING_ACTION_VALUE = new ErrorMessage(
             915, "The given actionType requires a valid actionValue!");
+    public static final Message PLUGIN_START_IN_FRONTEND_MODE = new ErrorMessage(
+            920, "Could not start plugins because easyrec is in frontend mode!");
+    public static final Message PLUGIN_START_ALREADY_RUNNING = new ErrorMessage(
+            921, "Could not start plugins because some plugins are already running!");
+    public static final Message PLUGIN_START_NO_TENANT_CONFIG = new ErrorMessage(
+            921, "Could not load tenant configuration!");
     public static final Message VALID_URL = new ErrorMessage(
             999, "This is a valid URL!");
 

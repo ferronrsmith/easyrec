@@ -32,6 +32,7 @@
         <property name="updateURL" value="$easyrec{easyrec.updateURL}"/>
         <property name="biz" value="$easyrec{easyrec.biz}"/>
         <property name="operationMode" value="$easyrec{easyrec.operationMode}"/>
+        <property name="securedAPIMethods" value="$easyrec{easyrec.securedAPIMethods}"/>
     </bean>
     
     <bean id="WS" class="org.easyrec.vocabulary.WS">
