@@ -194,6 +194,8 @@ public class MSG {
             602, "Plugin parameter invalid!");
     public static final Message PLUGIN_NOT_ACTIVE = new ErrorMessage(
             603, "Plugins disabled!");
+    public static final Message PLUGIN_STARTED = new SuccessMessage(
+            604, "Plugins successfully started!");
 
     // cluster messages
     // error messages

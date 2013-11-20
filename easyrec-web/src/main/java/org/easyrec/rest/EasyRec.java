@@ -1476,7 +1476,6 @@ public class EasyRec {
         // what went wrong (e.g. Wrong API key).
         List<Message> errorMessages = new ArrayList<Message>();
         List<Message> successMessages = new ArrayList<Message>();
-        Integer coreTenantId = null;
 
         Operator o = operatorDAO.getOperatorFromToken(token);
         if (o == null) {
@@ -1484,7 +1483,7 @@ public class EasyRec {
             throwEasyrecException(errorMessages, type, callback);
         }
 
-        coreTenantId = operatorDAO.getTenantId(o.getApiKey(), tenantId);
+        final Integer coreTenantId = operatorDAO.getTenantId(o.getApiKey(), tenantId);
         if (coreTenantId == null) {
             errorMessages.add(MSG.TENANT_NOT_EXISTS);
             throwEasyrecException(errorMessages, type, callback);
@@ -1505,112 +1504,44 @@ public class EasyRec {
             errorMessages.add(MSG.PLUGIN_START_NO_TENANT_CONFIG);
             throwEasyrecException(errorMessages, type, callback);
         }
-        if ("true".equals(tenantConfig.getProperty(RemoteTenant.AUTO_ARCHIVER_ENABLED))) {
-            String daysString = tenantConfig.getProperty(RemoteTenant.AUTO_ARCHIVER_TIME_RANGE);
-            final int days = Integer.parseInt(daysString);
-            ArchivePseudoConfiguration configuration = new ArchivePseudoConfiguration(days);
-            configuration.setAssociationType("ARCHIVE");
-            NamedConfiguration namedConfiguration = new NamedConfiguration(coreTenantId, 0,
-                    ArchivePseudoGenerator.ID, "Archive", configuration, true);
 
-            generatorContainer.runGenerator(namedConfiguration,
-                    // create a log entry only for archiver runs where actions were actually archived
-                    // --> remove log entries where the number of archived actions is 0
-                    new Predicate<GeneratorStatistics>() {
-                        public boolean apply(GeneratorStatistics input) {
-                            ArchivePseudoStatistics archivePseudoStatistics = (ArchivePseudoStatistics) input;
+        Runnable r = new Runnable() {
+            public void run() {
+                if ("true".equals(tenantConfig.getProperty(RemoteTenant.AUTO_ARCHIVER_ENABLED))) {
+                    String daysString = tenantConfig.getProperty(RemoteTenant.AUTO_ARCHIVER_TIME_RANGE);
+                    final int days = Integer.parseInt(daysString);
+                    ArchivePseudoConfiguration configuration = new ArchivePseudoConfiguration(days);
+                    configuration.setAssociationType("ARCHIVE");
+                    NamedConfiguration namedConfiguration = new NamedConfiguration(coreTenantId, 0,
+                            ArchivePseudoGenerator.ID, "Archive", configuration, true);
 
-                            return archivePseudoStatistics.getNumberOfArchivedActions() > 0;
-                        }
-                    }, true);
-        }
+                    generatorContainer.runGenerator(namedConfiguration,
+                            // create a log entry only for archiver runs where actions were actually archived
+                            // --> remove log entries where the number of archived actions is 0
+                            new Predicate<GeneratorStatistics>() {
+                                public boolean apply(GeneratorStatistics input) {
+                                    ArchivePseudoStatistics archivePseudoStatistics = (ArchivePseudoStatistics) input;
 
-        List<LogEntry> generatorRuns = generatorContainer.runGeneratorsForTenant(coreTenantId);
+                                    return archivePseudoStatistics.getNumberOfArchivedActions() > 0;
+                                }
+                            }, true);
+                }
 
-        List<GeneratorResponse> responses = Lists.transform(generatorRuns, new Function<LogEntry, GeneratorResponse>() {
-            public GeneratorResponse apply(LogEntry input) {
-                Message message =
-                        input.getStatistics().getClass().equals(StatisticsConstants.ExecutionFailedStatistics.class)
-                                ? MSG.GENERATOR_FINISHED_FAIL : MSG.GENERATOR_FINISHED_SUCCESS;
-                message = message.content(input.getStatistics());
-
-                return new GeneratorResponse(message, "startPlugin", input.getPluginId());
+                generatorContainer.runGeneratorsForTenant(coreTenantId);
             }
-        });
+        };
 
-        GeneratorsResponse generatorsResponse = new GeneratorsResponse(responses);
+        new Thread(r).start();
+
+        successMessages.add(MSG.PLUGIN_STARTED);
+
+        Response response = formatResponse(successMessages, errorMessages,
+                WS.ACTION_START_PLUGINS, type, callback);
 
         mon.stop();
 
-        if (WS.JSON_PATH.equals(type)) {
-            if (callback != null)
-                return Response.ok(new JSONWithPadding(generatorsResponse, callback), WS.RESPONSE_TYPE_JSCRIPT).build();
-            else
-                return Response.ok(generatorsResponse, WS.RESPONSE_TYPE_JSON).build();
-        } else {
-            return Response.ok(generatorsResponse, WS.RESPONSE_TYPE_XML).build();
-        }
+        return response;
     }
-
-    // ============ helper classes for generator start =============
-
-    @SuppressWarnings({"UnusedDeclaration"})
-    @XmlRootElement(name = "generators")
-    @XmlSeeAlso(GeneratorStatistics.class)
-    private static class GeneratorsResponse {
-        @XmlElement(name = "generator")
-        private List<GeneratorResponse> generatorResponses;
-
-        private GeneratorsResponse() {
-        }
-
-        public GeneratorsResponse(List<GeneratorResponse> generatorResponses) {
-            this.generatorResponses = generatorResponses;
-        }
-
-        public List<GeneratorResponse> getGeneratorResponses() {
-            return generatorResponses;
-        }
-    }
-
-    @SuppressWarnings({"UnusedDeclaration"})
-    @XmlRootElement(name = "generator")
-    private static class GeneratorResponse {
-        @XmlElement(name = "success", required = false)
-        private SuccessMessage successMessage;
-        @XmlElement(name = "error", required = false)
-        private ErrorMessage errorMessage;
-        @XmlElement(name = "action")
-        private String action;
-        @XmlAttribute(name = "id")
-        @XmlJavaTypeAdapter(PluginId.URIAdapter.class)
-        private PluginId pluginId;
-
-        private GeneratorResponse() {
-        }
-
-        public GeneratorResponse(Message message, String action, PluginId pluginId) {
-            if (message.getClass().equals(ErrorMessage.class))
-                errorMessage = (ErrorMessage) message;
-            else
-                successMessage = (SuccessMessage) message;
-            this.action = action;
-            this.pluginId = pluginId;
-        }
-
-        public Message getMessage() {
-            return errorMessage != null ? errorMessage : successMessage;
-        }
-
-        public String getAction() {
-            return action;
-        }
-
-        public PluginId getPluginId() {
-            return pluginId;
-        }
-    }
-
 
     // ================ private methods =================
 
