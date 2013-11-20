@@ -17,6 +17,10 @@
  */
 package org.easyrec.model.web;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author phlavac
  */
@@ -29,6 +33,7 @@ public class EasyRecSettings {
     private String biz;
     private String updateURL;
     private String operationMode;
+    private Set<String> securedAPIMethods = new HashSet<String>();
 
     // TODO: move to vocabulary?
     public final static String DEFAULT_OPERATION_MODE = "generator";
@@ -92,5 +97,16 @@ public class EasyRecSettings {
 
     public boolean isGenerator() {
         return DEFAULT_OPERATION_MODE.equals(operationMode);
+    }
+
+    public Set<String> getSecuredAPIMethods() {
+        return securedAPIMethods;
+    }
+
+    // ToDo: utilize PropertyPlaceholderConfigurer to do the splitting job if possible
+    public void setSecuredAPIMethods(Set<String> securedAPIMethods) {
+        for (String item : securedAPIMethods) {
+            this.securedAPIMethods.addAll(Arrays.asList(item.split(",")));
+        }
     }
 }
