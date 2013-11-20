@@ -184,6 +184,8 @@ public class MSG {
             503, "Invalid Assoc Value (use a decimal value between 0-100)!");
     public static final Message ITEMFROM_EQUAL_ITEMTO = new ErrorMessage(
             504, "ItemFrom Id must differ from ItemTo Id!");
+    public static final Message ASSOC_TYPE_NEEDED = new ErrorMessage(
+            505, "Association Type (assoctype) needed!");
 
     // plugin messages
     public static final Message PLUGIN_INSTALLED = new SuccessMessage(

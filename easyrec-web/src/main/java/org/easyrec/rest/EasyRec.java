@@ -1495,10 +1495,14 @@ public class EasyRec {
             if (itemTo == null)
                 messages.add(MSG.ITEM_TO_ID_DOES_NOT_EXIST);
 
-            try {
-                assocTypeId = typeMappingService.getIdOfAssocType(coreTenantId, assocType);
-            } catch (Exception e) {
-                messages.add(MSG.ASSOC_TYPE_DOES_NOT_EXIST);
+            if (assocType == null)
+                messages.add(MSG.ASSOC_TYPE_NEEDED);
+            else {
+                try {
+                    assocTypeId = typeMappingService.getIdOfAssocType(coreTenantId, assocType);
+                } catch (Exception e) {
+                    messages.add(MSG.ASSOC_TYPE_DOES_NOT_EXIST);
+                }
             }
 
         } else
