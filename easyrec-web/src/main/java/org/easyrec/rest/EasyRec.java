@@ -1708,7 +1708,7 @@ public class EasyRec {
 
         final Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
         if (coreTenantId == null) {
-
+            exceptionResponse(WS.ACTION_START_PLUGINS, MSG.TENANT_NOT_EXISTS, type, callback);
         }
 
         if (!easyrecSettings.isGenerator()) {

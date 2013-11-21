@@ -246,7 +246,7 @@ public class MSG {
     public static final Message PLUGIN_START_ALREADY_RUNNING = new ErrorMessage(
             921, "Could not start plugins because some plugins are already running!");
     public static final Message PLUGIN_START_NO_TENANT_CONFIG = new ErrorMessage(
-            921, "Could not load tenant configuration!");
+            922, "Could not load tenant configuration!");
     public static final Message VALID_URL = new ErrorMessage(
             999, "This is a valid URL!");
 
