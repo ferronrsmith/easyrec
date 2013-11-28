@@ -575,6 +575,8 @@ public class ActionDAOMysqlImpl extends
         query.append(DEFAULT_ITEM_COLUMN_NAME);
         query.append(", ");
         query.append(DEFAULT_ITEM_TYPE_COLUMN_NAME);
+        query.append(", ");
+        query.append("MAX("+ DEFAULT_ACTION_TIME_COLUMN_NAME + ") AS maxActionTime");
         query.append(" FROM ");
         query.append(DEFAULT_TABLE_NAME);
         query.append(" WHERE ");
@@ -632,7 +634,7 @@ public class ActionDAOMysqlImpl extends
 
         query.append(" GROUP BY " + DEFAULT_ITEM_COLUMN_NAME);
 
-        query.append(" ORDER BY " + DEFAULT_ACTION_TIME_COLUMN_NAME + " DESC");
+        query.append(" ORDER BY maxActionTime DESC");
 
         // Note: for a non-mysql implementation this needs to be changed
         if (numberOfLastActionsConsidered != null && numberOfLastActionsConsidered > 0) {
