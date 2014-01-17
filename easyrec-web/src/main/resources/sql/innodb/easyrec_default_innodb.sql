@@ -122,16 +122,16 @@ CREATE TABLE item (
   tenantId int(11) NOT NULL,
   itemid varchar(250) NOT NULL DEFAULT '',
   itemtype varchar(20) NOT NULL DEFAULT '',
-  description varchar(500) CHARACTER SET utf8 DEFAULT NULL,
+  description varchar(500) DEFAULT NULL,
   profileData text,
-  url varchar(500) CHARACTER SET utf8 DEFAULT NULL,
+  url varchar(500) DEFAULT NULL,
   imageurl varchar(500) CHARACTER SET utf8 DEFAULT NULL,
   active tinyint(1) DEFAULT '1',
   creationdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   changedate TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (id),
   UNIQUE KEY itemTripple (tenantId,itemid,itemtype)
-) ENGINE=InnoDb DEFAULT CHARSET=latin1 COMMENT='Table containing items with profiles';
+) ENGINE=InnoDb DEFAULT CHARSET=utf8 COMMENT='Table containing items with profiles';
 
 --
 -- Table structure for table easyrec.itemassoc

@@ -4,7 +4,7 @@ ALTER TABLE itemtype DROP COLUMN profileSchema;
 ALTER TABLE itemtype DROP COLUMN profileMatcher;
 
 -- move the columns from the profile table to the item table
-ALTER TABLE item ADD profileData text;
+ALTER TABLE item ADD profileData text CHARACTER SET utf8;
 ALTER TABLE item ADD changedate DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';
 
 -- change the field size of description in the actionarchive table
