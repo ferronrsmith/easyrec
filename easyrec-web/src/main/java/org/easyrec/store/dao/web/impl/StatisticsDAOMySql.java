@@ -180,7 +180,7 @@ public class StatisticsDAOMySql extends JdbcDaoSupport implements StatisticsDAO 
             }
 
             sql = new StringBuilder().append("SELECT ")
-                    .append("	IF(assocType<100, 1001, assocType) as actionTypeId, ")
+                    .append("	IF(assocType < 100 || assocType = 999, 1001, assocType) as actionTypeId, ")
                     .append("	DAY(timestamp) as unit,  ").append("	COUNT(1) as cnt ").append("FROM  ")
                     .append("	backtracking   ").append("WHERE  ").append("	tenantId = ? AND    ")
                     .append("	timestamp > ? AND  ").append("	timestamp < ? AND ").append(sAssocType)
