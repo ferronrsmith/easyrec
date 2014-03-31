@@ -107,7 +107,7 @@ public class ArchiveDAOMysqlImpl extends JdbcDaoSupport implements ArchiveDAO {
                     .append("  actionTypeId int(11) NOT NULL, ").append("  ratingValue int(11) default NULL, ")
                     .append("  searchSucceeded tinyint(1) default NULL, ")
                     .append("  numberOfFoundItems int(11) default NULL, ")
-                    .append("  description varchar(500) default NULL, ").append("  actionTime datetime NOT NULL, ")
+                    .append("  description varchar(500) CHARACTER SET utf8 default NULL, ").append("  actionTime datetime NOT NULL, ")
                     .append("  PRIMARY KEY  (id), ")
                     .append("  KEY action_reader (tenantId,userId,actionTypeId,itemTypeId), ")
                     .append("  KEY tenantId (tenantId,actionTime) ")

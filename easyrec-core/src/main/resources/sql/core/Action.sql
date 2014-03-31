@@ -18,7 +18,7 @@ CREATE TABLE action (
   ratingValue INT(11),
   searchSucceeded TINYINT(1),
   numberOfFoundItems INT(11),
-  description VARCHAR(250),
+  description VARCHAR(500) CHARACTER SET utf8,
   actionTime DATETIME NOT NULL,
   PRIMARY KEY (id),
   KEY action_reader (tenantId,userId,actionTypeId,itemTypeId)

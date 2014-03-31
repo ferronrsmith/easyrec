@@ -10,7 +10,7 @@ CREATE TABLE actionarchive (
   ratingValue int(11) default NULL,
   searchSucceeded tinyint(1) default NULL,
   numberOfFoundItems int(11) default NULL,
-  description varchar(500) default NULL,
+  description varchar(500) CHARACTER SET utf8 default NULL,
   actionTime datetime NOT NULL,
   PRIMARY KEY  (id),
   KEY action_reader (tenantId,userId,actionTypeId,itemTypeId),

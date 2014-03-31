@@ -9,7 +9,7 @@ ALTER TABLE item ADD changedate DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00';
 
 -- change the field size of description in the actionarchive table
 -- to match the description in the action table
-ALTER TABLE actionarchive MODIFY description VARCHAR(500);
+ALTER TABLE actionarchive MODIFY description VARCHAR(500) CHARACTER SET utf8;
 
 -- the profile table will be dropped by the migration code
 
