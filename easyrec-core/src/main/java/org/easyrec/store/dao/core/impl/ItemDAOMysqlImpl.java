@@ -211,7 +211,7 @@ public class ItemDAOMysqlImpl extends BasicDAOMysqlImpl implements ItemDAO {
                     null, true, new Date().toString());
 
         } catch (Exception e) {
-            logger.error("An error occured adding an item!", e);
+            logger.error("An error occurred while adding an item (id: '" + itemId + "')!", e);
             return null;
         }
 

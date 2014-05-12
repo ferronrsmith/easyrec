@@ -186,7 +186,7 @@ public class RemoteTenantDAOMysqlImpl extends BasicDAOMysqlImpl implements Remot
                 return r;
 
             } catch (Exception e) {
-                logger.warn("An error occurred!", e);
+                logger.warn("An error occurred while getting tenant with id '" + tenantId + "'!", e);
                 return null;
             }
         }
@@ -211,7 +211,7 @@ public class RemoteTenantDAOMysqlImpl extends BasicDAOMysqlImpl implements Remot
                 return r;
 
             } catch (Exception e) {
-                logger.warn("An error occurred!", e);
+                logger.warn("Could not fetch tenant with id '" + tenantId + "'!", e);
                 return r;
             }
         }
@@ -242,7 +242,7 @@ public class RemoteTenantDAOMysqlImpl extends BasicDAOMysqlImpl implements Remot
             remoteTenantIntCache.remove(tenantId);
 
         } catch (Exception e) {
-            logger.warn("An error occurred!", e);
+            logger.warn("An error occurred while updating tenant with id '" + tenantId + "'!", e);
         }
     }
 
@@ -260,8 +260,7 @@ public class RemoteTenantDAOMysqlImpl extends BasicDAOMysqlImpl implements Remot
             return getJdbcTemplate()
                     .query(SQL_GET_TENANTS_FROM_OPERATOR.replace("{0}", operatorId), args, argTypes, remoteTenantRowMapper);
         } catch (Exception e) {
-            logger.warn("An error occured while loading tenants for operator " + operatorId);
-            logger.warn("An error occurred!", e);
+            logger.warn("An error occurred while loading tenants for operator " + operatorId, e);
             return null;
         }
     }
@@ -274,7 +273,7 @@ public class RemoteTenantDAOMysqlImpl extends BasicDAOMysqlImpl implements Remot
         try {
             return getJdbcTemplate().query(SQL_GET_ALL_TENANTS, remoteTenantRowMapper);
         } catch (Exception e) {
-            logger.warn("An error occurred!", e);
+            logger.warn("An error occurred while fetching all tenants!", e);
             return null;
         }
     }
@@ -285,7 +284,7 @@ public class RemoteTenantDAOMysqlImpl extends BasicDAOMysqlImpl implements Remot
      * @see at.researchstudio.sat.recommender.remote.store.dao.RemoteTenantDAO
      */
     public List<RemoteTenant> getTenants(int offset, int limit) {
-        return getTenants(offset,limit,false) ;
+        return getTenants(offset, limit, false);
     }
 
     /*
@@ -296,12 +295,12 @@ public class RemoteTenantDAOMysqlImpl extends BasicDAOMysqlImpl implements Remot
         try {
             String filter = "";
 
-            if(filterDemoTenants){
-                  filter = "EASYREC_DEMO";
+            if (filterDemoTenants) {
+                filter = "EASYREC_DEMO";
             }
 
-            Object[] args = {filter,offset,limit};
-            int[] argTypes = {Types.VARCHAR,Types.INTEGER,Types.INTEGER};
+            Object[] args = {filter, offset, limit};
+            int[] argTypes = {Types.VARCHAR, Types.INTEGER, Types.INTEGER};
             return getJdbcTemplate()
                     .query(SQL_GET_TENANTS, args, argTypes, remoteTenantRowMapper);
 
@@ -383,7 +382,8 @@ public class RemoteTenantDAOMysqlImpl extends BasicDAOMysqlImpl implements Remot
 
             Properties tenantConfig = new Properties();
             try {
-                tenantConfig.load(new ByteArrayInputStream(new StringBuffer(sTenantConfig).toString().getBytes()));
+                if (sTenantConfig != null)
+                    tenantConfig.load(new ByteArrayInputStream(new StringBuffer(sTenantConfig).toString().getBytes()));
 
             } catch (Exception ignored) {
                 logger.warn("An error occurred!", ignored);
@@ -393,8 +393,9 @@ public class RemoteTenantDAOMysqlImpl extends BasicDAOMysqlImpl implements Remot
 
             Properties tenantStatistic = new Properties();
             try {
-                tenantStatistic
-                        .load(new ByteArrayInputStream(new StringBuffer(sTenantStatistic).toString().getBytes()));
+                if (sTenantStatistic != null)
+                    tenantStatistic
+                            .load(new ByteArrayInputStream(new StringBuffer(sTenantStatistic).toString().getBytes()));
 
             } catch (Exception ignored) {
                 logger.warn("An error occurred!", ignored);

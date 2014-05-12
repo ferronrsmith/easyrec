@@ -155,7 +155,8 @@ public class Item implements Serializable {
                 return "n/a";
             return URLDecoder.decode(description.trim(), "UTF-8");
         } catch (Exception e) {
-            logger.warn("An error occurred!", e);
+            if (logger.isDebugEnabled())
+                logger.debug("Could not decode description of item with id '" + id + "'", e);
             return description.trim();
         }
 

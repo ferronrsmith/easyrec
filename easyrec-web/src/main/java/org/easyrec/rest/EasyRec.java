@@ -168,7 +168,6 @@ public class EasyRec {
         List<Message> messages = new ArrayList<Message>();
 
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
-        RemoteTenant r = remoteTenantDAO.get(coreTenantId);
 
         //        if (r.isMaxActionLimitExceeded()) {
         //            messages.add(Message.MAXIMUM_ACTIONS_EXCEEDED);
@@ -192,6 +191,7 @@ public class EasyRec {
                 throw new EasyRecException(messages, WS.ACTION_VIEW);
         }
 
+        RemoteTenant r = remoteTenantDAO.get(coreTenantId);
         itemType = checkItemType(itemType, type, coreTenantId, tenantId, WS.ACTION_VIEW, callback);
         Session session = new Session(sessionId, request.getRemoteAddr());
         Item item = shopRecommenderService.viewItem(r, userId, itemId, itemType, itemDescription,
@@ -237,10 +237,8 @@ public class EasyRec {
         List<Message> messages = new ArrayList<Message>();
 
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
-        RemoteTenant r = remoteTenantDAO.get(coreTenantId);
-        //        if (r.isMaxActionLimitExceeded()) {
-        //            messages.add(Message.MAXIMUM_ACTIONS_EXCEEDED);
-        //        }
+
+
 
         checkParams(coreTenantId, itemId, itemDescription, itemUrl, sessionId, messages);
 
@@ -271,6 +269,11 @@ public class EasyRec {
             else
                 throw new EasyRecException(messages, WS.ACTION_RATE);
         }
+
+        RemoteTenant r = remoteTenantDAO.get(coreTenantId);
+        //        if (r.isMaxActionLimitExceeded()) {
+        //            messages.add(Message.MAXIMUM_ACTIONS_EXCEEDED);
+        //        }
 
         itemType = checkItemType(itemType, type, coreTenantId, tenantId, WS.ACTION_RATE, callback);
         Session session = new Session(sessionId, request.getRemoteAddr());
@@ -318,10 +321,6 @@ public class EasyRec {
         List<Message> messages = new ArrayList<Message>();
 
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
-        RemoteTenant r = remoteTenantDAO.get(coreTenantId);
-        //        if (r.isMaxActionLimitExceeded()) {
-        //            messages.add(Message.MAXIMUM_ACTIONS_EXCEEDED);
-        //        }
 
         checkParams(coreTenantId, itemId, itemDescription, itemUrl, sessionId, messages);
 
@@ -341,6 +340,11 @@ public class EasyRec {
             else
                 throw new EasyRecException(messages, WS.ACTION_BUY);
         }
+
+        RemoteTenant r = remoteTenantDAO.get(coreTenantId);
+        //        if (r.isMaxActionLimitExceeded()) {
+        //            messages.add(Message.MAXIMUM_ACTIONS_EXCEEDED);
+        //        }
 
         itemType = checkItemType(itemType, type, coreTenantId, tenantId, WS.ACTION_BUY, callback);
         Session session = new Session(sessionId, request.getRemoteAddr());
@@ -388,10 +392,6 @@ public class EasyRec {
         List<Message> messages = new ArrayList<Message>();
 
         Integer coreTenantId = operatorDAO.getTenantId(apiKey, tenantId);
-        RemoteTenant r = remoteTenantDAO.get(coreTenantId);
-        //        if (r.isMaxActionLimitExceeded()) {
-        //            messages.add(Message.MAXIMUM_ACTIONS_EXCEEDED);
-        //        }
 
         checkParams(coreTenantId, itemId, itemDescription, itemUrl, sessionId, messages);
         Integer actValue = -1;
@@ -432,6 +432,11 @@ public class EasyRec {
             else
                 throw new EasyRecException(messages, WS.ACTION_SENDACTION);
         }
+
+        RemoteTenant r = remoteTenantDAO.get(coreTenantId);
+        //        if (r.isMaxActionLimitExceeded()) {
+        //            messages.add(Message.MAXIMUM_ACTIONS_EXCEEDED);
+        //        }
 
         itemType = checkItemType(itemType, type, coreTenantId, tenantId, WS.ACTION_RATE, callback);
         Session session = new Session(sessionId, request.getRemoteAddr());
