@@ -425,6 +425,7 @@ public class AssocTypeDAOMysqlImpl extends AbstractTableCreatingDAOImpl implemen
         try {
             id = getIdOfType(tenantId, assocType);
         } catch (IllegalArgumentException e) {
+            logger.warn("An error occurred!", e);
             return null;
         }
         return id;

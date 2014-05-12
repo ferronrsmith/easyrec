@@ -214,6 +214,7 @@ public class MyUtils {
                 return null;
             }
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
             return null;
         }
     }

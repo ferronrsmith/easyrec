@@ -67,6 +67,7 @@ public class WaitingGenerator extends GeneratorPluginSupport<WaitingGeneratorCon
             }
         } catch (InterruptedException e) {
             //ignore
+            logger.warn("An error occurred!", e);
         }
         //final progress update
         progress = new Progress(totalSteps, totalSteps, "done");

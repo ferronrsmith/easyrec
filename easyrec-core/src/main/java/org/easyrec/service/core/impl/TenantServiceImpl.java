@@ -240,6 +240,7 @@ public class TenantServiceImpl implements TenantService {
             tenantConfig.load(new ByteArrayInputStream(new StringBuffer(config).toString().getBytes()));
             //tenantConfig.load(new StringReader(config));
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
             return null;
         }
         return tenantConfig;
@@ -278,6 +279,7 @@ public class TenantServiceImpl implements TenantService {
         try {
             tenantStatistic.load(new ByteArrayInputStream(new StringBuffer(config).toString().getBytes()));
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
             return null;
         }
         return tenantStatistic;

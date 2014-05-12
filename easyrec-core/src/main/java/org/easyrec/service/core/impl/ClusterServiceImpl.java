@@ -616,7 +616,7 @@ public class ClusterServiceImpl implements ClusterService, InitializingBean {
             m.marshal(cluster, sw);
             xml = sw.toString();
         } catch (Exception e) {
-            System.out.println("An Error occurred marshaling the document" + e);
+            logger.warn("An Error occurred marshaling the document!", e);
             return -1;
         }
 

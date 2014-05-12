@@ -20,6 +20,8 @@
 package org.easyrec.model.core.web;
 
 import com.google.common.base.Strings;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.easyrec.model.core.web.statistic.*;
 
 import java.util.Collection;
@@ -48,6 +50,9 @@ import java.util.Properties;
  * @since <PROJECT VERSION ON FILE CREATION>
  */
 public class RemoteTenant {
+
+    private final Log logger = LogFactory.getLog(getClass());
+
     private Integer id;
     private String stringId;
     private String operatorId;
@@ -144,6 +149,7 @@ public class RemoteTenant {
                     Float.parseFloat(tenantStatisticProperties.getProperty(TENANT_AVERAGE_ACTIONS_PER_USER)),
                     Float.parseFloat(tenantStatisticProperties.getProperty(TENANT_RECOMMENDATION_COVERAGE)));
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
             this.tenantStatistic = new TenantStatistic(0, 0, 0, 0, 0.F, 0.F);
         }
 
@@ -155,6 +161,7 @@ public class RemoteTenant {
                     Integer.parseInt(tenantStatisticProperties.getProperty(USER_11_100_ACTIONS)),
                     Integer.parseInt(tenantStatisticProperties.getProperty(USER_101_AND_MORE_ACTIONS)));
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
             this.userStatistic = new UserStatistic(0, 0, 0, 0, 0);
         }
 
@@ -166,6 +173,7 @@ public class RemoteTenant {
                     Integer.parseInt(tenantStatisticProperties.getProperty(ASSOC_VALUE_GREATER_THAN_MIN_ASSOC_VALUE3)),
                     Integer.parseInt(tenantStatisticProperties.getProperty(ASSOC_VALUE_GREATER_THAN_MIN_ASSOC_VALUE4)));
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
             this.ruleMinerStatistic = new RuleMinerStatistic(0, 0, 0, 0, 0);
         }
 
@@ -174,6 +182,7 @@ public class RemoteTenant {
             this.conversionStatistic = new ConversionStatistic(
                     Integer.parseInt(tenantStatisticProperties.getProperty(CONVERSION_RECOMMENDATION_TO_BUY_COUNT)));
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
             this.conversionStatistic = new ConversionStatistic(0);
         }
 
@@ -194,6 +203,7 @@ public class RemoteTenant {
                     Integer.parseInt(
                             tenantStatisticProperties.getProperty(ASSOC_STD_NUMBER_OF_RULES_PER_ITEM + assocType))));
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
             assocStatistic.put(assocType.replace("_", " "), new AssocStatistic(0, 0, 0, 0, 0));
         }
     }
@@ -616,6 +626,7 @@ public class RemoteTenant {
 
             maxActionLimitExceeded = maxActions < actions && maxActions != 0;
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
             maxActionLimitExceeded = false;
         }
 
@@ -634,6 +645,7 @@ public class RemoteTenant {
             int actions = Integer.parseInt(getMonthlyActions());
             l = Math.min(100, (actions * 100) / maxActions);
         } catch (Exception ignored) {
+            logger.warn("An error occurred!", ignored);
         }
         return l;
     }
@@ -650,6 +662,7 @@ public class RemoteTenant {
 
             maxActionLimitAlmostExceeded = maxActions * 0.8 <= actions && maxActions != 0;
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
             maxActionLimitAlmostExceeded = false;
         }
 

@@ -20,6 +20,8 @@ package org.easyrec.utils;
  */
 
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -36,8 +38,6 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * !!! CAUTION This is a class to fill the DB with action & items
@@ -54,6 +54,8 @@ import java.util.logging.Logger;
  * @author Peter Hlavac
  */
 public class Benchmark {
+
+    private static final Log logger = LogFactory.getLog(Benchmark.class);
 
     private static final int NUMBER_OF_TENANTS = 3;
     private static final int NUMBER_OF_USERS = 500000;
@@ -139,7 +141,7 @@ public class Benchmark {
                 try {
                     con.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(Benchmark.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.warn("An error occured", ex);
                 }
             }
         }

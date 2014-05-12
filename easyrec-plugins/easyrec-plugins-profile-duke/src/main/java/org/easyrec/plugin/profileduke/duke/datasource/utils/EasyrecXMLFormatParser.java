@@ -21,6 +21,8 @@ package org.easyrec.plugin.profileduke.duke.datasource.utils;
 
 import no.priv.garshol.duke.Property;
 import no.priv.garshol.duke.StatementHandler;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.easyrec.model.core.ItemVO;
 import org.easyrec.plugin.profileduke.ProfileDukeGenerator;
 import org.easyrec.service.core.ProfileService;
@@ -51,6 +53,9 @@ import java.util.List;
  *
  */
 public class EasyrecXMLFormatParser {
+
+    private static Log logger = LogFactory.getLog(EasyrecXMLFormatParser.class);
+
     private StatementHandler handler;
     private static List<Property> props;
     private static List<ItemVO<Integer, Integer>> profileItems;
@@ -160,7 +165,7 @@ public class EasyrecXMLFormatParser {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("An error occurred!", e);
         }
     }
 

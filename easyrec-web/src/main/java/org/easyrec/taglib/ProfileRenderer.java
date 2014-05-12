@@ -18,6 +18,8 @@
  */
 package org.easyrec.taglib;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 import org.owasp.esapi.ESAPI;
@@ -55,6 +57,8 @@ import java.io.Writer;
  * @author David Mann
  */
 public class ProfileRenderer implements Tag {
+
+    private static final Log logger = LogFactory.getLog(ProfileRenderer.class);
 
     private PageContext pageContext;
     private Tag parent;
@@ -198,6 +202,7 @@ public class ProfileRenderer implements Tag {
             doc.getDocumentElement().normalize();
             return doc.getDocumentElement().getChildNodes();
         } catch (SAXException e) {
+            logger.warn("An error occurred!", e);
             return null;
         }
     }
@@ -218,8 +223,9 @@ public class ProfileRenderer implements Tag {
             is.setCharacterStream(new StringReader(profileXML));
             return db.parse(is);
         } catch (ParserConfigurationException e) {
-            e.printStackTrace();
+            logger.warn("An error occurred!", e);
         } catch (IOException e) {
+            logger.warn("An error occurred!", e);
             e.printStackTrace();
         }
         return null;

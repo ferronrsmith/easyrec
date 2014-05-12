@@ -436,6 +436,7 @@ public class ItemTypeDAOMysqlImpl extends AbstractTableCreatingDAOImpl implement
         try {
             id = getIdOfType(tenantId, itemType);
         } catch (IllegalArgumentException e) {
+            logger.warn("An error occurred!", e);
             return null;
         }
         return id;

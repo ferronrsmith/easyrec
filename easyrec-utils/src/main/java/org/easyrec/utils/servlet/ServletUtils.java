@@ -17,6 +17,9 @@
  */
 package org.easyrec.utils.servlet;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URLDecoder;
@@ -46,6 +49,8 @@ import java.util.Vector;
 public class ServletUtils {
 
     private ServletUtils() {}
+
+    private static final Log logger = LogFactory.getLog(ServletUtils.class);
 
     private static String[] proxyHeaders = {"FORWARDED", "HTTP_FORWARDED", "HTTP_X_FORWARDED", "HTTP_X_FORWARDED FOR"};
 
@@ -107,7 +112,9 @@ public class ServletUtils {
         if (param != null) {
             try {
                 ret = Integer.parseInt(param);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+                logger.warn("An error occurred!", ignored);
+            }
         }
         return ret;
     }
@@ -130,7 +137,9 @@ public class ServletUtils {
         if (param != null) {
             try {
                 ret = Double.parseDouble(param);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+                logger.warn("An error occurred!", ignored);
+            }
         }
         return ret;
     }

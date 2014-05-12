@@ -5,6 +5,8 @@
 package org.easyrec.utils;
 
 import com.google.common.base.CharMatcher;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.easyrec.model.core.web.Item;
 import org.easyrec.model.core.TenantVO;
 import org.easyrec.model.core.web.Operator;
@@ -22,7 +24,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
-import java.util.logging.Logger;
 
 /**
  * @author pmarschik
@@ -58,7 +59,7 @@ public class Movielens1MImporter extends AbstractDependencyInjectionSpringCLI {
     private TenantService tenantService;
     private OperatorDAO operatorDAO;
     private ShopRecommenderService shopRecommenderService;
-    private static final Logger logger = Logger.getLogger(Movielens1MImporter.class.getName());
+    private static final Log logger = LogFactory.getLog(Movielens1MImporter.class.getName());
     private static final double RATING_COUNT = 1000209;
     private static final double MOVIE_COUNT = 3952;
     private static final double USER_COUNT = 6040;

@@ -230,6 +230,7 @@ public class MahoutDataModelMappingDAOMysqlImpl extends JdbcDaoSupport implement
         try {
             return new GenericUserPreferenceArray(getJdbcTemplate().query(getPreferencesFromUserQuery, args, argTypes, genericPreferenceRowMapper));
         } catch (EmptyResultDataAccessException e) {
+            logger.warn("An error occurred!", e);
             throw new NoSuchUserException(userID);
         }
     }
@@ -241,6 +242,7 @@ public class MahoutDataModelMappingDAOMysqlImpl extends JdbcDaoSupport implement
         try {
             return new GenericUserPreferenceArray(getJdbcTemplate().query(getPreferencesFromUserQuery, args, argTypes, genericBooleanPreferenceRowMapper));
         } catch (EmptyResultDataAccessException e) {
+            logger.warn("An error occurred!", e);
             throw new NoSuchUserException(userID);
         }
     }
@@ -253,6 +255,7 @@ public class MahoutDataModelMappingDAOMysqlImpl extends JdbcDaoSupport implement
         try {
             return getJdbcTemplate().query(getItemIDsFromUserQuery, args, argTypes, fastIDSetExtractor);
         } catch (EmptyResultDataAccessException e) {
+            logger.warn("An error occurred!", e);
             throw new NoSuchUserException(userID);
         }
     }
@@ -274,6 +277,7 @@ public class MahoutDataModelMappingDAOMysqlImpl extends JdbcDaoSupport implement
         try {
             return new GenericItemPreferenceArray(getJdbcTemplate().query(getPreferencesForItemQuery, args, argTypes, genericPreferenceRowMapper));
         } catch (EmptyResultDataAccessException e) {
+            logger.warn("An error occurred!", e);
             throw new NoSuchItemException(itemID);
         }
     }
@@ -286,6 +290,7 @@ public class MahoutDataModelMappingDAOMysqlImpl extends JdbcDaoSupport implement
         try {
             return new GenericItemPreferenceArray(getJdbcTemplate().query(getPreferencesForItemQuery, args, argTypes, genericBooleanPreferenceRowMapper));
         } catch (EmptyResultDataAccessException e) {
+            logger.warn("An error occurred!", e)
             throw new NoSuchItemException(itemID);
         }
     }
@@ -299,6 +304,7 @@ public class MahoutDataModelMappingDAOMysqlImpl extends JdbcDaoSupport implement
             return (Float) getJdbcTemplate().queryForObject(getPreferenceQuery, args, argTypes, Float.class);
         } catch (EmptyResultDataAccessException e) {
             //as mahout/taste doesn't catch the NoSuchUserException, we don't throw it to save time
+            logger.warn("An error occurred!", e);
             return null;
         }
     }
@@ -325,6 +331,7 @@ public class MahoutDataModelMappingDAOMysqlImpl extends JdbcDaoSupport implement
             return getJdbcTemplate().queryForObject(getPreferenceTimeQuery, args, argTypes, Date.class).getTime();
         } catch (EmptyResultDataAccessException e) {
             //as mahout/taste doesn't catch the NoSuchUserException, we don't throw it to save time
+            logger.warn("An error occurred!", e);
             return null;
         }
     }

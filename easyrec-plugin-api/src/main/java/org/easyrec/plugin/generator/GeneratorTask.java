@@ -30,7 +30,7 @@ public class GeneratorTask implements Runnable {
             this.generator.setConfiguration(config);
             this.generator.execute();
         } catch (Throwable t) {
-            logger.warn("Caught exception while executing generator: " + generator.getDisplayName());
+            logger.warn("Caught exception while executing generator: " + generator.getDisplayName(), t);
         }
     }
 

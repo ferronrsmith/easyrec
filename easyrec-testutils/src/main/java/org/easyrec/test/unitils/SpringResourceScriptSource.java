@@ -33,6 +33,7 @@ public class SpringResourceScriptSource extends DefaultScriptSource {
         try {
             return ResourceUtils.getFile(scriptLocation);
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
             return null;
         }
     }

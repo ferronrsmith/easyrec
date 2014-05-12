@@ -34,6 +34,8 @@ import gnu.trove.procedure.TCharProcedure;
 import gnu.trove.procedure.TObjectCharProcedure;
 import gnu.trove.procedure.TObjectProcedure;
 import gnu.trove.strategy.HashingStrategy;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.*;
 import java.util.*;
@@ -52,6 +54,8 @@ import java.util.*;
  */
 public class TObjectCharCustomHashMap<K> extends TCustomObjectHash<K>
     implements TObjectCharMap<K>, Externalizable {
+
+    private static final Log logger = LogFactory.getLog(TObjectCharCustomHashMap.class);
 
     static final long serialVersionUID = 1L;
 
@@ -610,6 +614,7 @@ public class TObjectCharCustomHashMap<K> extends TCustomObjectHash<K>
             }
         } catch ( ClassCastException ex ) {
             // unused.
+            logger.warn("An error occurred!", ex);
         }
         return true;
     }

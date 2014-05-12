@@ -872,6 +872,7 @@ public class ItemAssocDAOMysqlImpl extends
         try {
             return getJdbcTemplate().queryForObject(sqlString.toString(), args, argTypes, itemAssocVORowMapper);
         } catch (EmptyResultDataAccessException ex) {
+            logger.warn("An error occurred!", ex);
             return null;
         }
     }
@@ -923,6 +924,7 @@ public class ItemAssocDAOMysqlImpl extends
         try {
             return getJdbcTemplate().queryForObject(sqlString.toString(), args, argTypes, itemAssocVORowMapper);
         } catch (EmptyResultDataAccessException ex) {
+            logger.warn("An error occurred!", ex);
             return null;
         }
     }

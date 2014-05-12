@@ -345,6 +345,7 @@ public class ActionTypeDAOMysqlImpl extends AbstractTableCreatingDAOImpl impleme
         try {
             id = getIdOfType(tenantId, actionType);
         } catch (IllegalArgumentException e) {
+            logger.warn("An error occurred!", e);
             return null;
         }
         return id;

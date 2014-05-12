@@ -312,7 +312,7 @@ public class ActionDAOMysqlImpl extends AbstractTableCreatingDroppingDAOImpl imp
         try {
             currentResult += getJdbcTemplate().update(query.toString(), args.toArray(), argt.toArray());
         } catch (Exception e) {
-            e.printStackTrace(System.err);
+            logger.warn("An error occurred!", e);
         }
         return currentResult;
     }

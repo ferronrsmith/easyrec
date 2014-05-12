@@ -18,6 +18,8 @@
 package org.easyrec.util.core;
 
 import com.google.common.base.Strings;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.easyrec.model.core.web.Operator;
 import org.easyrec.utils.io.Text;
 import org.springframework.web.servlet.ModelAndView;
@@ -27,8 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  * This class checks if a Operator or Administrator is signed in.
@@ -36,6 +37,8 @@ import java.util.logging.Logger;
  * @author phlavac
  */
 public class Security {
+
+    private static final Log logger = LogFactory.getLog(Security.class);
 
     // TODO: move to vocabulary?   i would say remove this pathetic class :)
     public static final Integer ACCESS_LEVEL_DEVELOPER = 1;
@@ -99,12 +102,13 @@ public class Security {
      * @return
      */
     public static String signedInOperatorId(HttpServletRequest request) {
-        String signedInOperatorId = "";
+        Object signedInOperatorId = "";
         try {
-            signedInOperatorId = request.getSession().getAttribute("signedInOperatorId").toString();
+            signedInOperatorId = request.getSession().getAttribute("signedInOperatorId");
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
         }
-        return (Strings.isNullOrEmpty(signedInOperatorId)) ? "" : signedInOperatorId;
+        return (signedInOperatorId == null) ? "" : signedInOperatorId.toString();
     }
 
     /**
@@ -119,6 +123,7 @@ public class Security {
             operator = (Operator) request.getSession(true).getAttribute("signedInOperator");
             return operator;
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
         }
         return null;
     }
@@ -135,7 +140,7 @@ public class Security {
         try {
             response.sendRedirect(request.getContextPath() + "/home");
         } catch (IOException ex) {
-            Logger.getLogger(Security.class.getName()).log(Level.SEVERE, null, ex);
+            logger.warn("An error occurred!", ex);
         }
         return null;
     }

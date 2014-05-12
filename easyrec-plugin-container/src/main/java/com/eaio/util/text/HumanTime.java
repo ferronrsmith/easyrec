@@ -21,6 +21,9 @@
  */
 package com.eaio.util.text;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -66,6 +69,8 @@ import java.util.Iterator;
  * @see <a href="http://johannburkard.de/blog/programming/java/date-formatting-parsing-humans-humantime.html">Date Formatting and Parsing for Humans in Java with HumanTime</a>
  */
 public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneable {
+
+    private static Log logger = LogFactory.getLog(HumanTime.class);
 
     /**
      * The serial version UID.
@@ -525,6 +530,7 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
         }
         catch (IOException ex) {
             // What were they thinking...
+            logger.warn("An error occurred!", ex);
         }
         return a;
     }
@@ -702,6 +708,7 @@ public class HumanTime implements Externalizable, Comparable<HumanTime>, Cloneab
         }
         catch (IOException ex) {
             // What were they thinking...
+            logger.warn("An error occurred!", ex);
         }
 
         return a;

@@ -272,7 +272,7 @@ public class PluginRegistry implements ApplicationContextAware {
                 try {
                     if (!tmpFile.delete()) logger.warn("could not delete tmpFile");
                 } catch (SecurityException se) {
-                    logger.error("Could not delete temporary file! Please check permissions!" + se);
+                    logger.error("Could not delete temporary file! Please check permissions!", se);
                 }
         }
     }

@@ -20,6 +20,8 @@ package org.easyrec.utils.io;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -30,6 +32,9 @@ import java.security.NoSuchAlgorithmException;
  * @author phlavac
  */
 public class Text {
+
+    private static final Log logger = LogFactory.getLog(Text.class);
+
     /**
      * This function returns the given string without the last character.
      * e.g.
@@ -73,7 +78,7 @@ public class Text {
             }
             return buff.toString().trim();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            logger.warn("An error occurred!", e);
         }
         return null;
     }

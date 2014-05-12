@@ -4,6 +4,8 @@
  */
 package org.easyrec.utils;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.easyrec.exception.core.ClusterException;
 import org.easyrec.model.core.web.Item;
 import org.easyrec.model.core.TenantVO;
@@ -27,7 +29,6 @@ import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.util.*;
-import java.util.logging.Logger;
 import org.easyrec.plugin.container.PluginRegistry;
 import org.easyrec.plugin.model.Version;
 
@@ -39,7 +40,7 @@ import org.easyrec.plugin.model.Version;
  */
 @SuppressWarnings({"UnusedDeclaration"})
 public class Movielens100kImporter extends AbstractDependencyInjectionSpringCLI {
-    private static final Logger logger = Logger.getLogger(Movielens1MImporter.class.getName());
+    private static final Log logger = LogFactory.getLog(Movielens1MImporter.class);
     private static final double RATING_COUNT = 100000;
     private static final double MOVIE_COUNT = 1682;
     private static final double USER_COUNT = 943;

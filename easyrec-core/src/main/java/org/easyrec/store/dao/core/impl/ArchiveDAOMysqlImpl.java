@@ -70,6 +70,7 @@ public class ArchiveDAOMysqlImpl extends JdbcDaoSupport implements ArchiveDAO {
                 actualArchiveTableName = (String) getJdbcTemplate()
                         .queryForObject("SHOW TABLES LIKE 'actionarchive" + i + "'", String.class);
             } catch (Exception e) {
+                logger.warn("An error occurred!", e);
                 actualArchiveTableName = "";
             }
 
@@ -116,6 +117,7 @@ public class ArchiveDAOMysqlImpl extends JdbcDaoSupport implements ArchiveDAO {
 
             return "actionarchive" + getNextIndex;
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
             return actualArchiveTableName;
         }
     }
@@ -134,7 +136,7 @@ public class ArchiveDAOMysqlImpl extends JdbcDaoSupport implements ArchiveDAO {
         try {
             return getJdbcTemplate().queryForInt(sql.toString(), args, argTypes);
         } catch (Exception e) {
-            logger.debug(e);
+            logger.warn("An error occurred!", e);
             return -1;
         }
     }
@@ -146,7 +148,7 @@ public class ArchiveDAOMysqlImpl extends JdbcDaoSupport implements ArchiveDAO {
         try {
             return getJdbcTemplate().queryForInt(sql.toString());
         } catch (Exception e) {
-            logger.debug(e);
+            logger.warn("An error occurred!", e);
             return -1;
         }
     }

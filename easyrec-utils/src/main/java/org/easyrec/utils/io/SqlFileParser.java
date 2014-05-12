@@ -173,12 +173,12 @@ public class SqlFileParser {
             if (statement != null && statement.toString().trim().length() > 0)
                 throw new UnclosedStatementException("Statement is not closed until the end of the file.");
         } catch (IOException e) {
-            logger.warn(e);
+            logger.warn("An error occurred!", e);
         } finally {
             try {
                 reader.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.warn("An error occurred!", e);
             }
         }
         return statements;

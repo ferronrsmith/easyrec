@@ -115,6 +115,7 @@ public class UserDAOMysqlImpl extends AbstractTableCreatingDAOImpl implements Us
             try {
                 getJdbcTemplate().update(query.toString(), args, argt);
             } catch (final DataIntegrityViolationException ex0) {
+                logger.warn("An error occurred!", ex0);
             }
         }
     }

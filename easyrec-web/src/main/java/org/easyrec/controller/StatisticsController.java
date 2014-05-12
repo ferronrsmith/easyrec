@@ -85,6 +85,7 @@ public class StatisticsController extends AbstractController {
                 year = Integer.parseInt(request.getParameter("year"));
                 flot = Integer.parseInt(request.getParameter("flot")) == 0 ? false : true;
             } catch (Exception e) {
+                logger.warn(e);
                 return null;
             }
 

@@ -96,7 +96,7 @@ public class ProfileServiceImpl implements ProfileService {
             trans = tf.newTransformer();
             trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         } catch (Exception e) {
-
+            logger.warn("An error occurred!", e);
         }
     }
 

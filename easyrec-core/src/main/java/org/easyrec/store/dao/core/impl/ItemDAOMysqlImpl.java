@@ -343,6 +343,7 @@ public class ItemDAOMysqlImpl extends BasicDAOMysqlImpl implements ItemDAO {
 
             return items;
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
             return null;
         }
     }
@@ -504,6 +505,7 @@ public class ItemDAOMysqlImpl extends BasicDAOMysqlImpl implements ItemDAO {
             }
             return items;
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
             return null;
         }
     }

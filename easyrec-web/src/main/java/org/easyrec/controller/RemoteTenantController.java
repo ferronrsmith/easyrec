@@ -55,8 +55,6 @@ import org.springframework.web.util.HtmlUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This Controller handles the Tenant operation.
@@ -497,7 +495,7 @@ public class RemoteTenantController extends MultiActionController {
             mav.addObject("tenantId", tenantId);
             mav.addObject("item", item);
         } catch (Exception ex) {
-            Logger.getLogger(ItemController.class.getName()).log(Level.SEVERE, null, ex);
+            logger.warn("An error occurred!", ex);
         }
 
 

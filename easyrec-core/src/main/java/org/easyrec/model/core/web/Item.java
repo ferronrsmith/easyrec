@@ -18,6 +18,9 @@
 package org.easyrec.model.core.web;
 
 import com.google.common.base.Strings;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.easyrec.util.core.Web;
 import org.easyrec.utils.io.Text;
 
@@ -52,6 +55,9 @@ public class Item implements Serializable {
      *
      */
     private static final long serialVersionUID = 4214924728903902312L;
+
+    @XmlTransient
+    private static final Log logger = LogFactory.getLog(Item.class);
 
     private String id;
     private Integer tenantId;
@@ -149,6 +155,7 @@ public class Item implements Serializable {
                 return "n/a";
             return URLDecoder.decode(description.trim(), "UTF-8");
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
             return description.trim();
         }
 
@@ -309,6 +316,7 @@ public class Item implements Serializable {
                     itemFrom + "&i=" + itemTo + "&a=" + assocType + "&u=" + URLEncoder.encode(url, "UTF-8");
             }
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
             return null;
         }
     }

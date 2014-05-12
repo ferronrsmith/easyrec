@@ -285,6 +285,7 @@ public class ViewTypeDAOMysqlImpl extends AbstractTableCreatingDAOImpl implement
         try {
             id = getIdOfType(tenantId, viewType);
         } catch (IllegalArgumentException e) {
+            logger.warn("An error occurred!", e);
             return false;
         }
         return (id != null);

@@ -19,6 +19,8 @@
 package org.easyrec.util.core;
 
 import com.google.common.base.Strings;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.commons.validator.UrlValidator;
 import org.easyrec.utils.io.Text;
 import org.springframework.web.servlet.ModelAndView;
@@ -56,6 +58,8 @@ import java.util.regex.Pattern;
  * @author phlavac
  */
 public class Web {
+
+    private static final Log logger = LogFactory.getLog(Web.class);
 
     @SuppressWarnings({"UnusedDeclaration"})
     public static final String XML = "XML";
@@ -150,6 +154,7 @@ public class Web {
                 result = false;
             }
         } catch (AddressException ex) {
+            logger.warn("An error occurred!", ex);
             result = false;
         }
         return result;
@@ -177,6 +182,9 @@ public class Web {
      */
     @SuppressWarnings({"UnusedDeclaration"})
     public static boolean isDownloadAbleUrl(String sUrl) {
+
+
+
         if (Security.inWhiteListDomain(sUrl)) {
             return true;
         }
@@ -189,14 +197,19 @@ public class Web {
                 url.getContent();
                 return true;
             } catch (UnknownHostException e) {
+                logger.warn("An error occurred!", e);
                 return false; // ("Unknown Host");
             } catch (MalformedURLException e) {
+                logger.warn("An error occurred!", e);
                 return false; // ("Bad URL
             } catch (FileNotFoundException e) {
+                logger.warn("An error occurred!", e);
                 return false; // ("404 error returned");
             } catch (IOException e) {
+                logger.warn("An error occurred!", e);
                 return false; // ("Communication failure");
             } catch (Exception e) {
+                logger.warn("An error occurred!", e);
                 return false; // ("Another Shit happend");
             }
         }
@@ -240,11 +253,12 @@ public class Web {
                 innerHTMLList.add(tagNodes.item(i).getTextContent());
             }
         } catch (ParserConfigurationException e1) {
-            e1.printStackTrace();
+
+           logger.warn("An error occurred!", e1);
         } catch (SAXException e) {
-            e.printStackTrace();
+            logger.warn("An error occurred!", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warn("An error occurred!", e);
         }
         return innerHTMLList;
     }
@@ -314,6 +328,7 @@ public class Web {
             sHTML = writer.toString();
 
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
             throw new Exception();
         }
         return sHTML;

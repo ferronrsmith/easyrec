@@ -21,6 +21,8 @@ package org.easyrec.plugin.cli;
 
 import com.google.common.collect.ObjectArrays;
 import org.apache.commons.cli.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.easyrec.model.core.TenantVO;
 import org.easyrec.plugin.Executable;
 import org.easyrec.plugin.Plugin;
@@ -46,6 +48,8 @@ import java.util.List;
 public abstract class AbstractGeneratorCLI<GC extends GeneratorConfiguration, GS extends GeneratorStatistics>
         extends AbstractDependencyInjectionSpringCLI {
     // ------------------------------ FIELDS ------------------------------
+
+    private static final Log logger = LogFactory.getLog(AbstractGeneratorCLI.class);
 
     private TenantService tenantService;
 
@@ -117,7 +121,7 @@ public abstract class AbstractGeneratorCLI<GC extends GeneratorConfiguration, GS
         try {
             commandLine = parser.parse(options, args);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.warn("An error occurred!", e);
 
             usage();
             return -1;
@@ -206,13 +210,14 @@ public abstract class AbstractGeneratorCLI<GC extends GeneratorConfiguration, GS
             try {
                 generator.execute();
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.warn("An error occurred!", e);
             }
 
             // need to sleep 1s to avoid duplicate keys
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
+                logger.warn("An error occurred!", e);
             }
 
             generator.cleanup();

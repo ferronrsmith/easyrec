@@ -34,6 +34,8 @@ import gnu.trove.procedure.TFloatProcedure;
 import gnu.trove.procedure.TObjectFloatProcedure;
 import gnu.trove.procedure.TObjectProcedure;
 import gnu.trove.strategy.HashingStrategy;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.*;
 import java.util.*;
@@ -52,6 +54,8 @@ import java.util.*;
  */
 public class TObjectFloatCustomHashMap<K> extends TCustomObjectHash<K>
     implements TObjectFloatMap<K>, Externalizable {
+
+    private static final Log logger = LogFactory.getLog(TObjectFloatCustomHashMap.class);
 
     static final long serialVersionUID = 1L;
 
@@ -609,6 +613,7 @@ public class TObjectFloatCustomHashMap<K> extends TCustomObjectHash<K>
                 }
             }
         } catch ( ClassCastException ex ) {
+            logger.warn("An error occurred!", ex);
             // unused.
         }
         return true;

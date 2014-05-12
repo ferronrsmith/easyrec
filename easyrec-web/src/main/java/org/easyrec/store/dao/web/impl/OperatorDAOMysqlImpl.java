@@ -23,6 +23,7 @@ import org.easyrec.model.core.web.Operator;
 import org.easyrec.store.dao.impl.BasicDAOMysqlImpl;
 import org.easyrec.store.dao.web.OperatorDAO;
 import org.easyrec.utils.spring.store.dao.DaoUtils;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 
 import javax.sql.DataSource;
@@ -240,7 +241,8 @@ public class OperatorDAOMysqlImpl extends BasicDAOMysqlImpl implements OperatorD
                     operatorCache.put(o.getOperatorId(), o);
                 }
                 return o;
-            } catch (Exception e) {
+            } catch (EmptyResultDataAccessException e) {
+                logger.debug("Can't find operator with id '" + id + "'.", e);
                 return null;
             }
         }
@@ -364,6 +366,7 @@ public class OperatorDAOMysqlImpl extends BasicDAOMysqlImpl implements OperatorD
                 operatorCache.remove(operatorId);
                 operatorTenantCache.clear();
             } catch (Exception e) {
+                logger.warn("An error occurred!", e);
                 return false;
             }
             return true;
@@ -389,6 +392,7 @@ public class OperatorDAOMysqlImpl extends BasicDAOMysqlImpl implements OperatorD
                 return null;
             }
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
             return null;
         }
     }
@@ -442,6 +446,7 @@ public class OperatorDAOMysqlImpl extends BasicDAOMysqlImpl implements OperatorD
                 }
                 return o;
             } catch (Exception e) {
+                logger.warn("An error occurred!", e);
                 return null;
             }
         }

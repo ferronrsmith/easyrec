@@ -158,7 +158,7 @@ public class RemoteTenantDAOMysqlImpl extends BasicDAOMysqlImpl implements Remot
                 remoteTenantIntCache.remove(r.getId());
                 remoteTenantCache.remove(tenantId + ":::" + operatorId);
             } catch (Exception e) {
-                logger.debug(e);
+                logger.warn("An error occurred!", e);
             }
         }
     }
@@ -186,6 +186,7 @@ public class RemoteTenantDAOMysqlImpl extends BasicDAOMysqlImpl implements Remot
                 return r;
 
             } catch (Exception e) {
+                logger.warn("An error occurred!", e);
                 return null;
             }
         }
@@ -210,6 +211,7 @@ public class RemoteTenantDAOMysqlImpl extends BasicDAOMysqlImpl implements Remot
                 return r;
 
             } catch (Exception e) {
+                logger.warn("An error occurred!", e);
                 return r;
             }
         }
@@ -240,7 +242,7 @@ public class RemoteTenantDAOMysqlImpl extends BasicDAOMysqlImpl implements Remot
             remoteTenantIntCache.remove(tenantId);
 
         } catch (Exception e) {
-            logger.debug(e);
+            logger.warn("An error occurred!", e);
         }
     }
 
@@ -258,6 +260,8 @@ public class RemoteTenantDAOMysqlImpl extends BasicDAOMysqlImpl implements Remot
             return getJdbcTemplate()
                     .query(SQL_GET_TENANTS_FROM_OPERATOR.replace("{0}", operatorId), args, argTypes, remoteTenantRowMapper);
         } catch (Exception e) {
+            logger.warn("An error occured while loading tenants for operator " + operatorId);
+            logger.warn("An error occurred!", e);
             return null;
         }
     }
@@ -270,6 +274,7 @@ public class RemoteTenantDAOMysqlImpl extends BasicDAOMysqlImpl implements Remot
         try {
             return getJdbcTemplate().query(SQL_GET_ALL_TENANTS, remoteTenantRowMapper);
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
             return null;
         }
     }
@@ -301,6 +306,7 @@ public class RemoteTenantDAOMysqlImpl extends BasicDAOMysqlImpl implements Remot
                     .query(SQL_GET_TENANTS, args, argTypes, remoteTenantRowMapper);
 
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
             return null;
         }
     }
@@ -328,7 +334,7 @@ public class RemoteTenantDAOMysqlImpl extends BasicDAOMysqlImpl implements Remot
             execute("DELETE FROM plugin_configuration WHERE tenantId = ?", argsDelete, argTypesDelete);
 
         } catch (Exception e) {
-            logger.debug(e);
+            logger.warn("An error occurred!", e);
             return false;
         }
         return true;
@@ -351,6 +357,7 @@ public class RemoteTenantDAOMysqlImpl extends BasicDAOMysqlImpl implements Remot
         try {
             getJdbcTemplate().update(sql, args, argTypes);
         } catch (Exception e) {
+            logger.warn("An error occurred!", e);
             throw new Exception();
         }
     }
@@ -379,6 +386,7 @@ public class RemoteTenantDAOMysqlImpl extends BasicDAOMysqlImpl implements Remot
                 tenantConfig.load(new ByteArrayInputStream(new StringBuffer(sTenantConfig).toString().getBytes()));
 
             } catch (Exception ignored) {
+                logger.warn("An error occurred!", ignored);
             } // no tenantConfig available
 
             String sTenantStatistic = DaoUtils.getStringIfPresent(rs, DEFAULT_TENANT_STATISTIC_COLUMN_NAME);
@@ -389,6 +397,7 @@ public class RemoteTenantDAOMysqlImpl extends BasicDAOMysqlImpl implements Remot
                         .load(new ByteArrayInputStream(new StringBuffer(sTenantStatistic).toString().getBytes()));
 
             } catch (Exception ignored) {
+                logger.warn("An error occurred!", ignored);
             } // no tenantStatistic available
 
             RemoteTenant remoteTenant = new RemoteTenant(DaoUtils.getIntegerIfPresent(rs, DEFAULT_ID_COLUMN_NAME),
