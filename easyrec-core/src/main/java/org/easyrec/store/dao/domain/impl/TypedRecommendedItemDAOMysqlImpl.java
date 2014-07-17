@@ -172,7 +172,7 @@ public class TypedRecommendedItemDAOMysqlImpl
                                     .getItemTypeById(tenantId, DaoUtils.getInteger(rs, DEFAULT_ITEM_TYPE_COLUMN_NAME))),
                     DaoUtils.getDouble(rs, DEFAULT_PREDICTION_VALUE_COLUMN_NAME),
                     DaoUtils.getInteger(rs, DEFAULT_RECOMMENDATION_COLUMN_NAME),
-                    DaoUtils.getInteger(rs, DEFAULT_ITEM_ASSOC_COLUMN_NAME),
+                    DaoUtils.getLong(rs, DEFAULT_ITEM_ASSOC_COLUMN_NAME),
                     DaoUtils.getStringIfPresent(rs, DEFAULT_EXPLANATION_COLUMN_NAME));
         }
     }

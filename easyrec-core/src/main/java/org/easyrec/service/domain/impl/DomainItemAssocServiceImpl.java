@@ -75,18 +75,21 @@ public class DomainItemAssocServiceImpl implements DomainItemAssocService {
 
     //////////////////////////////////////////////////////////////////////////////
     // interface "ItemAssocService" implementation
+    @Override
     public List<ItemAssocVO<Integer, String>> getItemAssocs(
             ItemVO<Integer, String> itemFrom, String assocType, ItemVO<Integer, String> itemTo,
             IAConstraintVO<Integer, String> constraints) {
         return typedItemAssocDAO.getItemAssocs(itemFrom, assocType, itemTo, constraints);
     }
 
+    @Override
     public List<ItemAssocVO<Integer, String>> getItemAssocsFromTenant(Integer tenant,
                                                                                                        Integer numberOfResults) {
         return typedItemAssocDAO.getItemAssocsQBE(null, null, null,
                 new IAConstraintVO<Integer, String>(numberOfResults, tenant));
     }
 
+    @Override
     public List<ItemAssocVO<Integer, String>> getItemAssocsForItem(Integer tenant,
                                                                                                     ItemVO<Integer, String> itemFrom,
                                                                                                     Integer numberOfResults) {
@@ -94,46 +97,55 @@ public class DomainItemAssocServiceImpl implements DomainItemAssocService {
                 new IAConstraintVO<Integer, String>(numberOfResults, null, null, null, tenant, null, false));
     }
 
+    @Override
     public List<AssociatedItemVO<Integer, String>> getItemsFrom(String itemFromType, String assocType,
                                                                                  ItemVO<Integer, String> itemTo,
                                                                                  IAConstraintVO<Integer, String> constraints) {
         return typedItemAssocDAO.getItemsFrom(itemFromType, assocType, itemTo, constraints);
     }
 
+    @Override
     public List<AssociatedItemVO<Integer, String>> getItemsTo(
             ItemVO<Integer, String> itemFrom, String assocType, String itemToType,
             IAConstraintVO<Integer, String> constraints) {
         return typedItemAssocDAO.getItemsTo(itemFrom, assocType, itemToType, constraints);
     }
 
+    @Override
     public void importItemAssocsFromCSV(String fileName) {
         importItemAssocsFromCSV(fileName, null);
     }
 
+    @Override
     public void importItemAssocsFromCSV(String fileName,
                                         ItemAssocVO<Integer, String> defaults) {
         itemAssocService.importItemAssocsFromCSV(fileName,
                 typeMappingService.convertTypedItemAssocVO(defaults.getTenant(), defaults));
     }
 
+    @Override
     public Iterator<ItemAssocVO<Integer, String>> getItemAssocIterator(int bulkSize) {
         return typedItemAssocDAO.getItemAssocIterator(bulkSize);
     }
 
-    public ItemAssocVO<Integer, String> loadItemAssoc(Integer itemAssocId) {
+    @Override
+    public ItemAssocVO<Integer, String> loadItemAssoc(Long itemAssocId) {
         return typedItemAssocDAO.loadItemAssocByPrimaryKey(itemAssocId);
     }
 
+    @Override
     public int removeAllItemAssocs() {
         return typedItemAssocDAO.removeAllItemAssocs();
     }
 
+    @Override
     public int removeAllItemAssocsFromSource(String sourceType) {
         return typedItemAssocDAO.removeItemAssocsQBE(
                 new ItemAssocVO<Integer, String>(null, null, null, null, null,
                         sourceType, null, null, null));
     }
 
+    @Override
     public int removeAllItemAssocsFromSource(String sourceType, String sourceInfo) {
         return typedItemAssocDAO.removeItemAssocsQBE(
                 new ItemAssocVO<Integer, String>(null, null, null, null, null,
@@ -145,7 +157,8 @@ public class DomainItemAssocServiceImpl implements DomainItemAssocService {
      *
      * @param itemAssocId Integer
      */
-    public int removeItemAssoc(Integer itemAssocId) {
+    @Override
+    public int removeItemAssoc(Long itemAssocId) {
         // validate input parameters
         if (itemAssocId == null) {
             throw new IllegalArgumentException("missing 'itemAssocId'");
@@ -163,10 +176,12 @@ public class DomainItemAssocServiceImpl implements DomainItemAssocService {
      *
      * @param itemAssoc ItemAssocVO
      */
+    @Override
     public int removeItemAssocQBE(ItemAssocVO<Integer, String> itemAssoc) {
         return typedItemAssocDAO.removeItemAssocsQBE(itemAssoc);
     }
 
+    @Override
     public int insertItemAssoc(ItemAssocVO<Integer, String> itemAssoc) {
         // validate input parameters
         if (itemAssoc == null) {
@@ -189,6 +204,7 @@ public class DomainItemAssocServiceImpl implements DomainItemAssocService {
      *
      * @param itemAssoc ItemAssocVO
      */
+    @Override
     public int insertOrUpdateItemAssoc(ItemAssocVO<Integer, String> itemAssoc) {
         // validate input parameters
         if (itemAssoc == null) {
@@ -217,26 +233,31 @@ public class DomainItemAssocServiceImpl implements DomainItemAssocService {
         return rowsAffected;
     }
 
+    @Override
     public int insertOrUpdateItemAssocs(
             final List<ItemAssocVO<Integer, String>> itemAssocs) {
         return typedItemAssocDAO.insertOrUpdateItemAssocs(itemAssocs);
     }
 
+    @Override
     public int removeAllItemAssocsFromTenant(Integer tenantId) {
         return typedItemAssocDAO.removeItemAssocsQBE(
                 new ItemAssocVO<Integer, String>(null, tenantId, null, null, null,
                         null, null, null, null, null));
     }
 
-    public boolean isActiveItemAssoc(Integer itemAssocId) {
+    @Override
+    public boolean isActiveItemAssoc(Long itemAssocId) {
         return itemAssocService.isActiveItemAssoc(itemAssocId);
     }
 
-    public int activateItemAssoc(Integer itemAssocId) {
+    @Override
+    public int activateItemAssoc(Long itemAssocId) {
         return itemAssocService.activateItemAssoc(itemAssocId);
     }
 
-    public int deactivateItemAssoc(Integer itemAssocId) {
+    @Override
+    public int deactivateItemAssoc(Long itemAssocId) {
         return itemAssocService.deactivateItemAssoc(itemAssocId);
     }
 }

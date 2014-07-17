@@ -49,7 +49,7 @@ public class RecommendedItemVO<I extends Comparable<I>,T extends Comparable<T>>
     private Integer recommendationId;
     private ItemVO<I,T> item;
     private Double predictionValue = 0.0;
-    private Integer itemAssocId;
+    private Long itemAssocId;
     private String explanation = null;
 
     ////////////////////////////////////////////////////////////////////////
@@ -64,7 +64,7 @@ public class RecommendedItemVO<I extends Comparable<I>,T extends Comparable<T>>
         this.predictionValue = predictionValue;
     }
 
-    public RecommendedItemVO(ItemVO<I,T> item, Double predictionValue, Integer itemAssocId) {
+    public RecommendedItemVO(ItemVO<I,T> item, Double predictionValue, Long itemAssocId) {
         this(item, predictionValue);
         this.itemAssocId = itemAssocId;
     }
@@ -74,13 +74,13 @@ public class RecommendedItemVO<I extends Comparable<I>,T extends Comparable<T>>
         this.explanation = explanation;
     }
 
-    public RecommendedItemVO(ItemVO<I,T> item, Double predictionValue, Integer itemAssocId, String explanation) {
+    public RecommendedItemVO(ItemVO<I,T> item, Double predictionValue, Long itemAssocId, String explanation) {
         this(item, predictionValue, itemAssocId);
         this.explanation = explanation;
     }
 
     public RecommendedItemVO(Integer id, ItemVO<I,T> item, Double predictionValue, Integer recommendationId,
-                             Integer itemAssocId, String explanation) {
+                             Long itemAssocId, String explanation) {
         this(item, predictionValue, itemAssocId, explanation);
         this.id = id;
         this.recommendationId = recommendationId;
@@ -103,11 +103,11 @@ public class RecommendedItemVO<I extends Comparable<I>,T extends Comparable<T>>
         return item;
     }
 
-    public void setItemAssocId(Integer itemAssocId) {
+    public void setItemAssocId(Long itemAssocId) {
         this.itemAssocId = itemAssocId;
     }
 
-    public Integer getItemAssocId() {
+    public Long getItemAssocId() {
         return itemAssocId;
     }
 

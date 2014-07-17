@@ -163,6 +163,7 @@ public class TypedItemAssocDAOMysqlImpl extends
         return itemAssocDAO.insertItemAssoc(typeMappingService.convertTypedItemAssocVO(tenantId, itemAssoc));
     }
 
+    @Override
     public int insertOrUpdateItemAssocs(
             List<ItemAssocVO<Integer, String>> typedItemAssocs) {
         List<ItemAssocVO<Integer,Integer>> itemAssocs =
@@ -178,7 +179,7 @@ public class TypedItemAssocDAOMysqlImpl extends
 
     @Override
     public ItemAssocVO<Integer, String> loadItemAssocByPrimaryKey(
-            Integer itemAssocId) {
+            Long itemAssocId) {
         ItemAssocVO<Integer,Integer> loadedItemAssoc = itemAssocDAO
                 .loadItemAssocByPrimaryKey(itemAssocId);
         return typeMappingService.convertItemAssocVO(loadedItemAssoc.getTenant(), loadedItemAssoc);
@@ -224,12 +225,14 @@ public class TypedItemAssocDAOMysqlImpl extends
                 .updateItemAssocUsingUniqueKey(typeMappingService.convertTypedItemAssocVO(tenantId, itemAssoc));
     }
 
+    @Override
     public int removeItemAssocByTenant(Integer tenantId, String assocType, Integer sourceType, Date changeDate) {
         return itemAssocDAO
                 .removeItemAssocByTenant(tenantId, typeMappingService.getIdOfAssocType(tenantId, assocType), sourceType,
                         changeDate);
     }
 
+    @Override
     public int removeItemAssocByTenantAndThreshold(Integer tenantId, String assocType, Integer sourceType,
                                                    Date changeDate, double threshold) {
         return itemAssocDAO
@@ -249,7 +252,7 @@ public class TypedItemAssocDAOMysqlImpl extends
                         "tenant not specified, can not retrieve type mapping without tenant");
             }
             return new ItemAssocVO<Integer, String>(
-                    DaoUtils.getInteger(rs, DEFAULT_ID_COLUMN_NAME), tenantId,
+                    DaoUtils.getLong(rs, DEFAULT_ID_COLUMN_NAME), tenantId,
                     new ItemVO<Integer, String>(DaoUtils.getInteger(rs, DEFAULT_TENANT_COLUMN_NAME),
                             DaoUtils.getInteger(rs, DEFAULT_ITEM_FROM_COLUMN_NAME), typeMappingService
                             .getItemTypeById(tenantId, DaoUtils.getInteger(rs, DEFAULT_ITEM_FROM_TYPE_COLUMN_NAME))),

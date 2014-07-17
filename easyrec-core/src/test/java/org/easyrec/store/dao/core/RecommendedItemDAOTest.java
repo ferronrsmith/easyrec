@@ -59,7 +59,7 @@ public class RecommendedItemDAOTest {
         RecommendedItemVO<Integer, Integer> recommendedItem = null;
         try {
             recommendedItem = new RecommendedItemVO<Integer, Integer>(
-                    new ItemVO<Integer, Integer>(1, 34, 1), 0.88d, 1, "x");
+                    new ItemVO<Integer, Integer>(1, 34, 1), 0.88d, 1l, "x");
             recommendedItem.setRecommendationId(5);
         } catch (Exception e) {
             fail("caught exception: " + e);
@@ -75,7 +75,7 @@ public class RecommendedItemDAOTest {
         RecommendedItemVO<Integer, Integer> recommendedItem = null;
         try {
             recommendedItem = new RecommendedItemVO<Integer, Integer>(
-                    new ItemVO<Integer, Integer>(1, 34, 1), 0.88d, 1, "x");
+                    new ItemVO<Integer, Integer>(1, 34, 1), 0.88d, 1l, "x");
         } catch (Exception e) {
             fail("caught exception: " + e);
         }
@@ -93,12 +93,12 @@ public class RecommendedItemDAOTest {
     public void testLoadRecommendedItem() {
         RecommendedItemVO<Integer, Integer> loadedRecommendedItem = recommendedItemDAO.loadRecommendedItem(9);
         RecommendedItemVO<Integer, Integer> expectedRecommendedItem = new RecommendedItemVO<Integer, Integer>(
-                9, new ItemVO<Integer, Integer>(1, 33, 1), 0.89d, 5, 1, "x");
+                9, new ItemVO<Integer, Integer>(1, 33, 1), 0.89d, 5, 1l, "x");
         assertEquals(expectedRecommendedItem, loadedRecommendedItem);
 
         loadedRecommendedItem = recommendedItemDAO.loadRecommendedItem(10);
         expectedRecommendedItem = new RecommendedItemVO<Integer, Integer>(10,
-                new ItemVO<Integer, Integer>(1, 34, 1), 0.88d, 5, 1, "x");
+                new ItemVO<Integer, Integer>(1, 34, 1), 0.88d, 5, 1l, "x");
         assertEquals(expectedRecommendedItem, loadedRecommendedItem);
     }
 
@@ -216,9 +216,9 @@ public class RecommendedItemDAOTest {
     public void testGetRecommendedItemsOfRecommendation() {
         List<RecommendedItemVO<Integer, Integer>> expectedRecommendedItems = new ArrayList<RecommendedItemVO<Integer, Integer>>();
         expectedRecommendedItems.add(new RecommendedItemVO<Integer, Integer>(9,
-                new ItemVO<Integer, Integer>(1, 33, 1), 0.89d, 5, 1, "x"));
+                new ItemVO<Integer, Integer>(1, 33, 1), 0.89d, 5, 1l, "x"));
         expectedRecommendedItems.add(new RecommendedItemVO<Integer, Integer>(10,
-                new ItemVO<Integer, Integer>(1, 34, 1), 0.88d, 5, 1, "x"));
+                new ItemVO<Integer, Integer>(1, 34, 1), 0.88d, 5, 1l, "x"));
         List<RecommendedItemVO<Integer, Integer>> loadedRecommendedItems = recommendedItemDAO
                 .getRecommendedItemsOfRecommendation(5);
         assertEquals(expectedRecommendedItems, loadedRecommendedItems);
@@ -228,9 +228,9 @@ public class RecommendedItemDAOTest {
     public void testGetRecommendedItemsOfRecommendationKnowingTenant() {
         List<RecommendedItemVO<Integer, Integer>> expectedRecommendedItems = new ArrayList<RecommendedItemVO<Integer, Integer>>();
         expectedRecommendedItems.add(new RecommendedItemVO<Integer, Integer>(9,
-                new ItemVO<Integer, Integer>(1, 33, 1), 0.89d, 5, 1, "x"));
+                new ItemVO<Integer, Integer>(1, 33, 1), 0.89d, 5, 1l, "x"));
         expectedRecommendedItems.add(new RecommendedItemVO<Integer, Integer>(10,
-                new ItemVO<Integer, Integer>(1, 34, 1), 0.88d, 5, 1, "x"));
+                new ItemVO<Integer, Integer>(1, 34, 1), 0.88d, 5, 1l, "x"));
         List<RecommendedItemVO<Integer, Integer>> loadedRecommendedItems = recommendedItemDAO
                 .getRecommendedItemsOfRecommendation(5, 1);
         assertEquals(expectedRecommendedItems, loadedRecommendedItems);

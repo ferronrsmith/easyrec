@@ -69,18 +69,21 @@ public class ItemAssocServiceImpl implements ItemAssocService {
 
     //////////////////////////////////////////////////////////////////////////////
     // interface "ItemAssocService" implementation
+    @Override
     public List<ItemAssocVO<Integer,Integer>> getItemAssocs(
             ItemVO<Integer, Integer> itemFrom, Integer assocTypeId, ItemVO<Integer, Integer> itemTo,
             IAConstraintVO<Integer, Integer> constraints) {
         return itemAssocDAO.getItemAssocs(itemFrom, assocTypeId, itemTo, constraints);
     }
 
+    @Override
     public List<ItemAssocVO<Integer,Integer>> getItemAssocsFromTenant(
             Integer tenant, Integer numberOfResults) {
         return itemAssocDAO.getItemAssocsQBE(null, null, null,
                 new IAConstraintVO<Integer, Integer>(numberOfResults, tenant));
     }
 
+    @Override
     public List<ItemAssocVO<Integer,Integer>> getItemAssocsForItem(Integer tenant,
                                                                                                         ItemVO<Integer, Integer> itemFrom,
                                                                                                         Integer numberOfResults) {
@@ -88,6 +91,7 @@ public class ItemAssocServiceImpl implements ItemAssocService {
                 new IAConstraintVO<Integer, Integer>(numberOfResults, null, null, null, tenant, null, false));
     }
 
+    @Override
     public List<AssociatedItemVO<Integer, Integer>> getItemsFrom(Integer itemFromTypeId,
                                                                                    Integer assocTypeId,
                                                                                    ItemVO<Integer, Integer> itemTo,
@@ -95,16 +99,19 @@ public class ItemAssocServiceImpl implements ItemAssocService {
         return itemAssocDAO.getItemsFrom(itemFromTypeId, assocTypeId, itemTo, constraints);
     }
 
+    @Override
     public List<AssociatedItemVO<Integer, Integer>> getItemsTo(
             ItemVO<Integer, Integer> itemFrom, Integer assocTypeId, Integer itemToTypeId,
             IAConstraintVO<Integer, Integer> constraints) {
         return itemAssocDAO.getItemsTo(itemFrom, assocTypeId, itemToTypeId, constraints);
     }
 
+    @Override
     public void importItemAssocsFromCSV(String fileName) {
         importItemAssocsFromCSV(fileName, null);
     }
 
+    @Override
     public void importItemAssocsFromCSV(String fileName,
                                         ItemAssocVO<Integer,Integer> defaults) {
         long start = System.currentTimeMillis();
@@ -497,25 +504,30 @@ public class ItemAssocServiceImpl implements ItemAssocService {
         }
     }
 
+    @Override
     public Iterator<ItemAssocVO<Integer,Integer>> getItemAssocIterator(
             int bulkSize) {
         return itemAssocDAO.getItemAssocIterator(bulkSize);
     }
 
-    public ItemAssocVO<Integer,Integer> loadItemAssoc(Integer itemAssocId) {
+    @Override
+    public ItemAssocVO<Integer,Integer> loadItemAssoc(Long itemAssocId) {
         return itemAssocDAO.loadItemAssocByPrimaryKey(itemAssocId);
     }
 
+    @Override
     public int removeAllItemAssocs() {
         return itemAssocDAO.removeAllItemAssocs();
     }
 
+    @Override
     public int removeAllItemAssocsFromSource(Integer sourceTypeId) {
         return itemAssocDAO.removeItemAssocsQBE(
                 new ItemAssocVO<Integer,Integer>(null, null, null, null, null,
                         sourceTypeId, null, null, null));
     }
 
+    @Override
     public int removeAllItemAssocsFromSource(Integer sourceTypeId, String sourceInfo) {
         return itemAssocDAO.removeItemAssocsQBE(
                 new ItemAssocVO<Integer,Integer>(null, null, null, null, null,
@@ -527,7 +539,8 @@ public class ItemAssocServiceImpl implements ItemAssocService {
      *
      * @param itemAssocId Integer
      */
-    public int removeItemAssoc(Integer itemAssocId) {
+    @Override
+    public int removeItemAssoc(Long itemAssocId) {
         // validate input parameters
         if (itemAssocId == null) {
             throw new IllegalArgumentException("missing 'itemAssocId'");
@@ -544,10 +557,12 @@ public class ItemAssocServiceImpl implements ItemAssocService {
      * pass a sourceInfo="16" and an ItemToType="track", all itemassociations pointing to tracks with sourceInfo="16" will
      * be removed from the DB.
      */
+    @Override
     public int removeItemAssocQBE(ItemAssocVO<Integer,Integer> itemAssoc) {
         return itemAssocDAO.removeItemAssocsQBE(itemAssoc);
     }
 
+    @Override
     public int insertItemAssoc(ItemAssocVO<Integer,Integer> itemAssoc) {
         // validate input parameters
         if (itemAssoc == null) {
@@ -570,6 +585,7 @@ public class ItemAssocServiceImpl implements ItemAssocService {
      *
      * @param itemAssoc ItemAssocVO
      */
+    @Override
     public int insertOrUpdateItemAssoc(ItemAssocVO<Integer,Integer> itemAssoc) {
         // validate input parameters
         if (itemAssoc == null) {
@@ -604,22 +620,26 @@ public class ItemAssocServiceImpl implements ItemAssocService {
         return rowsAffected;
     }
 
+    @Override
     public int insertOrUpdateItemAssocs(
             final List<ItemAssocVO<Integer,Integer>> itemAssocs) {
         return itemAssocDAO.insertOrUpdateItemAssocs(itemAssocs);
     }
 
+    @Override
     public int removeAllItemAssocsFromTenant(Integer tenantId) {
         return itemAssocDAO.removeItemAssocsQBE(
                 new ItemAssocVO<Integer,Integer>(null, tenantId, null, null, null,
                         null, null, null, null, null));
     }
 
-    public boolean isActiveItemAssoc(Integer itemAssocId) {
+    @Override
+    public boolean isActiveItemAssoc(Long itemAssocId) {
         return itemAssocDAO.loadItemAssocByPrimaryKey(itemAssocId).isActive();
     }
 
-    public int activateItemAssoc(Integer itemAssocId) {
+    @Override
+    public int activateItemAssoc(Long itemAssocId) {
         if (!isActiveItemAssoc(itemAssocId)) {
             ItemAssocVO<Integer,Integer> loadedItemAssoc = itemAssocDAO
                     .loadItemAssocByPrimaryKey(itemAssocId);
@@ -630,7 +650,8 @@ public class ItemAssocServiceImpl implements ItemAssocService {
         }
     }
 
-    public int deactivateItemAssoc(Integer itemAssocId) {
+    @Override
+    public int deactivateItemAssoc(Long itemAssocId) {
         if (isActiveItemAssoc(itemAssocId)) {
             ItemAssocVO<Integer,Integer> loadedItemAssoc = itemAssocDAO
                     .loadItemAssocByPrimaryKey(itemAssocId);

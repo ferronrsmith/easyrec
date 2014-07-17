@@ -48,7 +48,7 @@ public class AssociatedItemVO<I extends Comparable<I>, T extends Comparable<T>>
     // members    
     private ItemVO<I,T> item;
     private Double assocValue;
-    private Integer itemAssocId;
+    private Long itemAssocId;
     private T assocType;
 
     ////////////////////////////////////////////////////////////////////////
@@ -57,11 +57,11 @@ public class AssociatedItemVO<I extends Comparable<I>, T extends Comparable<T>>
         this(item, null, null, null);
     }
 
-    public AssociatedItemVO(ItemVO<I,T> item, Integer itemAssocId, T assocType) {
+    public AssociatedItemVO(ItemVO<I,T> item, Long itemAssocId, T assocType) {
         this(item, null, itemAssocId, assocType);
     }
 
-    public AssociatedItemVO(ItemVO<I,T> item, Double assocValue, Integer itemAssocId, T assocType) {
+    public AssociatedItemVO(ItemVO<I,T> item, Double assocValue, Long itemAssocId, T assocType) {
         this.setItem(item);
         this.setAssocValue(assocValue);
         this.setItemAssocId(itemAssocId);
@@ -85,11 +85,11 @@ public class AssociatedItemVO<I extends Comparable<I>, T extends Comparable<T>>
         this.assocValue = assocValue;
     }
 
-    public Integer getItemAssocId() {
+    public Long getItemAssocId() {
         return itemAssocId;
     }
 
-    public void setItemAssocId(Integer itemAssocId) {
+    public void setItemAssocId(Long itemAssocId) {
         this.itemAssocId = itemAssocId;
     }
 

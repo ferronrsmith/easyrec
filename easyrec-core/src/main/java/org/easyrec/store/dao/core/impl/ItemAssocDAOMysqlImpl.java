@@ -171,7 +171,7 @@ public class ItemAssocDAOMysqlImpl extends
         int rowsAffected = getJdbcTemplate().update(factory.newPreparedStatementCreator(args), keyHolder);
 
         // retrieve auto increment id, and set to VO
-        itemAssoc.setId(keyHolder.getKey().intValue());
+        itemAssoc.setId(keyHolder.getKey().longValue());
 
         return rowsAffected;
     }
@@ -851,7 +851,7 @@ public class ItemAssocDAOMysqlImpl extends
      */
     @Override
     public ItemAssocVO<Integer,Integer> loadItemAssocByPrimaryKey(
-            Integer itemAssocId) {
+            Long itemAssocId) {
         // validate input parameters
         if (itemAssocId == null) {
             throw new IllegalArgumentException("missing 'itemAssocId'");
@@ -1304,7 +1304,7 @@ public class ItemAssocDAOMysqlImpl extends
         public ItemAssocVO<Integer,Integer> mapRow(ResultSet rs, int rowNum)
                 throws SQLException {
             ItemAssocVO<Integer,Integer> itemAssoc = new ItemAssocVO<Integer,Integer>(
-                    DaoUtils.getInteger(rs, DEFAULT_ID_COLUMN_NAME),
+                    DaoUtils.getLong(rs, DEFAULT_ID_COLUMN_NAME),
                     DaoUtils.getInteger(rs, DEFAULT_TENANT_COLUMN_NAME),
                     new ItemVO<Integer, Integer>(DaoUtils.getInteger(rs, DEFAULT_TENANT_COLUMN_NAME),
                             DaoUtils.getInteger(rs, DEFAULT_ITEM_FROM_COLUMN_NAME),
@@ -1332,7 +1332,7 @@ public class ItemAssocDAOMysqlImpl extends
                             DaoUtils.getInteger(rs, DEFAULT_ITEM_FROM_COLUMN_NAME),
                             DaoUtils.getInteger(rs, DEFAULT_ITEM_FROM_TYPE_COLUMN_NAME)),
                     DaoUtils.getDouble(rs, DEFAULT_ASSOC_VALUE_COLUMN_NAME),
-                    DaoUtils.getInteger(rs, DEFAULT_ID_COLUMN_NAME),
+                    DaoUtils.getLong(rs, DEFAULT_ID_COLUMN_NAME),
                     DaoUtils.getInteger(rs, DEFAULT_ASSOC_TYPE_COLUMN_NAME));
             return associatedItem;
         }
@@ -1347,7 +1347,7 @@ public class ItemAssocDAOMysqlImpl extends
                             DaoUtils.getInteger(rs, DEFAULT_ITEM_TO_COLUMN_NAME),
                             DaoUtils.getInteger(rs, DEFAULT_ITEM_TO_TYPE_COLUMN_NAME)),
                     DaoUtils.getDouble(rs, DEFAULT_ASSOC_VALUE_COLUMN_NAME),
-                    DaoUtils.getInteger(rs, DEFAULT_ID_COLUMN_NAME),
+                    DaoUtils.getLong(rs, DEFAULT_ID_COLUMN_NAME),
                     DaoUtils.getInteger(rs, DEFAULT_ASSOC_TYPE_COLUMN_NAME));
             return associatedItem;
         }

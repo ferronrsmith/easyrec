@@ -87,7 +87,7 @@ public abstract class AbstractBaseItemAssocDAOMysqlImpl<IA, AI, IT, AT, I, C> ex
 
     public abstract IA loadItemAssocByUniqueKey(IA itemAssoc);
 
-    public abstract IA loadItemAssocByPrimaryKey(Integer itemAssocId);
+    public abstract IA loadItemAssocByPrimaryKey(Long itemAssocId);
 
     public abstract Iterator<IA> getItemAssocIterator(int bulkSize);
 

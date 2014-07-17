@@ -88,9 +88,9 @@ public class RecommendationDAOTest {
         try {
             List<RecommendedItemVO<Integer, Integer>> recommendedItems = new ArrayList<RecommendedItemVO<Integer, Integer>>();
             recommendedItems.add(new RecommendedItemVO<Integer, Integer>(
-                    new ItemVO<Integer, Integer>(1, 33, 1), 0.89d, 1, "x"));
+                    new ItemVO<Integer, Integer>(1, 33, 1), 0.89d, 1l, "x"));
             recommendedItems.add(new RecommendedItemVO<Integer, Integer>(
-                    new ItemVO<Integer, Integer>(1, 34, 1), 0.88d, 1, "x"));
+                    new ItemVO<Integer, Integer>(1, 34, 1), 0.88d, 1l, "x"));
             recommendation = new RecommendationVO<Integer, Integer>(1, 3, 1, 1, 1,
                     1, "a", "b", recommendedItems);
         } catch (Exception e) {
@@ -111,9 +111,9 @@ public class RecommendationDAOTest {
         List<RecommendedItemVO<Integer, Integer>> recommendedItems = new ArrayList<RecommendedItemVO<Integer, Integer>>();
         recommendedItems.add(
                 new RecommendedItemVO<Integer, Integer>(9, new ItemVO<Integer, Integer>(1, 33, 1),
-                        0.89d, 5, 1, "x"));
+                        0.89d, 5, 1l, "x"));
         recommendedItems.add(new RecommendedItemVO<Integer, Integer>(10,
-                new ItemVO<Integer, Integer>(1, 34, 1), 0.88d, 5, 1, "x"));
+                new ItemVO<Integer, Integer>(1, 34, 1), 0.88d, 5, 1l, "x"));
         RecommendationVO<Integer, Integer> expectedRecommendation = new RecommendationVO<Integer, Integer>(
                 5, 1, 3, 1, 1, 1, 1, "a", "b", new Date(new GregorianCalendar(2007, 3, 15, 12, 18).getTimeInMillis()),
                 recommendedItems);

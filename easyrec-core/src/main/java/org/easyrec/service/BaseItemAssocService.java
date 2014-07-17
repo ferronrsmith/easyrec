@@ -52,7 +52,7 @@ public interface BaseItemAssocService<IA, ST, AI, IT, AT, I, C, T> {
     // non-typed methods
     public void importItemAssocsFromCSV(String fileName);
 
-    public int removeItemAssoc(Integer itemAssocId);
+    public int removeItemAssoc(Long itemAssocId);
 
     public int removeAllItemAssocs();
 
@@ -64,13 +64,13 @@ public interface BaseItemAssocService<IA, ST, AI, IT, AT, I, C, T> {
 
     public int insertOrUpdateItemAssocs(List<IA> itemAssocs);
 
-    public boolean isActiveItemAssoc(Integer itemAssocId);
+    public boolean isActiveItemAssoc(Long itemAssocId);
 
-    public int activateItemAssoc(Integer itemAssocId);
+    public int activateItemAssoc(Long itemAssocId);
 
-    public int deactivateItemAssoc(Integer itemAssocId);
+    public int deactivateItemAssoc(Long itemAssocId);
 
-    public IA loadItemAssoc(Integer itemAssocId);
+    public IA loadItemAssoc(Long itemAssocId);
 
     public Iterator<IA> getItemAssocIterator(int bulkSize);
 

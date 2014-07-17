@@ -54,7 +54,7 @@ public class ItemAssocVO<I extends Comparable<I>, T extends Comparable<T>>
 
     ////////////////////////////////////////////////////////////////////////
     // members
-    private Integer id;
+    private Long id;
 
     private I tenant;
 
@@ -81,7 +81,7 @@ public class ItemAssocVO<I extends Comparable<I>, T extends Comparable<T>>
         this(null, tenant, itemFrom, assocType, assocValue, itemTo, sourceType, sourceInfo, viewType, active, null);
     }
 
-    public ItemAssocVO(Integer id, I tenant, ItemVO<I,T> itemFrom, T assocType, Double assocValue,
+    public ItemAssocVO(Long id, I tenant, ItemVO<I,T> itemFrom, T assocType, Double assocValue,
                        ItemVO<I,T> itemTo, T sourceType, String sourceInfo, T viewType, Boolean active) {
         this(id, tenant, itemFrom, assocType, assocValue, itemTo, sourceType, sourceInfo, viewType, active, null);
     }
@@ -92,7 +92,7 @@ public class ItemAssocVO<I extends Comparable<I>, T extends Comparable<T>>
                 changeDate);
     }
 
-    public ItemAssocVO(Integer id, I tenant, ItemVO<I,T> itemFrom, T assocType, Double assocValue,
+    public ItemAssocVO(Long id, I tenant, ItemVO<I,T> itemFrom, T assocType, Double assocValue,
                        ItemVO<I,T> itemTo, T sourceType, String sourceInfo, T viewType, Boolean active,
                        Date changeDate) {
         setId(id);
@@ -108,7 +108,7 @@ public class ItemAssocVO<I extends Comparable<I>, T extends Comparable<T>>
         setChangeDate(changeDate);
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -152,7 +152,7 @@ public class ItemAssocVO<I extends Comparable<I>, T extends Comparable<T>>
         return changeDate;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -101,7 +101,7 @@ public interface BaseItemAssocDAO<IA, AI, IT, AT, I, C> extends TableCreatingDAO
     /**
      * returns an item association (using the primary key)
      */
-    public IA loadItemAssocByPrimaryKey(Integer itemAssocId);
+    public IA loadItemAssocByPrimaryKey(Long itemAssocId);
 
     /**
      * returns an iterator over item associations, using the given bulk size (to prevent an out of memory error)
